@@ -535,9 +535,11 @@ def _identity_fixtures():
 
 
 def test_t41_aho_corasick_and_regex_engines_agree_on_every_fixture_byte_for_byte():
-    """T41's own core correctness requirement (packet 024): the new default engine must be
-    byte-identical to the old one for every one of this module's own real fixtures - fraction, reason
-    string (including tilde roots and zones), and state, with no exceptions."""
+    """T41's own core correctness requirement (packet 024): the regex and Aho-Corasick engines must be
+    byte-identical to one another, REGARDLESS of which one is the current default (packet 025's own
+    OPTION_A_ACCEPTED ruling keeps "regex" as the default; this test's own job is to prove the two agree,
+    not to assert either one's default status) - for every one of this module's own real fixtures:
+    fraction, reason string (including tilde roots and zones), and state, with no exceptions."""
     mismatches = []
     for profile, listing in _identity_fixtures():
         regex_result = _score_skill_relevance(profile, listing, engine="regex")

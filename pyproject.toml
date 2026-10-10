@@ -14,7 +14,13 @@ dependencies = [
   "protego>=0.3",
   "pycountry>=24.6",
   "rapidfuzz>=3.6",
-  "selectolax>=0.3",
+  # T44 (packet 027), found live by PM rebuilding the venv from scratch today: selectolax>=1.0 removed the
+  # "Modest" HTML parsing backend `ajp.connectors.jobposting` imports (`from selectolax.parser import
+  # HTMLParser`) in favor of a new "lexbor" backend with a different API - a genuinely clean install
+  # (no old resolved wheel already on disk) crashes that module's own import with ImportError. An upper
+  # bound reproduces a working environment WITHOUT any code change; migrating to lexbor's own API is a
+  # real parser-behavior change needing its own identity verification, deliberately NOT done here.
+  "selectolax>=0.3,<1.0",
   "pdfplumber>=0.11",
   "fastapi>=0.115",
   "uvicorn[standard]>=0.30",

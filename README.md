@@ -204,7 +204,10 @@ at the next login until re-installed.
   `/docs` folder) exists purely as a public landing page describing the project and linking back to this
   repo and its docs - it makes no live requests and shows no live data, since the actual running platform
   (Postgres + FastAPI + Next.js) cannot be hosted on Pages at all (no server runtime, no database) and is
-  not publicly deployed anywhere. See `pm/outbox/t42_report.md` for the full reasoning.
+  not publicly deployed anywhere. See `pm/outbox/t42_report.md` for the full reasoning. **Live at
+  <https://lzjleo99-ux.github.io/academic-job-platform/>** (repo:
+  <https://github.com/lzjleo99-ux/academic-job-platform>, public) - the same static-only, no-live-data
+  disclaimer applies there too.
 
 ## License
 
