@@ -1,0 +1,4872 @@
+{
+  "components": {
+    "schemas": {
+      "ApplicantMatchOut": {
+        "properties": {
+          "apply_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Apply Url"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "computed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Computed At"
+          },
+          "contact_emails": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Contact Emails",
+            "type": "array"
+          },
+          "contact_phones": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Contact Phones",
+            "type": "array"
+          },
+          "country_iso2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Iso2"
+          },
+          "counts": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Counts",
+            "type": "object"
+          },
+          "coverage": {
+            "title": "Coverage",
+            "type": "number"
+          },
+          "factors": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/MatchFactor"
+            },
+            "title": "Factors",
+            "type": "object"
+          },
+          "listing_id": {
+            "title": "Listing Id",
+            "type": "string"
+          },
+          "location_class": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location Class"
+          },
+          "org_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Org Raw"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "title_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Title Raw"
+          },
+          "total_weight": {
+            "title": "Total Weight",
+            "type": "integer"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "required": [
+          "listing_id",
+          "score",
+          "factors",
+          "counts",
+          "coverage",
+          "total_weight"
+        ],
+        "title": "ApplicantMatchOut",
+        "type": "object"
+      },
+      "ApplicantMatchesResponse": {
+        "properties": {
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/ApplicantMatchOut"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total",
+          "results"
+        ],
+        "title": "ApplicantMatchesResponse",
+        "type": "object"
+      },
+      "ApplicantOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "cv_filename": {
+            "title": "Cv Filename",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "profile": {
+            "additionalProperties": true,
+            "title": "Profile",
+            "type": "object"
+          },
+          "source_format": {
+            "title": "Source Format",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "cv_filename",
+          "source_format",
+          "profile",
+          "created_at"
+        ],
+        "title": "ApplicantOut",
+        "type": "object"
+      },
+      "Body_analyze_v1_thesis_analyze_post": {
+        "properties": {
+          "file": {
+            "format": "binary",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_analyze_v1_thesis_analyze_post",
+        "type": "object"
+      },
+      "Body_upload_v1_applicants_post": {
+        "properties": {
+          "file": {
+            "format": "binary",
+            "title": "File",
+            "type": "string"
+          }
+        },
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_v1_applicants_post",
+        "type": "object"
+      },
+      "ChannelLinkOut": {
+        "properties": {
+          "country_iso2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Iso2"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string"
+          },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id",
+          "slug",
+          "label",
+          "url"
+        ],
+        "title": "ChannelLinkOut",
+        "type": "object"
+      },
+      "Confident": {
+        "properties": {
+          "conf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conf"
+          },
+          "raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw"
+          },
+          "v": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "V"
+          }
+        },
+        "title": "Confident",
+        "type": "object"
+      },
+      "FacetBucket": {
+        "properties": {
+          "count": {
+            "title": "Count",
+            "type": "integer"
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label"
+          },
+          "value": {
+            "title": "Value",
+            "type": "string"
+          }
+        },
+        "required": [
+          "value",
+          "count"
+        ],
+        "title": "FacetBucket",
+        "type": "object"
+      },
+      "FacetsResponse": {
+        "properties": {
+          "city": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "City",
+            "type": "array"
+          },
+          "country": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Country",
+            "type": "array"
+          },
+          "degree_required": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Degree Required",
+            "type": "array"
+          },
+          "discipline": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Discipline",
+            "type": "array"
+          },
+          "duration_bucket": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Duration Bucket",
+            "type": "array"
+          },
+          "foreigner": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Foreigner",
+            "type": "array"
+          },
+          "ft_pt": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Ft Pt",
+            "type": "array"
+          },
+          "kind": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Kind",
+            "type": "array"
+          },
+          "language": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Language",
+            "type": "array"
+          },
+          "location_class": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Location Class",
+            "type": "array"
+          },
+          "position_kind": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Position Kind",
+            "type": "array"
+          },
+          "salary_bucket": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Salary Bucket",
+            "type": "array"
+          },
+          "source": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/FacetBucket"
+            },
+            "title": "Source",
+            "type": "array"
+          }
+        },
+        "title": "FacetsResponse",
+        "type": "object"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "title": "Detail",
+            "type": "array"
+          }
+        },
+        "title": "HTTPValidationError",
+        "type": "object"
+      },
+      "HealthResponse": {
+        "properties": {
+          "db": {
+            "title": "Db",
+            "type": "string"
+          },
+          "degraded_sources": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Degraded Sources",
+            "type": "array"
+          },
+          "fx_as_of": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fx As Of"
+          },
+          "fx_currencies": {
+            "default": 0,
+            "title": "Fx Currencies",
+            "type": "integer"
+          },
+          "fx_stale_warning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fx Stale Warning"
+          },
+          "sources_last_run": {
+            "default": [],
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Sources Last Run",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status",
+          "db"
+        ],
+        "title": "HealthResponse",
+        "type": "object"
+      },
+      "ListingCard": {
+        "properties": {
+          "canonical_source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canonical Source Id"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "contract": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contract"
+          },
+          "country_iso2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Iso2"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "foreigner_eligible": {
+            "title": "Foreigner Eligible",
+            "type": "string"
+          },
+          "ft_pt": {
+            "title": "Ft Pt",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "location_class": {
+            "default": "unknown",
+            "title": "Location Class",
+            "type": "string"
+          },
+          "location_class_conf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location Class Conf"
+          },
+          "location_class_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location Class Raw"
+          },
+          "lon": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lon"
+          },
+          "org": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OrgRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "org_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Org Raw"
+          },
+          "position_kind": {
+            "title": "Position Kind",
+            "type": "string"
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At"
+          },
+          "salary_currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Currency"
+          },
+          "salary_eur_year": {
+            "$ref": "#/components/schemas/SalaryBasis"
+          },
+          "salary_period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Period"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceRef"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "title_raw": {
+            "title": "Title Raw",
+            "type": "string"
+          },
+          "verified_direct": {
+            "default": false,
+            "title": "Verified Direct",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title_raw",
+          "kind",
+          "position_kind",
+          "ft_pt",
+          "salary_eur_year",
+          "foreigner_eligible",
+          "status",
+          "sources"
+        ],
+        "title": "ListingCard",
+        "type": "object"
+      },
+      "ListingDetail": {
+        "properties": {
+          "ad_lang": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ad Lang"
+          },
+          "apply_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Apply Url"
+          },
+          "canonical_source_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Canonical Source Id"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "contact_emails": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Contact Emails",
+            "type": "array"
+          },
+          "contact_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contact Name"
+          },
+          "contact_phones": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Contact Phones",
+            "type": "array"
+          },
+          "contact_scope": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contact Scope"
+          },
+          "content_scanned": {
+            "default": false,
+            "title": "Content Scanned",
+            "type": "boolean"
+          },
+          "contract": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Contract"
+          },
+          "country_iso2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Country Iso2"
+          },
+          "deadline": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Deadline"
+          },
+          "degree_required": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Degree Required"
+          },
+          "disciplines_euroscivoc": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Disciplines Euroscivoc",
+            "type": "array"
+          },
+          "duration_months": {
+            "$ref": "#/components/schemas/Confident"
+          },
+          "extraction_family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Extraction Family"
+          },
+          "first_seen": {
+            "format": "date-time",
+            "title": "First Seen",
+            "type": "string"
+          },
+          "foreigner_eligible": {
+            "title": "Foreigner Eligible",
+            "type": "string"
+          },
+          "ft_pt": {
+            "title": "Ft Pt",
+            "type": "string"
+          },
+          "hours_pct": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hours Pct"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "language": {
+            "default": [],
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Language",
+            "type": "array"
+          },
+          "last_seen": {
+            "format": "date-time",
+            "title": "Last Seen",
+            "type": "string"
+          },
+          "lat": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lat"
+          },
+          "location_class": {
+            "default": "unknown",
+            "title": "Location Class",
+            "type": "string"
+          },
+          "location_class_conf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location Class Conf"
+          },
+          "location_class_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Location Class Raw"
+          },
+          "lon": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Lon"
+          },
+          "org": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/OrgRef"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "org_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Org Raw"
+          },
+          "position_kind": {
+            "title": "Position Kind",
+            "type": "string"
+          },
+          "posted_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At"
+          },
+          "posted_at_basis": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At Basis"
+          },
+          "posted_at_conf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At Conf"
+          },
+          "posted_at_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Posted At Raw"
+          },
+          "raw_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw Text"
+          },
+          "requirements_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Requirements Raw"
+          },
+          "rs_research_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rs Research Title"
+          },
+          "salary_currency": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Currency"
+          },
+          "salary_eur_year": {
+            "$ref": "#/components/schemas/SalaryBasis"
+          },
+          "salary_gross_net": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Gross Net"
+          },
+          "salary_max": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Max"
+          },
+          "salary_min": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Min"
+          },
+          "salary_period": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Period"
+          },
+          "salary_raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Salary Raw"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceRef"
+            },
+            "title": "Sources",
+            "type": "array"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "study_while_work_ok": {
+            "$ref": "#/components/schemas/Confident"
+          },
+          "title_raw": {
+            "title": "Title Raw",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "verified_direct": {
+            "default": false,
+            "title": "Verified Direct",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "title_raw",
+          "kind",
+          "position_kind",
+          "ft_pt",
+          "salary_eur_year",
+          "foreigner_eligible",
+          "status",
+          "sources",
+          "url",
+          "duration_months",
+          "study_while_work_ok",
+          "first_seen",
+          "last_seen"
+        ],
+        "title": "ListingDetail",
+        "type": "object"
+      },
+      "ListingsResponse": {
+        "properties": {
+          "degraded": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Degraded",
+            "type": "array"
+          },
+          "page": {
+            "$ref": "#/components/schemas/Page"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/ListingCard"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "sort": {
+            "title": "Sort",
+            "type": "string"
+          }
+        },
+        "required": [
+          "page",
+          "sort",
+          "results"
+        ],
+        "title": "ListingsResponse",
+        "type": "object"
+      },
+      "MatchFactor": {
+        "properties": {
+          "fraction": {
+            "title": "Fraction",
+            "type": "number"
+          },
+          "points": {
+            "title": "Points",
+            "type": "number"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "state": {
+            "title": "State",
+            "type": "string"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "weight",
+          "fraction",
+          "points",
+          "reason",
+          "state"
+        ],
+        "title": "MatchFactor",
+        "type": "object"
+      },
+      "MetaResponse": {
+        "properties": {
+          "currencies": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Currencies",
+            "type": "array"
+          },
+          "degraded_features": {
+            "items": {
+              "additionalProperties": {
+                "type": "string"
+              },
+              "type": "object"
+            },
+            "title": "Degraded Features",
+            "type": "array"
+          },
+          "degree_required": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Degree Required",
+            "type": "array"
+          },
+          "disciplines_euroscivoc": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Disciplines Euroscivoc",
+            "type": "array"
+          },
+          "disciplines_taxonomy_complete": {
+            "title": "Disciplines Taxonomy Complete",
+            "type": "boolean"
+          },
+          "duration_buckets": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Duration Buckets",
+            "type": "array"
+          },
+          "ft_pt": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Ft Pt",
+            "type": "array"
+          },
+          "fx_as_of": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fx As Of"
+          },
+          "kind": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Kind",
+            "type": "array"
+          },
+          "language_codes": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Language Codes",
+            "type": "array"
+          },
+          "position_kind": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Position Kind",
+            "type": "array"
+          },
+          "rs_research_title": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Rs Research Title",
+            "type": "array"
+          },
+          "salary_buckets": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Salary Buckets",
+            "type": "array"
+          }
+        },
+        "required": [
+          "disciplines_euroscivoc",
+          "disciplines_taxonomy_complete",
+          "rs_research_title",
+          "position_kind",
+          "kind",
+          "degree_required",
+          "ft_pt",
+          "currencies",
+          "language_codes",
+          "salary_buckets",
+          "duration_buckets",
+          "degraded_features"
+        ],
+        "title": "MetaResponse",
+        "type": "object"
+      },
+      "OrgDetail": {
+        "properties": {
+          "career_urls": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Career Urls",
+            "type": "array"
+          },
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "homepage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Homepage"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name En"
+          },
+          "name_native": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Native"
+          },
+          "open_listing_count": {
+            "title": "Open Listing Count",
+            "type": "integer"
+          },
+          "openalex_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openalex Id"
+          },
+          "openalex_works_count": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Openalex Works Count"
+          },
+          "qs_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Qs Rank"
+          },
+          "render_mode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Render Mode"
+          },
+          "robots_checked_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Robots Checked At"
+          },
+          "robots_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Robots Status"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          },
+          "the_rank": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "The Rank"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "country",
+          "type",
+          "open_listing_count"
+        ],
+        "title": "OrgDetail",
+        "type": "object"
+      },
+      "OrgRef": {
+        "additionalProperties": true,
+        "properties": {
+          "homepage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Homepage"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Id"
+          },
+          "name_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name En"
+          },
+          "name_native": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Native"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          }
+        },
+        "title": "OrgRef",
+        "type": "object"
+      },
+      "OrgSummary": {
+        "properties": {
+          "city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "City"
+          },
+          "country": {
+            "title": "Country",
+            "type": "string"
+          },
+          "homepage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Homepage"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "name_en": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name En"
+          },
+          "name_native": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name Native"
+          },
+          "open_listing_count": {
+            "title": "Open Listing Count",
+            "type": "integer"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          },
+          "type": {
+            "title": "Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "country",
+          "type",
+          "open_listing_count"
+        ],
+        "title": "OrgSummary",
+        "type": "object"
+      },
+      "Page": {
+        "properties": {
+          "page": {
+            "title": "Page",
+            "type": "integer"
+          },
+          "page_size": {
+            "title": "Page Size",
+            "type": "integer"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          },
+          "total_pages": {
+            "title": "Total Pages",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "page",
+          "page_size",
+          "total",
+          "total_pages"
+        ],
+        "title": "Page",
+        "type": "object"
+      },
+      "SalaryBasis": {
+        "properties": {
+          "fx_rate_date": {
+            "anyOf": [
+              {
+                "format": "date",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fx Rate Date"
+          },
+          "fx_source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fx Source"
+          },
+          "max_eur_year": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Eur Year"
+          },
+          "min_eur_year": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Eur Year"
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Note"
+          }
+        },
+        "title": "SalaryBasis",
+        "type": "object"
+      },
+      "SourceRef": {
+        "properties": {
+          "first_seen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Seen"
+          },
+          "last_seen": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Seen"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "verified_direct": {
+            "default": false,
+            "title": "Verified Direct",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "source_id",
+          "url"
+        ],
+        "title": "SourceRef",
+        "type": "object"
+      },
+      "SourceStatus": {
+        "properties": {
+          "ats_family": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ats Family"
+          },
+          "ats_site": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ats Site"
+          },
+          "ats_tenant": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ats Tenant"
+          },
+          "degraded_reasons": {
+            "default": [],
+            "items": {
+              "type": "string"
+            },
+            "title": "Degraded Reasons",
+            "type": "array"
+          },
+          "denied_24h": {
+            "default": 0,
+            "title": "Denied 24H",
+            "type": "integer"
+          },
+          "geo_scope": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Geo Scope"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "kind": {
+            "title": "Kind",
+            "type": "string"
+          },
+          "last_attempt_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Attempt At"
+          },
+          "last_run_status": {
+            "title": "Last Run Status",
+            "type": "string"
+          },
+          "last_success_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Success At"
+          },
+          "listing_count": {
+            "title": "Listing Count",
+            "type": "integer"
+          },
+          "requests_24h": {
+            "default": 0,
+            "title": "Requests 24H",
+            "type": "integer"
+          },
+          "robots_ok": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Robots Ok"
+          },
+          "route_type": {
+            "title": "Route Type",
+            "type": "string"
+          },
+          "tdm_reservation": {
+            "default": "none",
+            "title": "Tdm Reservation",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "route_type",
+          "robots_ok",
+          "last_run_status",
+          "listing_count"
+        ],
+        "title": "SourceStatus",
+        "type": "object"
+      },
+      "ThesisFinding": {
+        "properties": {
+          "check": {
+            "title": "Check",
+            "type": "string"
+          },
+          "conf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conf"
+          },
+          "excerpt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Excerpt"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Page"
+          },
+          "severity": {
+            "title": "Severity",
+            "type": "string"
+          }
+        },
+        "required": [
+          "check",
+          "severity",
+          "message"
+        ],
+        "title": "ThesisFinding",
+        "type": "object"
+      },
+      "ThesisReport": {
+        "properties": {
+          "findings": {
+            "items": {
+              "$ref": "#/components/schemas/ThesisFinding"
+            },
+            "title": "Findings",
+            "type": "array"
+          },
+          "summary": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Summary",
+            "type": "object"
+          },
+          "template_name": {
+            "title": "Template Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "template_name",
+          "summary",
+          "findings"
+        ],
+        "title": "ThesisReport",
+        "type": "object"
+      },
+      "ThesisTaskOut": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "original_filename": {
+            "title": "Original Filename",
+            "type": "string"
+          },
+          "report": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ThesisReport"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "similarity": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Similarity"
+          },
+          "source_format": {
+            "title": "Source Format",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          },
+          "template_name": {
+            "title": "Template Name",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "status",
+          "original_filename",
+          "source_format",
+          "template_name",
+          "created_at"
+        ],
+        "title": "ThesisTaskOut",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "ctx": {
+            "title": "Context",
+            "type": "object"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "title": "Location",
+            "type": "array"
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError",
+        "type": "object"
+      }
+    }
+  },
+  "info": {
+    "description": "Read-only listing API (M3, packet 007). Every uncertain field carries {v, conf, raw}; salary EUR/year figures always carry their fx basis; see /v1/meta.degraded_features for known gaps (never silently omitted).",
+    "title": "Academic Job Platform API",
+    "version": "0.1.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Health",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/v1/applicants": {
+      "post": {
+        "operationId": "upload_v1_applicants_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_v1_applicants_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Upload",
+        "tags": [
+          "applicants"
+        ]
+      }
+    },
+    "/v1/applicants/matching/weights": {
+      "get": {
+        "description": "The exact, real weights ajp.applicants.matching.score_listing uses - the methodology page fetches\nand renders this directly rather than restating the numbers by hand, so the two can never silently drift\napart (the same D4-style transparency standard already applied to the thesis similarity formula).",
+        "operationId": "matching_weights_v1_applicants_matching_weights_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "integer"
+                  },
+                  "title": "Response Matching Weights V1 Applicants Matching Weights Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Matching Weights",
+        "tags": [
+          "applicants"
+        ]
+      }
+    },
+    "/v1/applicants/{applicant_id}": {
+      "delete": {
+        "operationId": "delete_applicant_v1_applicants__applicant_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "applicant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Applicant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Applicant",
+        "tags": [
+          "applicants"
+        ]
+      },
+      "get": {
+        "operationId": "get_applicant_v1_applicants__applicant_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "applicant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Applicant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Applicant",
+        "tags": [
+          "applicants"
+        ]
+      },
+      "patch": {
+        "description": "A manual correction to the extracted profile - merges ``patch`` into the existing profile (never a\nfull replace), so reviewing/fixing one field never requires resending every other one.",
+        "operationId": "patch_profile_v1_applicants__applicant_id__patch",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "applicant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Applicant Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": true,
+                "title": "Patch",
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Patch Profile",
+        "tags": [
+          "applicants"
+        ]
+      }
+    },
+    "/v1/applicants/{applicant_id}/matches": {
+      "get": {
+        "operationId": "get_matches_v1_applicants__applicant_id__matches_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "applicant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Applicant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantMatchesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Matches",
+        "tags": [
+          "applicants"
+        ]
+      },
+      "post": {
+        "operationId": "compute_matches_v1_applicants__applicant_id__matches_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "applicant_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Applicant Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApplicantMatchesResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Compute Matches",
+        "tags": [
+          "applicants"
+        ]
+      }
+    },
+    "/v1/channels": {
+      "get": {
+        "operationId": "list_channels_v1_channels_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/ChannelLinkOut"
+                  },
+                  "title": "Response List Channels V1 Channels Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Channels",
+        "tags": [
+          "channels"
+        ]
+      }
+    },
+    "/v1/coverage": {
+      "get": {
+        "operationId": "coverage_v1_coverage_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Coverage V1 Coverage Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Coverage",
+        "tags": [
+          "governance"
+        ]
+      }
+    },
+    "/v1/facets": {
+      "get": {
+        "operationId": "facets_v1_facets_get",
+        "parameters": [
+          {
+            "description": "country_iso2, multi",
+            "in": "query",
+            "name": "country",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "country_iso2, multi",
+              "title": "Country"
+            }
+          },
+          {
+            "in": "query",
+            "name": "city",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "description": "with lon+r_km: radius search",
+            "in": "query",
+            "name": "lat",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "with lon+r_km: radius search",
+              "title": "Lat"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lon",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lon"
+            }
+          },
+          {
+            "in": "query",
+            "name": "r_km",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "R Km"
+            }
+          },
+          {
+            "description": "EuroSciVoc codes, flat match (see /v1/meta)",
+            "in": "query",
+            "name": "discipline",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EuroSciVoc codes, flat match (see /v1/meta)",
+              "title": "Discipline"
+            }
+          },
+          {
+            "description": "yes|no|unknown",
+            "in": "query",
+            "name": "foreigner",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "yes|no|unknown",
+              "title": "Foreigner"
+            }
+          },
+          {
+            "description": "EUR/year",
+            "in": "query",
+            "name": "salary_min",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EUR/year",
+              "title": "Salary Min"
+            }
+          },
+          {
+            "description": "EUR/year",
+            "in": "query",
+            "name": "salary_max",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EUR/year",
+              "title": "Salary Max"
+            }
+          },
+          {
+            "in": "query",
+            "name": "salary_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Salary Bucket"
+            }
+          },
+          {
+            "description": "keep listings with no stated salary",
+            "in": "query",
+            "name": "salary_include_unspecified",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "keep listings with no stated salary",
+              "title": "Salary Include Unspecified",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "lt6|6_12|12_24|24_36|gt36|permanent|unknown",
+            "in": "query",
+            "name": "duration_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "lt6|6_12|12_24|24_36|gt36|permanent|unknown",
+              "title": "Duration Bucket"
+            }
+          },
+          {
+            "description": "full|part|both|unknown",
+            "in": "query",
+            "name": "ft_pt",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "full|part|both|unknown",
+              "title": "Ft Pt"
+            }
+          },
+          {
+            "description": "true|false|unknown",
+            "in": "query",
+            "name": "study_while_working",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "true|false|unknown",
+              "title": "Study While Working"
+            }
+          },
+          {
+            "description": "employment|enrollment|grant_call|internship|other; unfiltered (all kinds) by default",
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "employment|enrollment|grant_call|internship|other; unfiltered (all kinds) by default",
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position_kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Position Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "language",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          },
+          {
+            "in": "query",
+            "name": "language_level",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language Level"
+            }
+          },
+          {
+            "description": "bsc|msc|phd|none|unknown",
+            "in": "query",
+            "name": "degree_required",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "bsc|msc|phd|none|unknown",
+              "title": "Degree Required"
+            }
+          },
+          {
+            "description": "closing_soon|this_month",
+            "in": "query",
+            "name": "deadline_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "closing_soon|this_month",
+              "title": "Deadline Bucket"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deadline_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Deadline From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deadline_to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Deadline To"
+            }
+          },
+          {
+            "description": "open|closed|expired|unknown; default open only",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "open|closed|expired|unknown; default open only",
+              "title": "Status"
+            }
+          },
+          {
+            "description": "source ids among a listing's sources[]",
+            "in": "query",
+            "name": "source",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "source ids among a listing's sources[]",
+              "title": "Source"
+            }
+          },
+          {
+            "description": "title/requirements/raw text search",
+            "in": "query",
+            "name": "text",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "title/requirements/raw text search",
+              "title": "Text"
+            }
+          },
+          {
+            "description": "located|remote|hybrid|unknown; unfiltered by default (T23, PM ruling R2)",
+            "in": "query",
+            "name": "location_class",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "located|remote|hybrid|unknown; unfiltered by default (T23, PM ruling R2)",
+              "title": "Location Class"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FacetsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Facets",
+        "tags": [
+          "facets"
+        ]
+      }
+    },
+    "/v1/governance": {
+      "get": {
+        "operationId": "governance_v1_governance_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "title": "Response Governance V1 Governance Get",
+                  "type": "object"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Governance",
+        "tags": [
+          "governance"
+        ]
+      }
+    },
+    "/v1/listings": {
+      "get": {
+        "operationId": "list_listings_v1_listings_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "posted_desc",
+              "pattern": "^(deadline_asc|posted_desc|salary_desc)$",
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "title": "Page",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 100,
+              "minimum": 1,
+              "title": "Page Size",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "comma list; currently accepted: 'org' (nested org object always sent regardless)",
+            "in": "query",
+            "name": "include",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "comma list; currently accepted: 'org' (nested org object always sent regardless)",
+              "title": "Include"
+            }
+          },
+          {
+            "description": "country_iso2, multi",
+            "in": "query",
+            "name": "country",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "country_iso2, multi",
+              "title": "Country"
+            }
+          },
+          {
+            "in": "query",
+            "name": "city",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "description": "with lon+r_km: radius search",
+            "in": "query",
+            "name": "lat",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "with lon+r_km: radius search",
+              "title": "Lat"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lon",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lon"
+            }
+          },
+          {
+            "in": "query",
+            "name": "r_km",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "R Km"
+            }
+          },
+          {
+            "description": "EuroSciVoc codes, flat match (see /v1/meta)",
+            "in": "query",
+            "name": "discipline",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EuroSciVoc codes, flat match (see /v1/meta)",
+              "title": "Discipline"
+            }
+          },
+          {
+            "description": "yes|no|unknown",
+            "in": "query",
+            "name": "foreigner",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "yes|no|unknown",
+              "title": "Foreigner"
+            }
+          },
+          {
+            "description": "EUR/year",
+            "in": "query",
+            "name": "salary_min",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EUR/year",
+              "title": "Salary Min"
+            }
+          },
+          {
+            "description": "EUR/year",
+            "in": "query",
+            "name": "salary_max",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EUR/year",
+              "title": "Salary Max"
+            }
+          },
+          {
+            "in": "query",
+            "name": "salary_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Salary Bucket"
+            }
+          },
+          {
+            "description": "keep listings with no stated salary",
+            "in": "query",
+            "name": "salary_include_unspecified",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "keep listings with no stated salary",
+              "title": "Salary Include Unspecified",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "lt6|6_12|12_24|24_36|gt36|permanent|unknown",
+            "in": "query",
+            "name": "duration_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "lt6|6_12|12_24|24_36|gt36|permanent|unknown",
+              "title": "Duration Bucket"
+            }
+          },
+          {
+            "description": "full|part|both|unknown",
+            "in": "query",
+            "name": "ft_pt",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "full|part|both|unknown",
+              "title": "Ft Pt"
+            }
+          },
+          {
+            "description": "true|false|unknown",
+            "in": "query",
+            "name": "study_while_working",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "true|false|unknown",
+              "title": "Study While Working"
+            }
+          },
+          {
+            "description": "employment|enrollment|grant_call|internship|other; unfiltered (all kinds) by default",
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "employment|enrollment|grant_call|internship|other; unfiltered (all kinds) by default",
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position_kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Position Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "language",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          },
+          {
+            "in": "query",
+            "name": "language_level",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language Level"
+            }
+          },
+          {
+            "description": "bsc|msc|phd|none|unknown",
+            "in": "query",
+            "name": "degree_required",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "bsc|msc|phd|none|unknown",
+              "title": "Degree Required"
+            }
+          },
+          {
+            "description": "closing_soon|this_month",
+            "in": "query",
+            "name": "deadline_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "closing_soon|this_month",
+              "title": "Deadline Bucket"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deadline_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Deadline From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deadline_to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Deadline To"
+            }
+          },
+          {
+            "description": "open|closed|expired|unknown; default open only",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "open|closed|expired|unknown; default open only",
+              "title": "Status"
+            }
+          },
+          {
+            "description": "source ids among a listing's sources[]",
+            "in": "query",
+            "name": "source",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "source ids among a listing's sources[]",
+              "title": "Source"
+            }
+          },
+          {
+            "description": "title/requirements/raw text search",
+            "in": "query",
+            "name": "text",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "title/requirements/raw text search",
+              "title": "Text"
+            }
+          },
+          {
+            "description": "located|remote|hybrid|unknown; unfiltered by default (T23, PM ruling R2)",
+            "in": "query",
+            "name": "location_class",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "located|remote|hybrid|unknown; unfiltered by default (T23, PM ruling R2)",
+              "title": "Location Class"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingsResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Listings",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/v1/listings/export": {
+      "get": {
+        "operationId": "export_listings_v1_listings_export_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "sort",
+            "required": false,
+            "schema": {
+              "default": "posted_desc",
+              "pattern": "^(deadline_asc|posted_desc|salary_desc)$",
+              "title": "Sort",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "pattern": "^(csv|json)$",
+              "title": "Format",
+              "type": "string"
+            }
+          },
+          {
+            "description": "hard cap on exported rows",
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 1000,
+              "description": "hard cap on exported rows",
+              "maximum": 5000,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "description": "country_iso2, multi",
+            "in": "query",
+            "name": "country",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "country_iso2, multi",
+              "title": "Country"
+            }
+          },
+          {
+            "in": "query",
+            "name": "city",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "City"
+            }
+          },
+          {
+            "description": "with lon+r_km: radius search",
+            "in": "query",
+            "name": "lat",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "with lon+r_km: radius search",
+              "title": "Lat"
+            }
+          },
+          {
+            "in": "query",
+            "name": "lon",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Lon"
+            }
+          },
+          {
+            "in": "query",
+            "name": "r_km",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "exclusiveMinimum": 0,
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "R Km"
+            }
+          },
+          {
+            "description": "EuroSciVoc codes, flat match (see /v1/meta)",
+            "in": "query",
+            "name": "discipline",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EuroSciVoc codes, flat match (see /v1/meta)",
+              "title": "Discipline"
+            }
+          },
+          {
+            "description": "yes|no|unknown",
+            "in": "query",
+            "name": "foreigner",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "yes|no|unknown",
+              "title": "Foreigner"
+            }
+          },
+          {
+            "description": "EUR/year",
+            "in": "query",
+            "name": "salary_min",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EUR/year",
+              "title": "Salary Min"
+            }
+          },
+          {
+            "description": "EUR/year",
+            "in": "query",
+            "name": "salary_max",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "EUR/year",
+              "title": "Salary Max"
+            }
+          },
+          {
+            "in": "query",
+            "name": "salary_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Salary Bucket"
+            }
+          },
+          {
+            "description": "keep listings with no stated salary",
+            "in": "query",
+            "name": "salary_include_unspecified",
+            "required": false,
+            "schema": {
+              "default": true,
+              "description": "keep listings with no stated salary",
+              "title": "Salary Include Unspecified",
+              "type": "boolean"
+            }
+          },
+          {
+            "description": "lt6|6_12|12_24|24_36|gt36|permanent|unknown",
+            "in": "query",
+            "name": "duration_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "lt6|6_12|12_24|24_36|gt36|permanent|unknown",
+              "title": "Duration Bucket"
+            }
+          },
+          {
+            "description": "full|part|both|unknown",
+            "in": "query",
+            "name": "ft_pt",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "full|part|both|unknown",
+              "title": "Ft Pt"
+            }
+          },
+          {
+            "description": "true|false|unknown",
+            "in": "query",
+            "name": "study_while_working",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "true|false|unknown",
+              "title": "Study While Working"
+            }
+          },
+          {
+            "description": "employment|enrollment|grant_call|internship|other; unfiltered (all kinds) by default",
+            "in": "query",
+            "name": "kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "employment|enrollment|grant_call|internship|other; unfiltered (all kinds) by default",
+              "title": "Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "position_kind",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Position Kind"
+            }
+          },
+          {
+            "in": "query",
+            "name": "language",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language"
+            }
+          },
+          {
+            "in": "query",
+            "name": "language_level",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Language Level"
+            }
+          },
+          {
+            "description": "bsc|msc|phd|none|unknown",
+            "in": "query",
+            "name": "degree_required",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "bsc|msc|phd|none|unknown",
+              "title": "Degree Required"
+            }
+          },
+          {
+            "description": "closing_soon|this_month",
+            "in": "query",
+            "name": "deadline_bucket",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "closing_soon|this_month",
+              "title": "Deadline Bucket"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deadline_from",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Deadline From"
+            }
+          },
+          {
+            "in": "query",
+            "name": "deadline_to",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "format": "date",
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Deadline To"
+            }
+          },
+          {
+            "description": "open|closed|expired|unknown; default open only",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "open|closed|expired|unknown; default open only",
+              "title": "Status"
+            }
+          },
+          {
+            "description": "source ids among a listing's sources[]",
+            "in": "query",
+            "name": "source",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "source ids among a listing's sources[]",
+              "title": "Source"
+            }
+          },
+          {
+            "description": "title/requirements/raw text search",
+            "in": "query",
+            "name": "text",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "title/requirements/raw text search",
+              "title": "Text"
+            }
+          },
+          {
+            "description": "located|remote|hybrid|unknown; unfiltered by default (T23, PM ruling R2)",
+            "in": "query",
+            "name": "location_class",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "located|remote|hybrid|unknown; unfiltered by default (T23, PM ruling R2)",
+              "title": "Location Class"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Listings",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/v1/listings/{listing_id}": {
+      "get": {
+        "operationId": "get_listing_v1_listings__listing_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listing_id",
+            "required": true,
+            "schema": {
+              "title": "Listing Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListingDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Listing",
+        "tags": [
+          "listings"
+        ]
+      }
+    },
+    "/v1/meta": {
+      "get": {
+        "operationId": "meta_v1_meta_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetaResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Meta",
+        "tags": [
+          "meta"
+        ]
+      }
+    },
+    "/v1/orgs": {
+      "get": {
+        "operationId": "list_orgs_v1_orgs_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "country",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Country"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/OrgSummary"
+                  },
+                  "title": "Response List Orgs V1 Orgs Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "List Orgs",
+        "tags": [
+          "orgs"
+        ]
+      }
+    },
+    "/v1/orgs/{org_id}": {
+      "get": {
+        "operationId": "get_org_v1_orgs__org_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "org_id",
+            "required": true,
+            "schema": {
+              "title": "Org Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgDetail"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Org",
+        "tags": [
+          "orgs"
+        ]
+      }
+    },
+    "/v1/sources": {
+      "get": {
+        "operationId": "list_sources_v1_sources_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/SourceStatus"
+                  },
+                  "title": "Response List Sources V1 Sources Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "List Sources",
+        "tags": [
+          "sources"
+        ]
+      }
+    },
+    "/v1/thesis/analyze": {
+      "post": {
+        "operationId": "analyze_v1_thesis_analyze_post",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "template",
+            "required": false,
+            "schema": {
+              "default": "rs_phd_generic",
+              "title": "Template",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_analyze_v1_thesis_analyze_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThesisTaskOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Analyze",
+        "tags": [
+          "thesis"
+        ]
+      }
+    },
+    "/v1/thesis/similarity/sources": {
+      "get": {
+        "description": "Every source id the UI can offer as an enable/disable toggle - packet 008's own D4 disclaimer text is\nshown by the UI alongside these, never by this endpoint (this is just the toggle list).",
+        "operationId": "similarity_sources_v1_thesis_similarity_sources_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {},
+                  "title": "Response Similarity Sources V1 Thesis Similarity Sources Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Similarity Sources",
+        "tags": [
+          "thesis"
+        ]
+      }
+    },
+    "/v1/thesis/templates": {
+      "get": {
+        "operationId": "templates_v1_thesis_templates_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {},
+                  "title": "Response Templates V1 Thesis Templates Get",
+                  "type": "array"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Templates",
+        "tags": [
+          "thesis"
+        ]
+      }
+    },
+    "/v1/thesis/{task_id}": {
+      "delete": {
+        "description": "T25 (packet 016): closes RC1's own documented gap - a real self-service delete, not just the bulk\npurge_older_than mechanism that already existed but had no per-document trigger.",
+        "operationId": "delete_task_v1_thesis__task_id__delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Delete Task",
+        "tags": [
+          "thesis"
+        ]
+      },
+      "get": {
+        "operationId": "get_task_v1_thesis__task_id__get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ThesisTaskOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Task",
+        "tags": [
+          "thesis"
+        ]
+      }
+    },
+    "/v1/thesis/{task_id}/export": {
+      "get": {
+        "operationId": "export_docx_v1_thesis__task_id__export_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Export Docx",
+        "tags": [
+          "thesis"
+        ]
+      }
+    },
+    "/v1/thesis/{task_id}/report": {
+      "get": {
+        "operationId": "get_report_v1_thesis__task_id__report_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Task Id",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "required": false,
+            "schema": {
+              "default": "json",
+              "pattern": "^(json|pdf)$",
+              "title": "Format",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Report",
+        "tags": [
+          "thesis"
+        ]
+      }
+    },
+    "/v1/thesis/{task_id}/similarity": {
+      "get": {
+        "operationId": "get_similarity_v1_thesis__task_id__similarity_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Task Id",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Get Similarity",
+        "tags": [
+          "thesis"
+        ]
+      },
+      "post": {
+        "operationId": "run_similarity_v1_thesis__task_id__similarity_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "task_id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "title": "Task Id",
+              "type": "string"
+            }
+          },
+          {
+            "description": "omit for all sources; pass to enable only these",
+            "in": "query",
+            "name": "sources",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "omit for all sources; pass to enable only these",
+              "title": "Sources"
+            }
+          },
+          {
+            "description": "explicit per-run consent - Copyleaks is never called without it",
+            "in": "query",
+            "name": "copyleaks_consent",
+            "required": false,
+            "schema": {
+              "default": false,
+              "description": "explicit per-run consent - Copyleaks is never called without it",
+              "title": "Copyleaks Consent",
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Run Similarity",
+        "tags": [
+          "thesis"
+        ]
+      }
+    }
+  }
+}

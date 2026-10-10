@@ -1,0 +1,67 @@
+# T42 (packet 024): everything live/local/generated/secret stays OUT of the repo - nothing here is a
+# judgment call made once and forgotten; `tests/test_repo_hygiene.py` re-checks the tracked set itself for
+# a stray secret/absolute-path on every test run, so a future addition that violates this file's own
+# intent fails loudly instead of silently landing in a commit. A pattern with no leading slash already
+# matches at ANY depth (git's own documented behavior), so entries below are listed once, not duplicated
+# per directory level.
+
+# ---------------------------------------------------------------- Python -------------------------------------
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+htmlcov/
+.coverage
+.coverage.*
+
+# ---------------------------------------------------------------- Node / Next.js / Playwright -----------------
+node_modules/
+.next/
+out/
+.turbo/
+*.tsbuildinfo
+next-env.d.ts
+playwright-report/
+test-results/
+blob-report/
+
+# ---------------------------------------------------------------- live data / embedded Postgres / raw crawls --
+# The live, real data dir (the host's own $HOME/.ajp/, per README.md's own "ajp-init" section) is OUTSIDE
+# this repo entirely, never reachable by a commit from in here. These are the project's own LOCAL/dev-time
+# equivalents (tools/dev_up.py's own temp stack, any ad-hoc local data dir) - never committed either, for
+# the exact same reason: real crawled content, embedded-Postgres binary files, and anything derived from a
+# live run has no business in version control.
+data/
+raw/
+raw_pdf/
+pgdata/
+*.log
+logs/
+
+# ---------------------------------------------------------------- uploaded applicant/thesis files -------------
+# D4/Privacy page: an uploaded CV or thesis file is analysed locally and never sent anywhere else - "never
+# committed to a public git history" is the exact same promise, extended to this repo's own history. This
+# is the RUNTIME upload storage location specifically (ajp.applicants.store/ajp.thesis.store's own default
+# root, already covered by `data/` above since both live under it by default) - spelled out explicitly in
+# case either default root is ever overridden to somewhere else under the repo. Deliberately NOT a blanket
+# `*.pdf`/`*.docx` rule, which would also exclude this project's own committed, intentional test fixtures
+# (tests/cv_fixtures/, tests/thesis_fixtures/, tests/fixtures/documents/ - real .docx/.pdf files the test
+# suite itself depends on being tracked).
+data/applicants/
+data/thesis/
+
+# ---------------------------------------------------------------- secrets / environment ------------------------
+.env
+.env.*
+!.env.example
+!web/.env.local.example
+
+# ---------------------------------------------------------------- OS / editor noise -----------------------------
+.DS_Store
+*.swp
+.vscode/
+.idea/

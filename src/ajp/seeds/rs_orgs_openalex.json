@@ -1,0 +1,1229 @@
+{
+  "fetched_from": "t12_openalex_rs_institutions_raw.json (2026-09-22, 119 RS institutions)",
+  "matches": [
+    {
+      "slug": "bg",
+      "openalex_id": "https://openalex.org/I4068193",
+      "matched_name": "University of Belgrade",
+      "score": 100.0
+    },
+    {
+      "slug": "uns",
+      "openalex_id": "https://openalex.org/I170726198",
+      "matched_name": "University of Novi Sad",
+      "score": 100.0
+    },
+    {
+      "slug": "ni",
+      "openalex_id": "https://openalex.org/I152518017",
+      "matched_name": "University of Nis",
+      "score": 100.0
+    },
+    {
+      "slug": "kg",
+      "openalex_id": "https://openalex.org/I14245010",
+      "matched_name": "University of Kragujevac",
+      "score": 100.0
+    },
+    {
+      "slug": "np",
+      "openalex_id": "https://openalex.org/I207056914",
+      "matched_name": "State University of Novi Pazar",
+      "score": 100.0
+    },
+    {
+      "slug": "odbrane",
+      "openalex_id": "https://openalex.org/I4210153194",
+      "matched_name": "University of Defence",
+      "score": 100.0
+    },
+    {
+      "slug": "private-singidunum",
+      "openalex_id": "https://openalex.org/I170253739",
+      "matched_name": "Singidunum University",
+      "score": 100.0
+    },
+    {
+      "slug": "private-union",
+      "openalex_id": "https://openalex.org/I4210105304",
+      "matched_name": "Union University",
+      "score": 100.0
+    },
+    {
+      "slug": "private-unionnikolatesla",
+      "openalex_id": "https://openalex.org/I4210120853",
+      "matched_name": "Univerzitet Union Nikola Tesla",
+      "score": 100.0
+    },
+    {
+      "slug": "private-metropolitan",
+      "openalex_id": "https://openalex.org/I4210092976",
+      "matched_name": "Metropolitan University",
+      "score": 100.0
+    },
+    {
+      "slug": "private-educons",
+      "openalex_id": "https://openalex.org/I4210126020",
+      "matched_name": "Educons University",
+      "score": 100.0
+    },
+    {
+      "slug": "private-megatrend",
+      "openalex_id": "https://openalex.org/I159365519",
+      "matched_name": "Megatrend University",
+      "score": 100.0
+    },
+    {
+      "slug": "inst-ipb",
+      "openalex_id": "https://openalex.org/I4210149559",
+      "matched_name": "Institute of Physics Belgrade",
+      "score": 100.0
+    },
+    {
+      "slug": "inst-itn-sanu",
+      "openalex_id": "https://openalex.org/I4210117138",
+      "matched_name": "Institute of Technical Sciences of SASA",
+      "score": 100.0
+    },
+    {
+      "slug": "inst-pupin",
+      "openalex_id": "https://openalex.org/I10572248",
+      "matched_name": "Institut Mihajlo Pupin",
+      "score": 97.8
+    }
+  ],
+  "ambiguous": [],
+  "unmatched_seed_orgs": [
+    {
+      "slug": "inst-ifvc_ns",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210090643",
+        "name": "Institute of Field and Vegetable Crops",
+        "score": 89.4
+      }
+    },
+    {
+      "slug": "kpu",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 85.4
+      }
+    },
+    {
+      "slug": "inst-ihtm",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210147895",
+        "name": "Institut za higijenu i tehnologiju mesa",
+        "score": 77.3
+      }
+    },
+    {
+      "slug": "inst-vinca",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210104882",
+        "name": "Institute of Social Sciences",
+        "score": 76.2
+      }
+    },
+    {
+      "slug": "kg-jura",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 76.2
+      }
+    },
+    {
+      "slug": "bg-ius",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 74.6
+      }
+    },
+    {
+      "slug": "uns-pravni",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 74.6
+      }
+    },
+    {
+      "slug": "uns-akademija",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 73.3
+      }
+    },
+    {
+      "slug": "bg-agrif",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 72.0
+      }
+    },
+    {
+      "slug": "kg-pmf",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 71.6
+      }
+    },
+    {
+      "slug": "va",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210153194",
+        "name": "University of Defence",
+        "score": 71.2
+      }
+    },
+    {
+      "slug": "bg-arh",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 71.1
+      }
+    },
+    {
+      "slug": "inst-imi",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210143963",
+        "name": "Maize Research Institute Zemun Polje",
+        "score": 70.8
+      }
+    },
+    {
+      "slug": "bg-bio",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 69.8
+      }
+    },
+    {
+      "slug": "bg-ff",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 69.8
+      }
+    },
+    {
+      "slug": "nis-artf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 69.8
+      }
+    },
+    {
+      "slug": "kg-ekfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 69.6
+      }
+    },
+    {
+      "slug": "bg-med",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 69.4
+      }
+    },
+    {
+      "slug": "nis-prafak",
+      "best": {
+        "openalex_id": "https://openalex.org/I152518017",
+        "name": "University of Nis",
+        "score": 69.4
+      }
+    },
+    {
+      "slug": "bg-pharmacy",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 68.8
+      }
+    },
+    {
+      "slug": "bg-sfb",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 68.8
+      }
+    },
+    {
+      "slug": "uns-mf",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 68.8
+      }
+    },
+    {
+      "slug": "uns-pmf",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 68.8
+      }
+    },
+    {
+      "slug": "bg-uf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 68.5
+      }
+    },
+    {
+      "slug": "bg-chem",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 67.7
+      }
+    },
+    {
+      "slug": "bg-fil",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 67.7
+      }
+    },
+    {
+      "slug": "bg-gef",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 67.7
+      }
+    },
+    {
+      "slug": "bg-f",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 66.7
+      }
+    },
+    {
+      "slug": "bg-fpn",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210149625",
+        "name": "Belgrade Centre for Security Policy",
+        "score": 66.7
+      }
+    },
+    {
+      "slug": "bg-tfbor",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210114033",
+        "name": "Business Technology Incubator of Technical Faculties Belgrade",
+        "score": 66.7
+      }
+    },
+    {
+      "slug": "uns-ff",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 66.7
+      }
+    },
+    {
+      "slug": "uns-tf",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 66.7
+      }
+    },
+    {
+      "slug": "inst-ibiss",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210124853",
+        "name": "Institute of Criminological & Sociological Research",
+        "score": 66.0
+      }
+    },
+    {
+      "slug": "uns-ftn",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210117138",
+        "name": "Institute of Technical Sciences of SASA",
+        "score": 65.9
+      }
+    },
+    {
+      "slug": "bg-rgf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 65.9
+      }
+    },
+    {
+      "slug": "bg-matf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 65.7
+      }
+    },
+    {
+      "slug": "uns-polj",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 65.7
+      }
+    },
+    {
+      "slug": "nis-medfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 65.7
+      }
+    },
+    {
+      "slug": "inst-imsi",
+      "best": {
+        "openalex_id": "https://openalex.org/I4394709245",
+        "name": "Institut za voćarstvo, Čačak",
+        "score": 65.6
+      }
+    },
+    {
+      "slug": "inst-inep",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210086457",
+        "name": "Institute for Plant Protection and Environment",
+        "score": 65.5
+      }
+    },
+    {
+      "slug": "kg-afc",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 64.9
+      }
+    },
+    {
+      "slug": "pr",
+      "best": {
+        "openalex_id": "https://openalex.org/I207056914",
+        "name": "State University of Novi Pazar",
+        "score": 64.8
+      }
+    },
+    {
+      "slug": "inst-imgge",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405269636",
+        "name": "Institute of Lowland Forestry and Environment",
+        "score": 64.0
+      }
+    },
+    {
+      "slug": "kg-pfu",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 64.0
+      }
+    },
+    {
+      "slug": "bg-stomf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 63.3
+      }
+    },
+    {
+      "slug": "kg-medf",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 63.2
+      }
+    },
+    {
+      "slug": "bg-ekof",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 62.8
+      }
+    },
+    {
+      "slug": "bg-fb",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260830",
+        "name": "University of Defence in Belgrade, Strategic Research Institute",
+        "score": 62.5
+      }
+    },
+    {
+      "slug": "bg-sf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260830",
+        "name": "University of Defence in Belgrade, Strategic Research Institute",
+        "score": 62.0
+      }
+    },
+    {
+      "slug": "kg-fin",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210127331",
+        "name": "Academy of Engineering Sciences of Serbia",
+        "score": 61.9
+      }
+    },
+    {
+      "slug": "nis-eknfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I152518017",
+        "name": "University of Nis",
+        "score": 61.8
+      }
+    },
+    {
+      "slug": "bg-grf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 61.7
+      }
+    },
+    {
+      "slug": "bg-vet",
+      "best": {
+        "openalex_id": "https://openalex.org/I4392021137",
+        "name": "Scientific Institute for Veterinary Medicine of Serbia",
+        "score": 61.7
+      }
+    },
+    {
+      "slug": "uns-fsfv",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 61.5
+      }
+    },
+    {
+      "slug": "kg-filum",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 61.5
+      }
+    },
+    {
+      "slug": "kg-pefja",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 61.5
+      }
+    },
+    {
+      "slug": "inst-iit-kg",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210154960",
+        "name": "BioSense Institute",
+        "score": 61.4
+      }
+    },
+    {
+      "slug": "bg-ffh",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210149625",
+        "name": "Belgrade Centre for Security Policy",
+        "score": 61.4
+      }
+    },
+    {
+      "slug": "uns-pef",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 61.1
+      }
+    },
+    {
+      "slug": "nis-pmf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 61.1
+      }
+    },
+    {
+      "slug": "nis-filfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I152518017",
+        "name": "University of Nis",
+        "score": 60.7
+      }
+    },
+    {
+      "slug": "nis-fsfv",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 60.7
+      }
+    },
+    {
+      "slug": "bg-bfspc",
+      "best": {
+        "openalex_id": "https://openalex.org/I4068193",
+        "name": "University of Belgrade",
+        "score": 60.3
+      }
+    },
+    {
+      "slug": "bg-etf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260830",
+        "name": "University of Defence in Belgrade, Strategic Research Institute",
+        "score": 59.8
+      }
+    },
+    {
+      "slug": "uns-ef",
+      "best": {
+        "openalex_id": "https://openalex.org/I170726198",
+        "name": "University of Novi Sad",
+        "score": 59.5
+      }
+    },
+    {
+      "slug": "bg-fsfv",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 59.3
+      }
+    },
+    {
+      "slug": "bg-mas",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260830",
+        "name": "University of Defence in Belgrade, Strategic Research Institute",
+        "score": 59.3
+      }
+    },
+    {
+      "slug": "bg-fasper",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260830",
+        "name": "University of Defence in Belgrade, Strategic Research Institute",
+        "score": 59.1
+      }
+    },
+    {
+      "slug": "nis-znrfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 58.3
+      }
+    },
+    {
+      "slug": "nis-poljfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 58.2
+      }
+    },
+    {
+      "slug": "kg-ftn",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210158487",
+        "name": "Technical College of Applied Sciences",
+        "score": 57.7
+      }
+    },
+    {
+      "slug": "nis-gaf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 57.6
+      }
+    },
+    {
+      "slug": "uns-gf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 57.4
+      }
+    },
+    {
+      "slug": "bg-fon",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260830",
+        "name": "University of Defence in Belgrade, Strategic Research Institute",
+        "score": 57.1
+      }
+    },
+    {
+      "slug": "nis-pfvr",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210126020",
+        "name": "Educons University",
+        "score": 57.1
+      }
+    },
+    {
+      "slug": "bg-tmf",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 56.2
+      }
+    },
+    {
+      "slug": "nis-tf",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 55.6
+      }
+    },
+    {
+      "slug": "nis-elfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I4210137550",
+        "name": "University of Arts in Belgrade",
+        "score": 54.3
+      }
+    },
+    {
+      "slug": "nis-masfak",
+      "best": {
+        "openalex_id": "https://openalex.org/I14245010",
+        "name": "University of Kragujevac",
+        "score": 53.3
+      }
+    },
+    {
+      "slug": "uns-tfzr",
+      "best": {
+        "openalex_id": "https://openalex.org/I207056914",
+        "name": "State University of Novi Pazar",
+        "score": 53.2
+      }
+    },
+    {
+      "slug": "uns-magister",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405260968",
+        "name": "Visoka strukovna vaspitačka i medicinska škola u Vršcu",
+        "score": 52.3
+      }
+    },
+    {
+      "slug": "kg-mfkv",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 51.5
+      }
+    },
+    {
+      "slug": "kg-hitvb",
+      "best": {
+        "openalex_id": "https://openalex.org/I4405263277",
+        "name": "Kriminalističko-policijski univerzitet",
+        "score": 49.3
+      }
+    }
+  ],
+  "works_count_by_slug": {
+    "bg": 118391,
+    "uns": 55665,
+    "ni": 27642,
+    "kg": 19799,
+    "np": 1711,
+    "odbrane": 3158,
+    "private-singidunum": 4568,
+    "private-union": 837,
+    "private-unionnikolatesla": 3414,
+    "private-metropolitan": 2096,
+    "private-educons": 1282,
+    "private-megatrend": 1260,
+    "inst-ipb": 6280,
+    "inst-itn-sanu": 2743,
+    "inst-pupin": 2693
+  },
+  "review_queue_new_org_candidates": [
+    {
+      "openalex_id": "https://openalex.org/I4210155633",
+      "name": "Astronomical Observatory",
+      "type": "facility",
+      "works_count": 8053,
+      "homepage": "http://www.aob.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I1338511612",
+      "name": "Serbian Academy of Sciences and Arts",
+      "type": "government",
+      "works_count": 7687,
+      "homepage": "http://www.sanu.ac.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210112420",
+      "name": "Centar za Promociju Nauke",
+      "type": "government",
+      "works_count": 6027,
+      "homepage": "https://www.cpn.edu.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210125723",
+      "name": "Arheološki Institut",
+      "type": "archive",
+      "works_count": 4784,
+      "homepage": "https://ai.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210135359",
+      "name": "Institute of Economic Sciences",
+      "type": "nonprofit",
+      "works_count": 3626,
+      "homepage": "http://www.ien.bg.ac.rs/en/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210090643",
+      "name": "Institute of Field and Vegetable Crops",
+      "type": "facility",
+      "works_count": 3144,
+      "homepage": "https://nsseme.com",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210094076",
+      "name": "Development Agency of Serbia",
+      "type": "government",
+      "works_count": 3074,
+      "homepage": "http://www.ras.gov.rs/en",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210137550",
+      "name": "University of Arts in Belgrade",
+      "type": "education",
+      "works_count": 2843,
+      "homepage": "http://www.arts.bg.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210109515",
+      "name": "Institute of Forestry",
+      "type": "education",
+      "works_count": 2834,
+      "homepage": "https://forest.org.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210140980",
+      "name": "Institute of General and Physical Chemistry",
+      "type": "facility",
+      "works_count": 2704,
+      "homepage": "http://www.iofh.bg.ac.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210154968",
+      "name": "Institute for Technology of Nuclear and other Mineral Raw Materials",
+      "type": "facility",
+      "works_count": 2418,
+      "homepage": "http://www.itnms.ac.rs/?lang=en",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210134213",
+      "name": "Institut za Reumatologiju",
+      "type": "education",
+      "works_count": 2387,
+      "homepage": "http://www.reumatologija.org.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210143963",
+      "name": "Maize Research Institute Zemun Polje",
+      "type": "facility",
+      "works_count": 2372,
+      "homepage": "https://mrizp.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210086457",
+      "name": "Institute for Plant Protection and Environment",
+      "type": "facility",
+      "works_count": 2366,
+      "homepage": "https://izbis.bg.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210154960",
+      "name": "BioSense Institute",
+      "type": "facility",
+      "works_count": 2305,
+      "homepage": "http://biosense.rs/",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210138792",
+      "name": "Institute for Animal Husbandry",
+      "type": "facility",
+      "works_count": 2245,
+      "homepage": "https://istocar.bg.ac.rs/en/278-2/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210087320",
+      "name": "Mining and Metallurgy Institute Bor",
+      "type": "facility",
+      "works_count": 2086,
+      "homepage": "https://irmbor.co.rs",
+      "city": "Bor"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210158487",
+      "name": "Technical College of Applied Sciences",
+      "type": "education",
+      "works_count": 1998,
+      "homepage": "http://www.vts-zr.edu.rs",
+      "city": "Zrenjanin"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210122809",
+      "name": "Sportska Akademija Beograd",
+      "type": "education",
+      "works_count": 1859,
+      "homepage": "http://sportsacademy.edu.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210119881",
+      "name": "Institute of Public Health of Vojvodina",
+      "type": "education",
+      "works_count": 1705,
+      "homepage": "https://izjzv.org.rs",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210153876",
+      "name": "Scientific Veterinary Institute \"Novi Sad\"",
+      "type": "facility",
+      "works_count": 1663,
+      "homepage": "https://niv.ns.ac.rs",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I63327873",
+      "name": "Gulf University",
+      "type": "education",
+      "works_count": 1467,
+      "homepage": "https://www.gulfuniversity.edu.bh",
+      "city": "Sanad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210155294",
+      "name": "Military Technical Institute",
+      "type": "government",
+      "works_count": 1431,
+      "homepage": "http://www.vti.mod.gov.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210142455",
+      "name": "National Library of Serbia",
+      "type": "archive",
+      "works_count": 1408,
+      "homepage": "https://nb.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210124776",
+      "name": "Pokrajinski Sekretarijat za Nauku i Tehnološki Razvoj",
+      "type": "government",
+      "works_count": 1406,
+      "homepage": "http://apv-nauka.ns.ac.rs/",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210113556",
+      "name": "Institut za savremenu istoriju",
+      "type": "facility",
+      "works_count": 1280,
+      "homepage": "http://isi.co.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210154129",
+      "name": "Ministry of Interior of the Republic of Serbia",
+      "type": "government",
+      "works_count": 1265,
+      "homepage": "https://www.mup.gov.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210114683",
+      "name": "Institute of Architecture and Urban & Spatial Planning of Serbia",
+      "type": "facility",
+      "works_count": 1259,
+      "homepage": "https://iaus.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I110774718",
+      "name": "Univerzitet u Novom Pazaru",
+      "type": "education",
+      "works_count": 1062,
+      "homepage": "http://www.uninp.edu.rs/",
+      "city": "Novi Pazar"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210147895",
+      "name": "Institut za higijenu i tehnologiju mesa",
+      "type": "facility",
+      "works_count": 1011,
+      "homepage": "https://inmes.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210125459",
+      "name": "Military Geographical Institute",
+      "type": "facility",
+      "works_count": 990,
+      "homepage": "http://www.vgi.mod.gov.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210127331",
+      "name": "Academy of Engineering Sciences of Serbia",
+      "type": "facility",
+      "works_count": 986,
+      "homepage": "http://www.ains.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210104882",
+      "name": "Institute of Social Sciences",
+      "type": "facility",
+      "works_count": 984,
+      "homepage": "https://www.idn.org.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210110825",
+      "name": "Centre of Research Excellence in Nutrition and Metabolism",
+      "type": "facility",
+      "works_count": 793,
+      "homepage": "http://srbnutrition.info/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210119141",
+      "name": "Kreativno Edukativni Centar",
+      "type": "nonprofit",
+      "works_count": 788,
+      "homepage": "http://www.kec.rs/",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210152813",
+      "name": "Institute of Pesticides and Environmental Protection",
+      "type": "facility",
+      "works_count": 756,
+      "homepage": "https://pesting.org.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210126573",
+      "name": "Institute of International Politics and Economics",
+      "type": "facility",
+      "works_count": 720,
+      "homepage": "https://www.diplomacy.bg.ac.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210145743",
+      "name": "Regulatory Agency for Electronic Communications and Postal Services",
+      "type": "government",
+      "works_count": 716,
+      "homepage": "http://www.ratel.rs/home.136.html",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210116938",
+      "name": "Institut za zdravstvenu zaštitu majke i deteta Srbije \"Dr Vukan Čupić\"",
+      "type": "facility",
+      "works_count": 622,
+      "homepage": "https://www.imd.org.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4387154834",
+      "name": "Institute of Comparative Law",
+      "type": "government",
+      "works_count": 620,
+      "homepage": "https://iup.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210094697",
+      "name": "Belgrade Open School",
+      "type": "education",
+      "works_count": 551,
+      "homepage": "http://www.bos.rs/en/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4405269636",
+      "name": "Institute of Lowland Forestry and Environment",
+      "type": "facility",
+      "works_count": 530,
+      "homepage": "https://ilfe.org",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210124853",
+      "name": "Institute of Criminological & Sociological Research",
+      "type": "facility",
+      "works_count": 489,
+      "homepage": "http://www.iksi.ac.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4405266719",
+      "name": "Institute of Food Technology",
+      "type": "education",
+      "works_count": 414,
+      "homepage": "https://fins.uns.ac.rs",
+      "city": "Novi Sad"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4392021137",
+      "name": "Scientific Institute for Veterinary Medicine of Serbia",
+      "type": "facility",
+      "works_count": 319,
+      "homepage": "https://nivs.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210111476",
+      "name": "Institute for Recent History of Serbia",
+      "type": "education",
+      "works_count": 297,
+      "homepage": "http://www.inisbgd.co.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210161743",
+      "name": "European University",
+      "type": "education",
+      "works_count": 267,
+      "homepage": "http://www.eu.ac.rs/",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4405259462",
+      "name": "Geographical Institute “Jovan Cvijić” SASA",
+      "type": "facility",
+      "works_count": 255,
+      "homepage": "https://gi.sanu.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4405266431",
+      "name": "Lola Institute",
+      "type": "facility",
+      "works_count": 221,
+      "homepage": "https://www.li.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210150360",
+      "name": "Petnica Science Center",
+      "type": "nonprofit",
+      "works_count": 187,
+      "homepage": "https://pi.petnica.rs/",
+      "city": "Valjevo"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4405258852",
+      "name": "Institute for the Serbian Language of SASA",
+      "type": "facility",
+      "works_count": 186,
+      "homepage": "https://www.isj.sanu.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210122164",
+      "name": "Ministry of Science, Technological Development, and Innovation",
+      "type": "government",
+      "works_count": 178,
+      "homepage": "https://nitra.gov.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210149625",
+      "name": "Belgrade Centre for Security Policy",
+      "type": "government",
+      "works_count": 139,
+      "homepage": "http://www.bezbednost.org/BCSP/2/BCSP.shtml",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210120180",
+      "name": "Ministry of Science and Environmental Protection",
+      "type": "government",
+      "works_count": 114,
+      "homepage": "http://www.srbija.gov.rs/vesti/vest.php?id=21405",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4405258136",
+      "name": "Institute of Musicology SASA",
+      "type": "facility",
+      "works_count": 79,
+      "homepage": "https://music.sanu.ac.rs",
+      "city": "Belgrade"
+    },
+    {
+      "openalex_id": "https://openalex.org/I4210160973",
+      "name": "Ministry of Finance and Economy",
+      "type": "government",
+      "works_count": 58,
+      "homepage": "http://www.upravacarina.rs/en/",
+      "city": "Belgrade"
+    }
+  ]
+}

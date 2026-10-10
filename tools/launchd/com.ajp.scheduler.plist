@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  T28 (packet 016, user's own explicit demand: the platform must stay in sync with online jobs
+  AUTOMATICALLY, never depend on a human manually running a command). A user-level (not system-level)
+  LaunchAgent for the ajp-run daemon mode - the EXISTING scheduler this project already built (R1 3-strikes,
+  the F9 per-source watchdog, the 24h +/-10% cadence), just packaged to start itself. Committed here as a
+  TEMPLATE with __PLACEHOLDER__ tokens - a plist cannot expand a shell variable or `~`, so
+  tools/install_agents.sh resolves the real, absolute paths for THIS machine's own checkout/venv and
+  substitutes them before copying the result into ~/Library/LaunchAgents/. Never edit the placeholders by
+  hand; edit this template and re-run the install script instead.
+
+  RunAtLoad: starts once when the agent is loaded (at login, or right after install).
+  KeepAlive.SuccessfulExit=false: restarted only after a CRASH (a real error) - a clean, intentional exit
+  (there is none today; the daemon mode loops until SIGTERM) is not treated as a failure to relaunch from.
+  ThrottleInterval 600: launchd will not respawn a repeatedly-crashing job more often than once every 10
+  minutes - a real safety margin against a hard crash loop hammering the embedded Postgres or the network.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ajp.scheduler</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__AJP_VENV_BIN__/ajp-run</string>
+    <string>--daemon</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__AJP_REPO_ROOT__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>__AJP_VENV_BIN__:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+  <key>ThrottleInterval</key>
+  <integer>600</integer>
+  <key>StandardOutPath</key>
+  <string>__AJP_LOG_DIR__/scheduler.log</string>
+  <key>StandardErrorPath</key>
+  <string>__AJP_LOG_DIR__/scheduler.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

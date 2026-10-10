@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  T28: user-level LaunchAgent for the Next.js web UI - always-on local access on port 3000. Template - see
+  com.ajp.scheduler.plist's own header comment for the __PLACEHOLDER__ substitution convention.
+
+  __AJP_WEB_NPM_SCRIPT__ is 'start' (production - the install script runs `npm run build` once first, so
+  this serves the real, optimized production build) unless that build failed or was skipped, in which case
+  the install script substitutes 'dev' instead and prints exactly why - never silently falling back without
+  saying so.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ajp.web</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__AJP_NPM_BIN__</string>
+    <string>run</string>
+    <string>__AJP_WEB_NPM_SCRIPT__</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__AJP_WEB_DIR__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>__AJP_NODE_BIN_DIR__:/usr/bin:/bin:/usr/sbin:/sbin</string>
+    <key>PORT</key>
+    <string>3000</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+  <key>ThrottleInterval</key>
+  <integer>600</integer>
+  <key>StandardOutPath</key>
+  <string>__AJP_LOG_DIR__/web.log</string>
+  <key>StandardErrorPath</key>
+  <string>__AJP_LOG_DIR__/web.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

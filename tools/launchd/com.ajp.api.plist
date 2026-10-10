@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  T28: user-level LaunchAgent for `ajp-api` (the EXISTING read-only FastAPI app, packet 007) - always-on
+  local access on its own default port 8000, same data dir as the scheduler. Template - see
+  com.ajp.scheduler.plist's own header comment for the __PLACEHOLDER__ substitution convention; the same
+  applies here.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ajp.api</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>__AJP_VENV_BIN__/ajp-api</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__AJP_REPO_ROOT__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>__AJP_VENV_BIN__:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <false/>
+  </dict>
+  <key>ThrottleInterval</key>
+  <integer>600</integer>
+  <key>StandardOutPath</key>
+  <string>__AJP_LOG_DIR__/api.log</string>
+  <key>StandardErrorPath</key>
+  <string>__AJP_LOG_DIR__/api.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

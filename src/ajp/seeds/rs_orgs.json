@@ -1,0 +1,1910 @@
+{
+  "generated_at": "2026-09-21T22:46:12+00:00",
+  "count": 101,
+  "orgs": [
+    {
+      "slug": "bg",
+      "type": "university",
+      "parent_slug": null,
+      "name_en": "University of Belgrade",
+      "name_native": null,
+      "city": "Belgrade",
+      "homepage": "https://www.bg.ac.rs/",
+      "career_urls": [
+        "https://www.bg.ac.rs/stipendije-i-konkursi/",
+        "https://www.bg.ac.rs/zaposljavanje-istrazivaca/",
+        "https://www.bg.ac.rs/centar-za-razvoj-karijere/",
+        "https://www.bg.ac.rs/oglasavanje/"
+      ],
+      "contact_email": "centar@razvojkarijere.bg.ac.rs",
+      "contact_phone": "+381 11 3207 400",
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "NO central job board; recruitment is faculty-level. contact e-mail belongs to the Career Development Centre. TODO name_native",
+      "host": "www.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-razvojkarijere",
+      "type": "career_centre",
+      "parent_slug": "bg",
+      "name_en": "University of Belgrade Career Development Centre",
+      "name_native": "Centar za razvoj karijere i savetovanje studenata Univerziteta u Beogradu",
+      "city": "Belgrade",
+      "homepage": "http://www.razvojkarijere.bg.ac.rs/",
+      "career_urls": [],
+      "contact_email": "centar@razvojkarijere.bg.ac.rs",
+      "contact_phone": "+381 11 3207 400",
+      "source_url": "pm_packet_016#need_input_rulings.razvojkarijere",
+      "notes": "T27/T25 (packet 016, PM ruling 2026-09-28): identified as the University of Belgrade's own separate Career Development Centre site (previously only known indirectly via the contact_email/phone already recorded on the parent 'bg' org). Live-verified 2026-09-28: Drupal site, robots.txt allows /posao and /praksa (Crawl-delay:10, standard Drupal disallow list - nothing relevant blocked); real individual /node/NNNN pages exist under both paths, so a bounded discovery WAS actually run (rs_org_boards' own generic board.py crawler, career_urls temporarily pointed at both pages) - not skipped. Verdict: NO real, reliably-distinguishable listing pattern. Content is genuinely MIXED and the shared classifier cannot tell the two apart from the title alone: /posao is predominantly stale (2019-2022) announcements about career FAIRS/EVENTS the centre organizes or promotes; /praksa has one real, current (2025) internship call (the centre's own 'Tandem praksa' programme) mixed in with MORE fair/event announcements that also happen to contain the word 'praksa' ('Sajam praksi/poslova...', 'JobFair...sajam poslova i praksi') - a live test run showed the classifier keeps ALL of them as kind=internship indiscriminately, which would misrepresent a 2022 job-fair announcement as if it were a real, current internship opening (D1: never fabricate). Per the packet's own explicit fallback ('if custom-CMS/no pattern, keep deeplink with reason'): kept deeplink_only rather than ingested, since 'a pattern exists but isn't precise enough to trust' is exactly that case, not a licence to keep trying more page paths.",
+      "host": "www.razvojkarijere.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-28T00:00:00+00:00",
+      "render_mode": "deeplink_only",
+      "deeplink_url": "http://www.razvojkarijere.bg.ac.rs/praksa"
+    },
+    {
+      "slug": "bg-agrif",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Agriculture",
+      "name_native": "ПОЉОПРИВРЕДНИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://agrif.bg.ac.rs/",
+      "career_urls": [
+        "https://agrif.bg.ac.rs/sr/mesto-susreta-tradicije-i-inovacija/konkursi",
+        "https://agrif.bg.ac.rs/sr/mesto-susreta-tradicije-i-inovacija/stipendije-praksa-posao"
+      ],
+      "render_mode": "playwright",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "; T5 closure ruling 2026-09-22 (pm/recon/t5_bg_board_addenda3.json): 2 board URLs hand-added as PM-verified (JS shell, robots allows, sitemap advertises them), rendered via Playwright; exclude /sr/fakultet/zaposleni* (staff), /sr/upis/* (enrollment), studentski-parlament (not employment)",
+      "host": "agrif.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": true
+      }
+    },
+    {
+      "slug": "bg-arh",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Architecture",
+      "name_native": "АРХИТЕКТОНСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.arh.bg.ac.rs/",
+      "career_urls": [
+        "https://www.arh.bg.ac.rs/category/konkursi-za-izbore/",
+        "https://www.arh.bg.ac.rs/category/vesti/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.arh.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-bfspc",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Orthodox Theology",
+      "name_native": "ПРАВОСЛАВНИ БОГОСЛОВСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://bfspc.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); T5 addenda4 2026-09-22: WP sitemap has only staff directories + enrollment; no konkurs/izbor board; coverage=none_found, deeplink to homepage",
+      "host": "bfspc.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {}
+    },
+    {
+      "slug": "bg-bio",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Biology",
+      "name_native": "БИОЛОШКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://bio.bg.ac.rs/",
+      "career_urls": [
+        "https://bio.bg.ac.rs/aktuelnosti/konkursi/konkursi-za-radna-mesta/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "bio.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-chem",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Chemistry",
+      "name_native": "ХЕМИЈСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.chem.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "T5 addenda4 2026-09-22: /upis/konkurs.html is ENROLLMENT; no employment board found (static site, no sitemap, no obavestenja/konkursi/zvanja paths); coverage=none_found, deeplink to homepage; employment calls appear via the central BG /zaposljavanje-istrazivaca/ page and Sluzbeni glasnik instead",
+      "host": "www.chem.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {}
+    },
+    {
+      "slug": "bg-ekof",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Economics and Business",
+      "name_native": "ЕКОНОМСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.ekof.bg.ac.rs/",
+      "career_urls": [
+        "https://www.ekof.bg.ac.rs/o-fakultetu/konkursi-i-referati/konkursi-za-izbore-u-zvanja/",
+        "https://www.ekof.bg.ac.rs/o-fakultetu/konkursi-i-referati/referati-o-izboru-u-zvanje/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.ekof.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-etf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "School of Electrical Engineering",
+      "name_native": "ЕЛЕКТРОТЕХНИЧКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.etf.bg.ac.rs/",
+      "career_urls": [
+        "https://www.etf.bg.ac.rs/sr/konkursi",
+        "https://www.etf.bg.ac.rs/obavestenja/konkursi-za-izbore-u-zvanja"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.etf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-f",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Philosophy",
+      "name_native": "ФИЛОЗОФСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.f.bg.ac.rs/",
+      "career_urls": [
+        "https://www.f.bg.ac.rs/konkursi",
+        "https://www.f.bg.ac.rs/vesti"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "T5 addenda4 2026-09-22: /konkursi is ENROLLMENT content (kind=enrollment via classifier, not an employment-empty failure); added generic /vesti board (numeric /vesti/stampa/{id} articles) where izbori-u-zvanja calls are published as news",
+      "host": "www.f.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "max_pages": 3
+      }
+    },
+    {
+      "slug": "bg-fasper",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Special Education and Rehabilitation",
+      "name_native": "ФАКУЛТЕТ ЗА СПЕЦИЈАЛНУ ЕДУКАЦИЈУ И РЕХАБИЛИТАЦИЈУ",
+      "city": "Belgrade",
+      "homepage": "https://www.fasper.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "; T5 closure ruling 2026-09-22: employment lives on the HR host zaposleni.fasper.bg.ac.rs (R4: never crawled); old board URL (fakultet/konkursi-stipendije.php, HTTP 404) retired",
+      "host": "www.fasper.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "deeplink_url": "http://zaposleni.fasper.bg.ac.rs",
+      "crawl_config": {}
+    },
+    {
+      "slug": "bg-fb",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Security Studies",
+      "name_native": "ФАКУЛТЕТ БЕЗБЕДНОСТИ",
+      "city": "Belgrade",
+      "homepage": "https://fb.bg.ac.rs/",
+      "career_urls": [
+        "https://fb.bg.ac.rs/category/novosti-sr/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "fb.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-ff",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Physics",
+      "name_native": "ФИЗИЧКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://ff.bg.ac.rs/",
+      "career_urls": [
+        "https://www.ff.bg.ac.rs/kategorija/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "ff.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-ffh",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty for Physical Chemistry",
+      "name_native": "ФАКУЛТЕТ ЗА ФИЗИЧКУ ХЕМИЈУ",
+      "city": "Belgrade",
+      "homepage": "https://www.ffh.bg.ac.rs/",
+      "career_urls": [
+        "https://www.ffh.bg.ac.rs/konkurs/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.ffh.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-fil",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Philology",
+      "name_native": "ФИЛОЛОШКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://fil.bg.ac.rs/",
+      "career_urls": [
+        "https://fil.bg.ac.rs/sr/obavestenja/konkursi-za-radna-mesta"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "fil.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-fon",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Organizational Sciences",
+      "name_native": "ФАКУЛТЕТ ОРГАНИЗАЦИОНИХ НАУКА",
+      "city": "Belgrade",
+      "homepage": "https://fon.bg.ac.rs/",
+      "career_urls": [
+        "https://fon.bg.ac.rs/konkursi/",
+        "https://fon.bg.ac.rs/naucnoistrazivacka-zvanja/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "en.fon.bg.ac.rs is English mirror; crawl canonical fon.bg.ac.rs; en.fon.bg.ac.rs is English mirror; crawl canonical fon.bg.ac.rs",
+      "host": "fon.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-fpn",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Political Sciences",
+      "name_native": "ФАКУЛТЕТ ПОЛИТИЧКИХ НАУКА",
+      "city": "Belgrade",
+      "homepage": "https://www.fpn.bg.ac.rs/",
+      "career_urls": [
+        "https://info.fpn.bg.ac.rs/konkursi"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.fpn.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-fsfv",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Sports and Physical Education",
+      "name_native": "ФАКУЛТЕТ СПОРТА И ФИЗИЧКОГ ВАСПИТАЊА",
+      "city": "Belgrade",
+      "homepage": "https://www.fsfv.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "PM 2026-09-22: robots.txt 'Disallow: /' - deeplink only, zero fetches incl. sitemap; PM 2026-09-22: robots.txt 'Disallow: /' - deeplink only, zero fetches incl. sitemap",
+      "host": "www.fsfv.bg.ac.rs",
+      "robots_status": "disallowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-gef",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Geography",
+      "name_native": "Географски Факултет",
+      "city": "Belgrade",
+      "homepage": "https://gef.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); T5 closure ruling 2026-09-22: confirmed no employment board exists (1297 WP posts checked, categories vesti/studenti/izdavacka/nastavnici only)",
+      "host": "gef.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "deeplink_url": "https://gef.bg.ac.rs/category/vesti/",
+      "crawl_config": {}
+    },
+    {
+      "slug": "bg-grf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Civil Engineering",
+      "name_native": "ГРАЂЕВИНСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://web1.grf.bg.ac.rs/",
+      "career_urls": [
+        "https://web1.grf.bg.ac.rs/vesti"
+      ],
+      "render_mode": "playwright",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); PM: possibly JS-rendered; verify before assuming httpx; JS shell: rendered via Playwright; degrades to deeplink if 3 consecutive runs find nothing; /vesti is a JS shell (54KB identical chrome on subpaths) -> Playwright render path then parser; /mojizbor is a LOGIN portal (Prijava) - excluded under R4 auth-portal spirit, never attempt login; /fakultet/in and /fakultet/bil returned no parseable listings via plain fetch; JS shell: rendered via Playwright; degrades to deeplink if 3 consecutive runs find nothing; /vesti is a JS shell (54KB identical chrome on subpaths) -> Playwright render path then parser; /mojizbor is a LOGIN portal (Prijava) - excluded under R4 auth-portal spirit, never attempt login; /fakultet/in and /fakultet/bil returned no parseable listings via plain fetch",
+      "host": "web1.grf.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": true
+      }
+    },
+    {
+      "slug": "bg-ius",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Law",
+      "name_native": "ПРАВНИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www1.ius.bg.ac.rs/",
+      "career_urls": [
+        "https://www1.ius.bg.ac.rs/category/announcements/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "PM: possibly JS-rendered; verify before assuming httpx; if www.ius.bg.ac.rs renders, discover its native konkursi/oglasna tabla category and add it; if www.ius.bg.ac.rs renders, discover its native konkursi/oglasna tabla category and add it",
+      "host": "www1.ius.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-mas",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Mechanical Engineering",
+      "name_native": "МАШИНСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.mas.bg.ac.rs/",
+      "career_urls": [
+        "https://www.mas.bg.ac.rs/fakultet/izbori-u-zvanja/konkursi/start",
+        "https://www.mas.bg.ac.rs/fakultet/izbori-u-zvanja/referati/start"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "excluded (R4): zaposleni.mas.bg.ac.rs (HR portal, R4); excluded (R4): zaposleni.mas.bg.ac.rs (HR portal, R4)",
+      "host": "www.mas.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-matf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Mathematics",
+      "name_native": "МАТЕМАТИЧКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.matf.bg.ac.rs/",
+      "career_urls": [
+        "https://oglasi.matf.bg.ac.rs/",
+        "https://www.matf.bg.ac.rs/nastava/izbori-u-zvanja/konkursi-za-izbor-nastavnika-i-saradnika/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.matf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-med",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "faculty of Medicine",
+      "name_native": "МЕДИЦИНСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://med.bg.ac.rs/",
+      "career_urls": [
+        "https://med.bg.ac.rs/?cat=slajder_konkursi"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "med.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-pharmacy",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Pharmacy",
+      "name_native": "ФАРМАЦЕУТСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.pharmacy.bg.ac.rs/",
+      "career_urls": [
+        "https://www.pharmacy.bg.ac.rs/aktuelnosti/94/konkursi-i-stipendije/",
+        "http://www.ph.bg.ac.rs/karijeraufarmaciji/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "www.pharmacy.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-rgf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Mining and Geology",
+      "name_native": "Рударско-геолошки факултет",
+      "city": "Belgrade",
+      "homepage": "https://rgf.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); custom PHP site (page.php?page=...), homepage is 6MB; board route not exposed on homepage (only career center link); discovery via in-page links, render if needed; deeplink after 3 empty runs; custom PHP site (page.php?page=...), homepage is 6MB; board route not exposed on homepage (only career center link); discovery via in-page links, render if needed; deeplink after 3 empty runs; custom PHP site (page.php?page=...), homepage is 6MB; board route not exposed on homepage (only career center link); discovery via in-page links, render if needed; deeplink after 3 empty runs",
+      "host": "rgf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": true
+      }
+    },
+    {
+      "slug": "bg-sf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Transport and Traffic Engineering",
+      "name_native": "САОБРАЋАЈНИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.sf.bg.ac.rs/",
+      "career_urls": [
+        "https://www.sf.bg.ac.rs/index.php/sr-rs/2016-02-12-02-13-17/388-konkursi"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "Joomla; board contains mixed ads incl open 'konkurs za radno mesto vanredni profesor...' (employment) plus company ads and mobility; classifier gating essential. APEX sf.bg.ac.rs serves a certificate SAN mismatch - use www.sf.bg.ac.rs; if cert mismatch persists, do NOT disable verification (mark blo; Joomla; board contains mixed ads incl open 'konkurs za radno mesto vanredni profesor...' (employment) plus company ads and mobility; classifier gating essential. APEX sf.bg.ac.rs serves a certificate SAN mismatch - use www.sf.bg.ac.rs; if cert mismatch persists, do NOT disable verification (mark blo; Joomla; board contains mixed ads incl open 'konkurs za radno mesto vanredni profesor...' (employment) plus company ads and mobility; classifier gating essential. APEX sf.bg.ac.rs serves a certificate SAN mismatch - use www.sf.bg.ac.rs; if cert mismatch persists, do NOT disable verification (mark blo",
+      "host": "www.sf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "max_pages": 3
+      }
+    },
+    {
+      "slug": "bg-sfb",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Forestry",
+      "name_native": "ШУМАРСКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.sfb.bg.ac.rs/",
+      "career_urls": [
+        "https://www.sfb.bg.ac.rs/fakultet/oglasna-tabla/uvidi-javnosti/izbori-u-zvanja/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "T5 addenda4 2026-09-22: replaced with the deep konkursi page (PM-verified live open docent call); siblings referati-komisija/pristupna-predavanja-kandidata/prigovori-na-referate are person-specific (R7-refinement); studenti/konkursi-za-upis-studenata is enrollment, not added here",
+      "host": "www.sfb.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-stomf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Dental Medicine",
+      "name_native": "СТОМАТОЛОШКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.stomf.bg.ac.rs/",
+      "career_urls": [
+        "https://www.stomf.bg.ac.rs/nastava/lista-zvanja/"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); lista-zvanja is likely person-specific (expect classifier to exclude); enrollment konkursi under /nastava/doktorske-studije/konkurs-za-upis and /prijemni-ispit are kind=enrollment; discover staff open-call board, else deeplink; lista-zvanja is likely person-specific (expect classifier to exclude); enrollment konkursi under /nastava/doktorske-studije/konkurs-za-upis and /prijemni-ispit are kind=enrollment; discover staff open-call board, else deeplink; lista-zvanja is likely person-specific (expect classifier to exclude); enrollment konkursi under /nastava/doktorske-studije/konkurs-za-upis and /prijemni-ispit are kind=enrollment; discover staff open-call board, else deeplink",
+      "host": "www.stomf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": true
+      }
+    },
+    {
+      "slug": "bg-tfbor",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Technical Faculty in Bor",
+      "name_native": "ТЕХНИЧКИ ФАКУЛТЕТ У БОРУ",
+      "city": "Bor",
+      "homepage": "https://www.tfbor.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); T5 addenda4 2026-09-22: no employment board (sitemap+homepage checked); coverage=none_found, deeplink to homepage",
+      "host": "www.tfbor.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {}
+    },
+    {
+      "slug": "bg-tmf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Technology and Metallurgy",
+      "name_native": "ТЕХНОЛОШКО-МЕТАЛУРШКИ ФАКУЛТЕТ",
+      "city": "Belgrade",
+      "homepage": "https://www.tmf.bg.ac.rs/",
+      "career_urls": [
+        "https://www.tmf.bg.ac.rs/sr/dokumenti/konkursi"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "no open-konkurs board at guessed paths; only /sr/dokumenti/izveshtaji-na-uvidu-javnosti/{nastavna-zvanja,naucnoistrazivacka-zvanja} which are person-specific review reports -> excluded by R7-refinement classifier. Run discovery; deeplink to homepage if nothing open found after 3 runs; no open-konkurs board at guessed paths; only /sr/dokumenti/izveshtaji-na-uvidu-javnosti/{nastavna-zvanja,naucnoistrazivacka-zvanja} which are person-specific review reports -> excluded by R7-refinement classifier. Run discovery; deeplink to homepage if nothing open found after 3 runs; no open-konkurs board at guessed paths; only /sr/dokumenti/izveshtaji-na-uvidu-javnosti/{nastavna-zvanja,naucnoistrazivacka-zvanja} which are person-specific review reports -> excluded by R7-refinement classifier. Run discovery; deeplink to homepage if nothing open found after 3 runs",
+      "host": "www.tmf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": true
+      }
+    },
+    {
+      "slug": "bg-uf",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Education",
+      "name_native": "ФАКУЛТЕТ ЗА ОБРАЗОВАЊЕ УЧИТЕЉА И ВАСПИТАЧА",
+      "city": "Belgrade",
+      "homepage": "https://www.uf.bg.ac.rs/",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": "TODO: employment board not yet known - discover from homepage navigation (T5); no public employment board (R4 HR portal / none found): deeplink only; WordPress; public homepage shows only enrollment PDFs; staff side is zaposleni.uf.bg.ac.rs HR portal (R4 excluded); likely deeplink-only for employment; no public employment board (R4 HR portal / none found): deeplink only; WordPress; public homepage shows only enrollment PDFs; staff side is zaposleni.uf.bg.ac.rs HR portal (R4 excluded); likely deeplink-only for employment; no public employment board (R4 HR portal / none found): deeplink only; WordPress; public homepage shows only enrollment PDFs; staff side is zaposleni.uf.bg.ac.rs HR portal (R4 excluded); likely deeplink-only for employment",
+      "host": "www.uf.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "bg-vet",
+      "type": "faculty",
+      "parent_slug": "bg",
+      "name_en": "Faculty of Veterinary Medicine",
+      "name_native": "ФАКУЛТЕТ ВЕТЕРИНАРСКЕ МЕДИЦИНЕ",
+      "city": "Belgrade",
+      "homepage": "https://vet.bg.ac.rs/",
+      "career_urls": [
+        "https://vet.bg.ac.rs/sr/fakultet/konkursi"
+      ],
+      "render_mode": "httpx",
+      "source_url": "https://www.bg.ac.rs/faculties/ + https://www.bg.ac.rs/fakulteti/ ; boards: pm_packet_004",
+      "notes": null,
+      "host": "vet.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "uns",
+      "type": "university",
+      "name_en": "University of Novi Sad",
+      "homepage": "https://www.uns.ac.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [
+        "https://www.uns.ac.rs/index.php/konkursi/aktuelni-konkursi",
+        "https://www.uns.ac.rs/index.php/univerzitet/javnost-rada/oglasna-tabla"
+      ],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "contact page JS-rendered, Playwright; 14 faculties",
+      "host": "www.uns.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": null,
+      "crawl_config": {}
+    },
+    {
+      "slug": "ni",
+      "type": "university",
+      "name_en": "University of Nis",
+      "homepage": "https://www.ni.ac.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [
+        "https://www.ni.ac.rs/stipendije-i-konkursi",
+        "https://www.ni.ac.rs/saradnja/uslovi-za-prijavljivanje-na-konkurse"
+      ],
+      "contact_email": "uniuni@ni.ac.rs",
+      "contact_phone": null,
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "first RS holder of HR Excellence in Research; 14 faculties",
+      "host": "www.ni.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "kg",
+      "type": "university",
+      "name_en": "University of Kragujevac",
+      "homepage": "https://www.kg.ac.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [
+        "https://www.kg.ac.rs/izbor_nastavnika_konkurs.php"
+      ],
+      "contact_email": "unikg@kg.ac.rs",
+      "contact_phone": "+381 34 370 270",
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "T10: real central hub URL discovered and verified 200 - guessed paths soft-redirect to homepage; discover real calls URL from sitemap/menu (Joomla); 12 faculties + institutes",
+      "host": "www.kg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "pr",
+      "type": "university",
+      "name_en": "University of Pristina (Kosovska Mitrovica)",
+      "homepage": "https://pr.ac.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [
+        "https://pr.ac.rs/category/izbori-u-zvanja/",
+        "https://pr.ac.rs/category/konkursi/",
+        "https://pr.ac.rs/category/konkursi/konkursi-i-stipendije-medjunarodni/"
+      ],
+      "contact_email": null,
+      "contact_phone": "+381 28 422 320",
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "T11 correction (t11_pr_detail.json): the earlier '/univerzitet/nastavnici/konkursi/' URL is a client-side shell (WP REST page id 856, EMPTY rendered content - the visible <article> blocks were generic latest-news false positives) and '/univerzitet/uvid-javnosti/konkursi/' is R7 person-procedure content - neither is configured as a board. Real boards: /category/izbori-u-zvanja/ (480 posts, main staff-election category, R7 type gate essential - live-verified titles are bare candidate names, correctly excluded as unclassifiable rather than a real employment/enrollment/grant_call marker), /category/konkursi/ (23 posts, general open calls incl. Erasmus+ mobility -> grant_call), /category/konkursi/konkursi-i-stipendije-medjunarodni/ (108 posts, international grants). /category/konkursi-i-stipendije-studenti/ (89 posts, student calls) deliberately NOT added - PM's own framing says do not merge into employment; deferred to a dedicated enrollment/student-grants pass if ever prioritised.",
+      "host": "pr.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": false
+      }
+    },
+    {
+      "slug": "np",
+      "type": "university",
+      "name_en": "State University of Novi Pazar",
+      "homepage": "https://www.np.ac.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [
+        "https://np.ac.rs/studenti/konkursi-univerziteta.html"
+      ],
+      "contact_email": "info@np.ac.rs",
+      "contact_phone": null,
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "T11 correction (t11_dunp_detail.json): despite the '/studenti/' URL path, this Cyrillic page is the university's STAFF election board (document library: numbered PDFs with meaningless filenames, real titles in a sibling table cell - see board._table_row_title, built this session for exactly this shape), not an enrollment page - same 'path words don't determine classification' lesson as R4's zaposleni-host-vs-path distinction. The old guessed URL '/assets/docs/konkursi-univerziteta.pdf' was dropped (never verified, superseded by the real page). Alias host dunp.np.ac.rs / canonical www.dunp.np.ac.rs noted, not crawled separately (same site). '/studenti/stipendije-i-konkursi.html' (student scholarships/enrollment) and '/studenti/konkursi.html' (an 11KB landing page with no documents) were checked and deliberately not added.",
+      "host": "www.np.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "crawl_config": {
+        "empty_is_failure": false
+      }
+    },
+    {
+      "slug": "odbrane",
+      "type": "university",
+      "name_en": "University of Defence",
+      "homepage": "https://www.uo.mod.gov.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "VERIFY URL; military - foreigner eligibility usually NO; scrape defensively; homepage verified 2026-09-21 (HTTP 200) T12: name_en was previously 'University of Defence (Belgrade)' (a stand-in value, not a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "www.uo.mod.gov.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "kpu",
+      "type": "university",
+      "name_en": "University of Criminal and Police Studies",
+      "homepage": "https://www.kpu.edu.rs/",
+      "parent_slug": null,
+      "name_native": null,
+      "career_urls": [],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#public_universities",
+      "notes": "T11: the homepage's own 'Izbori u zvanja' link points to a Google Drive folder - third-party host, out of manifest, never crawled (a second Drive folder 'Uvid javnosti' is R7 and excluded too; PM re-verified 2026-09-22: anonymous GET of the Drive folder now 404s, login/legacy resourceKey - reinforces deeplink-only). R4 excludes zaposleni.kpu.edu.rs entirely; /cms/studenti/* and /cms/studentski-meni/* are enrollment/student notices, not employment, and were never configured as boards either. T27 (packet 015), re-verified 2026-09-28: the same folder now 302-redirects straight to accounts.google.com (login-gated, no anonymous view left at all) - a deeplink this dead is worse than none, so render_mode moved from deeplink_only to skip and the dead deeplink_url was removed; this org has no other career channel today.",
+      "host": "www.kpu.edu.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "skip"
+    },
+    {
+      "slug": "private-singidunum",
+      "type": "university",
+      "name_en": "Singidunum University",
+      "homepage": "https://www.singidunum.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "T12: name_en was previously the bare host 'singidunum.ac.rs' (a TODO stand-in from T4 seeding, never a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "www.singidunum.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-union",
+      "type": "university",
+      "name_en": "Union University",
+      "homepage": "https://union.edu.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "T12: name_en was previously the bare host 'union.edu.rs' (a TODO stand-in from T4 seeding, never a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "union.edu.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-unionnikolatesla",
+      "type": "university",
+      "name_en": "Union Nikola Tesla University",
+      "homepage": "https://www.unionnikolatesla.edu.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "T12: name_en was previously the bare host 'unionnikolatesla.edu.rs' (a TODO stand-in from T4 seeding, never a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "www.unionnikolatesla.edu.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-metropolitan",
+      "type": "university",
+      "name_en": "Metropolitan University",
+      "homepage": "https://www.metropolitan.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "T12: name_en was previously the bare host 'metropolitan.ac.rs' (a TODO stand-in from T4 seeding, never a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "www.metropolitan.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-educons",
+      "type": "university",
+      "name_en": "Educons University",
+      "homepage": "https://www.educons.edu.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "T12: name_en was previously the bare host 'educons.edu.rs' (a TODO stand-in from T4 seeding, never a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "www.educons.edu.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-megatrend",
+      "type": "university",
+      "name_en": "Megatrend University",
+      "homepage": "https://www.megatrend.edu.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "T12: name_en was previously the bare host 'megatrend.edu.rs' (a TODO stand-in from T4 seeding, never a real name) - corrected using its confirmed OpenAlex institution record (homepage matches exactly).",
+      "host": "www.megatrend.edu.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-alfa",
+      "type": "university",
+      "name_en": "alfa.edu.rs",
+      "homepage": "https://www.alfa.edu.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "TODO: official name (placeholder = host); seeded from URL only",
+      "host": "www.alfa.edu.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "private-fefa",
+      "type": "university",
+      "name_en": "fefa.edu.rs",
+      "homepage": "https://fefa.edu.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "source_url": "pm_packet_001#private_universities_seed",
+      "notes": "TODO: official name (placeholder = host); seeded from URL only",
+      "host": "fefa.edu.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "inst-vinca",
+      "type": "institute",
+      "name_en": "Institute of Nuclear Sciences Vinca",
+      "homepage": "https://www.vinca.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.vinca.rs/o-institutu/naucno-vece/izbori-u-zvanja"
+      ],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "T7 gap resolution (2026-09-22): NOT a config error - the board itself is correct. Real bug found: (a) a sidewide mega-menu widget (class 'jf_mm_pro*') was passing the in_chrome() check and its one brochure PDF link was short-circuiting item extraction before the real Joomla category LIST TABLE (com_content, th.list-title/td.list-date rows) was ever tried; (b) that Joomla table layout had no parser family at all. Both fixed (board.in_chrome mega-menu token + a new 'table' family). Now correctly finds all 10 current items, all person-specific 'pokrenut postupak' procedure notices (R7-refinement) - 0 rows is the CORRECT result today, not a gap; an open 'raspisan konkurs' item will surface with a different slug when one exists. ?start=N Joomla pagination followed, max_pages=3.",
+      "host": "www.vinca.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {
+        "max_pages": 3
+      }
+    },
+    {
+      "slug": "inst-ipb",
+      "type": "institute",
+      "name_en": "Institute of Physics Belgrade",
+      "homepage": "https://www.ipb.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.ipb.ac.rs/karijera-na-institutu-za-fiziku/"
+      ],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "PROVEN PATTERN 2026-09-21: live ERC PhD ads with named contact emails (e.g. magda@ipb.ac.rs) and salary statement 'comparable to leading European institutes'; T7 2026-09-22: render_mode was never set for institutes in the initial build (silent gap - crawl_targets() requires it, so no institute was ever actually crawlable); fixed here.",
+      "host": "www.ipb.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {}
+    },
+    {
+      "slug": "inst-ihtm",
+      "type": "institute",
+      "name_en": "Institute of Chemistry, Technology and Metallurgy",
+      "homepage": "https://www.ihtm.bg.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.ihtm.bg.ac.rs/sr/zaposleni-ihtm"
+      ],
+      "contact_email": null,
+      "contact_phone": "+381 11 2630 213",
+      "source_url": "pm_packet_001#institutes",
+      "notes": "department emails pattern xxx@ihtm.bg.ac.rs; find board under 'Zaposleni/Oglasi'; T7 2026-09-22: render_mode set; live-verified 1 real item ('Izbori u zvanja', kind=employment); dropped /kontakt (not a board)",
+      "host": "www.ihtm.bg.ac.rs",
+      "robots_status": "allowed_no_robots",
+      "robots_http_status": 404,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {}
+    },
+    {
+      "slug": "inst-imgge",
+      "type": "institute",
+      "name_en": "Institute of Molecular Genetics and Genetic Engineering",
+      "homepage": "https://www.imgge.bg.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.imgge.bg.ac.rs/lat/novosti"
+      ],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "T7 gap resolution + card-family build (2026-09-22): URL corrected to /lat/novosti (old /lat/izbori-u-zvanja was an empty stub). A generic YOOtheme '.el-item' card family was built (heading .el-title separate from a generic 'Pročitaj više' read-more link; month-name dates like '21 Avgust 2026'; a 'load more' pagination button, detected structurally, not by its own label) - this benefits any YOOtheme-templated board, not just IMGGE. Live-verified: 'Otvorene pozicije u IMGGI' (open positions) now correctly classifies as employment; 'Noć istraživača' (Researchers' Night, a public-outreach event) correctly excluded. No empty_is_failure (mixed-content news board).",
+      "host": "www.imgge.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {
+        "max_pages": 6
+      }
+    },
+    {
+      "slug": "inst-ibiss",
+      "type": "institute",
+      "name_en": "Institute for Biological Research Sinisa Stankovic",
+      "homepage": "https://www.ibiss.bg.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.ibiss.bg.ac.rs/sr-yu/oglasna-tabla"
+      ],
+      "contact_email": "ibiss@ibiss.bg.ac.rs",
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "T7 2026-09-22: render_mode set (see inst-ipb note); dropped the /kontakt career_url (a contact page, not a board)",
+      "host": "www.ibiss.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {}
+    },
+    {
+      "slug": "inst-imsi",
+      "type": "institute",
+      "name_en": "Institute for Multidisciplinary Research",
+      "homepage": "https://www.imsi.bg.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.imsi.bg.ac.rs/%D0%B1%D0%BB%D0%BE%D0%B3-%D0%B8-%D0%BD%D0%BE%D0%B2%D0%BE%D1%81%D1%82%D0%B8/"
+      ],
+      "contact_email": "office@imsi.bg.ac.rs",
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "large homepage; board path TBD via sitemap; T7 addenda (2026-09-22): PM-given path (blog-i-novosti), verified live: 4 items, 2 classify as grant_call - employment calls are rare and posted as news (as the PM expected); no empty_is_failure (mixed content)",
+      "host": "www.imsi.bg.ac.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {}
+    },
+    {
+      "slug": "inst-pupin",
+      "type": "institute",
+      "name_en": "Mihajlo Pupin Institute",
+      "homepage": "https://www.pupin.rs/lat/pocetna-2/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.pupin.rs/lat/posao-3/"
+      ],
+      "contact_email": "kadrovska@pupin.rs",
+      "contact_phone": "+381 11 2776 222",
+      "source_url": "pm_packet_001#institutes",
+      "notes": "HTTP 406 to non-browser clients; needs browser UA or Playwright; T7 addenda (2026-09-22): real board found via homepage nav ('Posao' link) - https://www.pupin.rs/lat/posao-3/, plain fetch works (200, no browser UA needed with our default UA); 0 items today, dedicated jobs page so empty_is_failure applies",
+      "host": "www.pupin.rs",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": true
+      }
+    },
+    {
+      "slug": "inst-imi",
+      "type": "institute",
+      "name_en": "Institute of Medical Research",
+      "homepage": "https://www.imi.bg.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "T7 closure (2026-09-22): imi.bg.ac.rs presents an EXPIRED TLS certificate (Playwright ERR_CERT_DATE_INVALID and httpx+certifi both fail with verification ON, as they must - never bypassed, R2). deeplink_only until the operator gets the certificate fixed (see operator_actions.md). imi.org.rs is a DIFFERENT, unrelated organisation (Institute for Management and Innovation) and must never be linked here.",
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "host": "www.imi.bg.ac.rs",
+      "render_mode": "deeplink_only",
+      "deeplink_url": "https://www.imi.bg.ac.rs/",
+      "crawl_config": {},
+      "robots_status": "unavailable"
+    },
+    {
+      "slug": "inst-inep",
+      "type": "institute",
+      "name_en": "Institute for Biological Research Sinisa? - INEP (environmental protection)",
+      "homepage": "https://www.inep.ac.rs/",
+      "parent_slug": null,
+      "career_urls": [
+        "https://www.inep.ac.rs/oglasna-tabla/"
+      ],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "T7 closure (2026-09-22): PM+self verified https://www.inep.ac.rs/oglasna-tabla/ live (200, robots allows, redirects www->apex); 19 items, 18 correctly excluded (biographies/plans/person-specific procedure docs), 1 kept (grant_call: diaspora project). Institut za primenu nuklearne energije u poljoprivredi, veterinarstvu i zivotnoj sredini (per its own oglasna-tabla content).",
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "host": "www.inep.ac.rs",
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed"
+    },
+    {
+      "slug": "inst-ifvc_ns",
+      "type": "institute",
+      "name_en": "Institute of Field and Vegetable Crops Novi Sad",
+      "homepage": "https://nsseme.com/",
+      "parent_slug": null,
+      "career_urls": [],
+      "contact_email": null,
+      "contact_phone": null,
+      "source_url": "pm_packet_001#institutes",
+      "notes": "verify career page; homepage verified 2026-09-21 (HTTP 200)",
+      "host": "nsseme.com",
+      "robots_status": "allowed",
+      "robots_http_status": 200,
+      "robots_checked_at": "2026-09-21T22:46:12+00:00"
+    },
+    {
+      "slug": "inst-itn-sanu",
+      "type": "institute",
+      "parent_slug": null,
+      "name_en": "Institute of Technical Sciences of SASA",
+      "name_native": "Institut tehnickih nauka SANU",
+      "city": "Belgrade",
+      "homepage": "https://itn.sanu.ac.rs/",
+      "career_urls": [
+        "https://itn.sanu.ac.rs/index.php/sr-cyrl-rs/novosti/obavestenja-naucnog-veca",
+        "https://itn.sanu.ac.rs/index.php/sr-cyrl-rs/novosti/vesti"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "max_pages": 2
+      },
+      "host": "itn.sanu.ac.rs",
+      "robots_status": "allowed",
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "source_url": "pm/recon/t7_institutes_addenda.json",
+      "notes": "T7 addenda (2026-09-22): board_candidates mix person-specific title-procedure notices with open calls (R7-refinement gate in the shared classifier handles this); /zaposleni is a staff directory, excluded (not added)"
+    },
+    {
+      "slug": "inst-iit-kg",
+      "type": "institute",
+      "parent_slug": null,
+      "name_en": "Institute for Information Technologies, University of Kragujevac",
+      "name_native": "Institut za informacione tehnologije Univerziteta u Kragujevcu",
+      "city": "Kragujevac",
+      "homepage": "https://iit.ac.rs/",
+      "host": "iit.ac.rs",
+      "career_urls": [
+        "https://iit.ac.rs/category/vesti/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm/recon/t7_closure_addenda.json",
+      "robots_checked_at": "2026-09-21T22:46:12+00:00",
+      "notes": "T7 gap resolution (2026-09-22): URL corrected per PM (the old URL was a single specific ad's own detail page, not a list - hence the earlier inconsistent 'recent posts' widget results). /category/vesti/ is a real WordPress article-card listing and now correctly extracts genuine per-item news/employment content (live-verified: 7 items, all correctly classified). Standard /page/N/ pagination available if needed later; /arhiva/ was checked and only surfaces a financial statement PDF, not added. Generic contact iit@uni.kg.ac.rs, +381 34 6100195 (per PM; not yet wired into org_master.contact_email/phone - noted for a future pass)."
+    },
+    {
+      "slug": "uns-ftn",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Technical Sciences",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://ftn.uns.ac.rs/",
+      "host": "ftn.uns.ac.rs",
+      "career_urls": [
+        "https://ftn.uns.ac.rs/category/oglasna-tabla-zaposleni/",
+        "https://ftn.uns.ac.rs/category/bilten-za-izbor-u-zvanje/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "Board discovered via /wp-sitemap-taxonomies-category-1.xml (homepage nav is enrollment/news, per packet 005's own warning); bilten-za-izbor-u-zvanje is likely R7 person-specific procedure content, kept as a second URL for the classifier to sort"
+    },
+    {
+      "slug": "uns-gf",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Civil Engineering, Subotica",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://www.gf.uns.ac.rs/",
+      "host": "www.gf.uns.ac.rs",
+      "career_urls": [
+        "https://www.gf.uns.ac.rs/oglasna-tabla/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda4: apex gf.uns.ac.rs has no A record, use www"
+    },
+    {
+      "slug": "uns-pef",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Education, Sombor",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://pef.uns.ac.rs/",
+      "host": "pef.uns.ac.rs",
+      "career_urls": [
+        "https://pef.uns.ac.rs/category/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": ""
+    },
+    {
+      "slug": "uns-mf",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Medicine",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://www.mf.uns.ac.rs/",
+      "host": "www.mf.uns.ac.rs",
+      "career_urls": [
+        "https://www.mf.uns.ac.rs/KonkursiiUvidi.php"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda4: apex mf.uns.ac.rs has no A record, use www"
+    },
+    {
+      "slug": "uns-ff",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Philosophy",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://www.ff.uns.ac.rs/",
+      "host": "www.ff.uns.ac.rs",
+      "career_urls": [
+        "https://www.ff.uns.ac.rs/sr/zaposleni/konkursi"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda3: /sr/zaposleni/konkursi is a PUBLIC board (path token 'zaposleni' here is not the R4 HR-subdomain pattern - R4 only excludes zaposleni.* HOSTS, this is a path)"
+    },
+    {
+      "slug": "uns-pmf",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Sciences",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://www.pmf.uns.ac.rs/",
+      "host": "www.pmf.uns.ac.rs",
+      "career_urls": [
+        "https://www.pmf.uns.ac.rs/vesti/za-zaposlene-stipendije/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda3: this is the real board; /konkursi/ is a templates DOCUMENT LIBRARY (not added - would need the document family's own generic-label handling and adds noise); docs.pmf Alfresco share excluded entirely (login-gated)"
+    },
+    {
+      "slug": "uns-tfzr",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Technical Faculty “Mihajlo Pupin”, Zrenjanin",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://www.tfzr.rs/",
+      "host": "www.tfzr.rs",
+      "career_urls": [
+        "https://www.tfzr.rs/sr-cyrl/oglasna-tabla/oglasna-tabla/oglasna-tabla"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "max_pages": 2
+      },
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda4: apex tfzr.uns.ac.rs redirects to www.tfzr.rs/sr-cyrl; currently only R7 person-specific docs + enrollment content per addenda4 - no empty_is_failure"
+    },
+    {
+      "slug": "uns-akademija",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Academy of Arts",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://akademija.uns.ac.rs/",
+      "host": "akademija.uns.ac.rs",
+      "career_urls": [
+        "https://akademija.uns.ac.rs/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": ""
+    },
+    {
+      "slug": "uns-fsfv",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Sport and Physical Education",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://fsfvns.edu.rs/",
+      "host": "fsfvns.edu.rs",
+      "career_urls": [
+        "https://fsfvns.edu.rs/izbor-saradnika/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "verified working (200) on fsfvns.edu.rs (addenda1); addenda4 later suggested www.fsfv.uns.ac.rs as an alias, but that host TIMES OUT from both this session and the PM's own vantage (addenda4 itself says so) - kept the demonstrably-working host. /konkurs/ on this same domain is enrollment (addenda1), not added here"
+    },
+    {
+      "slug": "uns-tf",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Technology",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://www.tf.uns.ac.rs/",
+      "host": "www.tf.uns.ac.rs",
+      "career_urls": [
+        "https://www.tf.uns.ac.rs/o-nama/fakultet/izbori-u-zvanja.html"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda4: only resolves on www (apex path soft-redirects to homepage)"
+    },
+    {
+      "slug": "uns-ef",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Economics, Subotica",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://ef.uns.ac.rs/",
+      "host": "ef.uns.ac.rs",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda3: no employment board found; deeplink to homepage"
+    },
+    {
+      "slug": "uns-polj",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Agriculture",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "http://polj.uns.ac.rs/",
+      "host": "polj.uns.ac.rs",
+      "career_urls": [
+        "http://polj.uns.ac.rs/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": false,
+        "crawl_delay_seconds": 10
+      },
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda5: HTTP-ONLY (port 443 refused, no TLS at all, not a cert issue; www has no A record - apex only). Drupal news homepage, /sr/node/N article URLs; mixed-content board (project calls, mobility, enrollment, and a rolling staff-notice PDF 'Obavestenje_oglasna_tabla_NNNN.pdf' under /sites/default/files/upload/ discovered via homepage links only - never guess its incrementing number). No dedicated izbor-u-zvanja section. robots.txt states 'Crawl-delay: 10' (standard Drupal disallow list otherwise; / and /node/* allowed) - PoliteClient now reads robots.txt Crawl-delay automatically (built for T13's AcademicTransfer, re-verified live against this exact host: resolves to 10.0s spacing) - the earlier manual 0.1 rps workaround is no longer needed for scheduled runs."
+    },
+    {
+      "slug": "uns-pravni",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Faculty of Law",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://pf.uns.ac.rs/",
+      "host": "pf.uns.ac.rs",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "crawl_config": {},
+      "robots_status": null,
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda5 confirms: only staff route is servisi.pf.uns.ac.rs/zaposleni (R4 HR portal); no public employment board exists."
+    },
+    {
+      "slug": "uns-magister",
+      "type": "faculty",
+      "parent_slug": "uns",
+      "name_en": "Hungarian Language Teacher Training Faculty, Subotica",
+      "name_native": null,
+      "city": "Novi Sad",
+      "homepage": "https://magister.uns.ac.rs/",
+      "host": "magister.uns.ac.rs",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "crawl_config": {},
+      "robots_status": null,
+      "source_url": "pm_packet_005#T8 + t8_uns_addenda(1-4).json",
+      "notes": "addenda5: Magyar Tanitokepzo Kar (Hungarian-language Teacher Training Faculty, Subotica) - a real faculty, not a missing board. Sections are Hungarian (Palyazatok/grant calls, Osztondijak/scholarships, 'Ertesitesek, egyeb hirek'/notices, Dokumentumok) - the Serbian classifier cannot read Hungarian text, so this is a classifier-coverage gap, not an absent board. deeplink_url points at its notices section. T20 i18n backlog: Hungarian-language board classifier (HU markers: allas/palyazat/munkatars/ertesites). T27 (packet 015), re-verified 2026-09-28: this exact host's own robots.txt also explicitly disallows the literal 'ClaudeBot' user-agent while allowing '*' - a deliberate signal from the site owner, respected over the letter of robots.txt even though this project's own honestly-named UA is not literally 'ClaudeBot'. PM ruling (packet 016, 2026-09-28): ACCEPTED - stay deeplink_only; revisit only if the site owner's own permission is obtained.",
+      "deeplink_url": "https://magister.uns.ac.rs/Ertesitesek-egyeb-hirek/tartalmak/332/",
+      "deeplink_reason": "Content is in Hungarian, which this platform cannot yet classify (no Hungarian-language board classifier exists), and this site's own robots.txt explicitly asks Anthropic's ClaudeBot to stay off - respected as the owner's evident intent."
+    },
+    {
+      "slug": "nis-medfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Medicine",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.medfak.ni.ac.rs/",
+      "host": "www.medfak.ni.ac.rs",
+      "career_urls": [
+        "https://www.medfak.ni.ac.rs/index.php/sr/konkursi"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "Joomla, PDF attachments expected (Izbor_U_Zvanja/ subfolder)."
+    },
+    {
+      "slug": "nis-prafak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Law",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://prafak.ni.ac.rs/",
+      "host": "prafak.ni.ac.rs",
+      "career_urls": [
+        "https://prafak.ni.ac.rs/index.php/9-uncategorised"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "Board is the Joomla '9-uncategorised' category (obfuscated Joomla alias, not a real section name)."
+    },
+    {
+      "slug": "nis-pmf",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Sciences and Mathematics",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.pmf.ni.ac.rs/",
+      "host": "www.pmf.ni.ac.rs",
+      "career_urls": [
+        "https://www.pmf.ni.ac.rs/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "Real employment board - do NOT confuse with the other 'pmf' (University of Novi Sad, different institution)."
+    },
+    {
+      "slug": "nis-pfvr",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Education, Vranje",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://pfvr.ni.ac.rs/",
+      "host": "pfvr.ni.ac.rs",
+      "career_urls": [
+        "https://pfvr.ni.ac.rs/konkursi/",
+        "https://pfvr.ni.ac.rs/konkursni-postupci/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "Archive-style board. /konkursni-postupci/ is person-specific procedure content per R7-refinement - kept as a second URL (same pattern as uns-ftn's bilten-za-izbor-u-zvanje) so the classifier sorts it, not excluded wholesale by URL."
+    },
+    {
+      "slug": "nis-elfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Electronic Engineering",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.elfak.ni.ac.rs/",
+      "host": "www.elfak.ni.ac.rs",
+      "career_urls": [
+        "https://www.elfak.ni.ac.rs/informacije/konkursi-posao"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "canonical_host is www.elfak.ni.ac.rs ONLY - www.elfak.rs (a different, similarly-named domain) has a TLS cert SAN mismatch and http returns 400; never configure it, never verify=False (R2)."
+    },
+    {
+      "slug": "nis-filfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Philosophy",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.filfak.ni.ac.rs/",
+      "host": "www.filfak.ni.ac.rs",
+      "career_urls": [
+        "https://www.filfak.ni.ac.rs/konkursi",
+        "https://www.filfak.ni.ac.rs/izbor-u-zvanja",
+        "https://www.filfak.ni.ac.rs/istrazivacki-konkursi"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "apex filfak.ni.ac.rs over http returns 403 - use https://www host only."
+    },
+    {
+      "slug": "nis-poljfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Agriculture, Krusevac",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://poljfak.ni.ac.rs/",
+      "host": "poljfak.ni.ac.rs",
+      "career_urls": [
+        "https://poljfak.ni.ac.rs/c/konkursi-za-izbor-nastavnika"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "apex https works (http redirects to https). Alias domain poljoprivrednifakultet.rs also resolves 200 - normalized as an alias, not configured separately."
+    },
+    {
+      "slug": "nis-artf",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Arts",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "http://www.artf.ni.ac.rs/",
+      "host": "www.artf.ni.ac.rs",
+      "career_urls": [
+        "http://www.artf.ni.ac.rs/konkursi-i-stipendije/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "artf.ni.ac.rs REFUSES port 443 entirely (connection refused, not a cert issue) - plain http:// is the only working scheme (no TLS to weaken; apex redirects to www)."
+    },
+    {
+      "slug": "nis-tf",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Technology, Leskovac",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://tf.ni.ac.rs/",
+      "host": "tf.ni.ac.rs",
+      "career_urls": [
+        "https://tf.ni.ac.rs/konkursi/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "addenda3 correction: www.tf.ni.ac.rs is unreachable, apex https works (WordPress). Real board found at /konkursi/ (dated permalinks, real 2025-26 employment calls) - this session's own earlier probe only got a connection reset on the bare homepage and never found this path; addenda3 supplied it."
+    },
+    {
+      "slug": "nis-masfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Mechanical Engineering",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.masfak.ni.ac.rs/",
+      "host": "www.masfak.ni.ac.rs",
+      "career_urls": [
+        "https://www.masfak.ni.ac.rs/index.php/sr/n-ursi-z-izb-r-n-s-vni-i-s-r-dni"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": true
+      },
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "addenda3: apex has no A record, www resolves (160.99.21.20) but TCP times out from both the PM's vantage and this session's - a genuine network-level block, not fixable by Playwright (TCP timeouts are not a TLS/JS problem, so no render is attempted). The career_url itself is an UNVERIFIED candidate (Joomla obfuscated alias found via search, never actually loaded) - real R1 applies: 3 failed scheduled runs degrade this org to deeplink automatically, not pre-set here."
+    },
+    {
+      "slug": "nis-gaf",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Civil Engineering and Architecture",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://gaf.ni.ac.rs/",
+      "host": "gaf.ni.ac.rs",
+      "career_urls": [
+        "https://gaf.ni.ac.rs/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": true
+      },
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "DNS resolves (160.99.31.12) but TCP times out from both the PM's vantage and this session's - same genuine network-level block as masfak, no render attempted. No specific board path found yet (its own news board is https://gaf.ni.ac.rs/_news/news.htm, not employment) - discovery deferred to T20 per addenda1; real R1 applies to the homepage itself, not pre-deeplinked here."
+    },
+    {
+      "slug": "nis-eknfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Economics",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.eknfak.ni.ac.rs/",
+      "host": "www.eknfak.ni.ac.rs",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "crawl_config": {},
+      "robots_status": null,
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "addenda2 (supersedes addenda1's 'legacy TLS Playwright' guess): apex has NO A record; www serves a cert CN=eknfak.ni.ac.rs issued by ZeroSSL, EXPIRED ~23 months (notAfter 2024-10-26) AND CN doesn't match the www hostname - same class as inst-imi. httpx+certifi correctly refuses; Playwright with ignore_https_errors=False would too. Never verify=False. Intended board: /srl/Konkursi.php (person-specific /srl/Izvestaji-komisije.php also exists, R7). operator_actions.md entry needed (renew/reissue the certificate for the correct hostname).",
+      "deeplink_url": "https://www.eknfak.ni.ac.rs/srl/Konkursi.php"
+    },
+    {
+      "slug": "nis-znrfak",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Occupational Safety",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://www.znrfak.ni.ac.rs/",
+      "host": "www.znrfak.ni.ac.rs",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "crawl_config": {},
+      "robots_status": null,
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "addenda2: NO EMPLOYMENT BOARD EXISTS - verified, not a config error. The matrix-guessed SERBIAN/011-*-OglasnaTabla.html pages are all per-program ENROLLMENT boards only (OS/OAS/MAS/DRS + OTDOC); the site's 2.3MB news page (SERBIAN/015-VESTI.html) contains ZERO occurrences of konkurs/izbor/zvanje/zaposlen in the employment sense. Host is up; the board simply does not exist - no R1 counter burned on it."
+    },
+    {
+      "slug": "nis-fsfv",
+      "type": "faculty",
+      "parent_slug": "ni",
+      "name_en": "Faculty of Sport and Physical Education",
+      "name_native": null,
+      "city": "Nis",
+      "homepage": "https://fsfv.ni.ac.rs/",
+      "host": "fsfv.ni.ac.rs",
+      "career_urls": [],
+      "render_mode": "deeplink_only",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T9 + t9_nis_addenda(1-3).json",
+      "notes": "Independently discovered and live-verified this session (not covered by PM's addenda batches). Homepage 200; no dedicated employment board - its only content-listing page is a Joomla category-blog layout at /fakultet/o-fakultetu/novosti (6 items, class 'com-content-category-blog__item'), a THIRD Joomla layout shape this project hasn't built a parser family for yet (distinct from the existing 'table' list-view and 'card' YOOtheme families). Manually inspected all 6 current items: 100% enrollment/exam-schedule content, zero employment signal even on direct reading - so this is a disclosed missing-family gap, not a hidden employment board; deferred, not blocking T9 (same trade-off precedent as T7's Vinca finding: no evidence of content being missed justifies building new machinery right now)."
+    },
+    {
+      "slug": "kg-ftn",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Technical Sciences, Cacak",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://ftn.kg.ac.rs/",
+      "host": "ftn.kg.ac.rs",
+      "career_urls": [
+        "https://ftn.kg.ac.rs/izbori",
+        "https://ftn.kg.ac.rs/prakseikonkursi"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "addenda2 correction: konkursi.php is a permanently-500 dead legacy script (homepage 200) - dropped entirely, no R1 counter burned on a confirmed-dead script. Real boards: /izbori ('Konkursi za izbor nastavnika i saradnika', ~254 document links, includes uvid-javnosti material - R7 gate applies) and /prakseikonkursi ('Konkursi za praksu i zaposlenje', employment+internship). HR system /app ('Sistem za zaposlene') is R4, never crawled."
+    },
+    {
+      "slug": "kg-medf",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Medical Sciences",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://medf.kg.ac.rs/",
+      "host": "medf.kg.ac.rs",
+      "career_urls": [
+        "https://medf.kg.ac.rs/informacije/konkursi/index.php"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Re-verified 200 in addenda2."
+    },
+    {
+      "slug": "kg-afc",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Agronomy, Cacak",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://afc.kg.ac.rs/",
+      "host": "afc.kg.ac.rs",
+      "career_urls": [
+        "https://afc.kg.ac.rs/index.php/sr/fakultet/izbori-nastavnika"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Re-verified 200 in addenda2. DISCLOSED GAP found this session: the faculty's own page is just a pointer ('Izbori nastavnika ... mogu se pogledati ovde') to the university's central per-faculty system (kg.ac.rs/izbor.php?fakultet_je=11), which renders its actual listing as a PDF inside a JS-driven viewer (<iframe id=\"pdfViewer\" src=\"\">, populated by client-side JS - the real PDF URL is never present in the raw HTML). Needs either Playwright rendering to capture the JS-set iframe src, or reverse-engineering the underlying PDF-path convention; deferred, not invented as a working URL."
+    },
+    {
+      "slug": "kg-ekfak",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Economics",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://ekfak.kg.ac.rs/",
+      "host": "ekfak.kg.ac.rs",
+      "career_urls": [
+        "https://ekfak.kg.ac.rs/sr/fakultet-menu/izbori-zvanja"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Re-verified 200 in addenda2."
+    },
+    {
+      "slug": "kg-filum",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Philology and Arts",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://filum.kg.ac.rs/",
+      "host": "filum.kg.ac.rs",
+      "career_urls": [
+        "https://filum.kg.ac.rs/index.php?option=com_content&view=category&layout=blog&id=20"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": false
+      },
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Independently discovered this session (matrix only had 3 hardcoded, ageing article ids 2312/2317/2319 - 'discover via sitemap' was its own recommendation). Used the Joomla CATEGORY id=20 those articles belong to instead (a real, stable listing URL), not the individual article ids. sitemap.xml itself 404s (non-XML-sitemap Joomla site). PARTIAL COVERAGE disclosed: the div.item Joomla family (built this session) correctly captures the 'leading' items (4 on this page), but Joomla's category-blog view also has a separate sidebar list ('div.items-more > ol.nav.nav-tabs.nav-stacked > li > a', no excerpt) holding MORE items - including real grant_call-shaped content ('Konkursi za mobilnost nastavnog kadra na Univerzitetu u Kragujevcu') - not yet scraped, since the current family-cascade model only lets one family win per page. Deferred, not invented."
+    },
+    {
+      "slug": "kg-fin",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Engineering Sciences",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://fin.kg.ac.rs/",
+      "host": "fin.kg.ac.rs",
+      "career_urls": [
+        "https://fin.kg.ac.rs/sr/servisi/konkursi/aktuelni-konkursi"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "addenda2 correction: matrix path /sr/fakultet/konkursi/objavljeni-konkursi 404s; real board is /sr/servisi/konkursi/aktuelni-konkursi (article ids 2326/2327/2337/2342/2372: docent/vanredni/redovni profesor, asistent, demonstratori, 2026). fink.rs (code=000 from PM's vantage) is an ALIAS ONLY, never the primary host; fin.kg.ac.rs is canonical."
+    },
+    {
+      "slug": "kg-hitvb",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Hotel Management and Tourism, Vrnjacka Banja",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://www.hit-vb.kg.ac.rs/",
+      "host": "www.hit-vb.kg.ac.rs",
+      "career_urls": [
+        "https://www.hit-vb.kg.ac.rs/index.php/nastavno-osoblje/konkursi-za-izbor/tekst-konkursa-za-izbor-nastavnika-i-saradnika"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "matrix URL '/index.php/nastavno-osoblje/konkursi-za-izbor/' (the parent) 404s in Joomla; only the 'tekst-konkursa' CHILD page exists and is the real board. Sibling paths deliberately NOT configured as boards: /formulari (forms, not calls), /izvestaji (R7 committee reports), /pristupna-predavanja (R7 qualifying-lecture notices) - all excluded by URL, matching the R7-refinement ruling."
+    },
+    {
+      "slug": "kg-mfkv",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Mechanical and Civil Engineering, Kraljevo",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://mfkv.rs/",
+      "host": "mfkv.rs",
+      "career_urls": [
+        "https://mfkv.rs/dokumenti-fakulteta/konkursi-za-izbor-nastavnika-i-saradnika"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "canonical host is mfkv.rs (alias mfkv.kg.ac.rs, per T12 sizing addenda's own domain-join note - not configured separately, same organisation)."
+    },
+    {
+      "slug": "kg-pefja",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Education, Jagodina",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://pefja.kg.ac.rs/",
+      "host": "pefja.kg.ac.rs",
+      "career_urls": [
+        "https://pefja.kg.ac.rs/objavljeni-konkursi-nastavnika/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Re-verified 200 in addenda2."
+    },
+    {
+      "slug": "kg-pfu",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Education, Uzice",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://pfu.kg.ac.rs/",
+      "host": "pfu.kg.ac.rs",
+      "career_urls": [
+        "https://pfu.kg.ac.rs/category/обавештења/"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": false
+      },
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Independently discovered this session: WordPress (Yoast sitemap), category-sitemap.xml lists per-title categories 'asistenti'/'docenti'/'vanredni-profesor'/'redovni-profesor' which turned out to be STAFF DIRECTORY pages (posts named after real people, e.g. 'doc. dr Branka Arsovic') not job listings - deliberately NOT used as career_urls. The general 'Obavestenja' (notices) category IS a real mixed board (enrollment ranking lists, R7 qualifying-lecture notices, grant calls, holiday announcements) - used instead; found live a genuine R7 text-classifier gap here (see rs_text.py 'pristupno predavanje' fix), not just a URL-level exclusion."
+    },
+    {
+      "slug": "kg-pmf",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Science",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://www.pmf.kg.ac.rs/",
+      "host": "www.pmf.kg.ac.rs",
+      "career_urls": [
+        "https://www.pmf.kg.ac.rs/index.php/oglasna-tabla"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "Re-verified 200 in addenda2. DISCLOSED GAP found this session: this is a custom (non-Joomla) 'Oglasna tabla' with its own searchable table ('Naslov oglasa' column header visible, 'Pretraga tabele...' search box - likely a JS DataTable), structurally distinct from every family built so far (not the Joomla list-title table, not div.item/article, not a document library). Confirmed real content exists (R7 procedural text visible in the raw HTML), just not yet in a recognised row/item shape; needs its own selector work, deferred."
+    },
+    {
+      "slug": "kg-jura",
+      "type": "faculty",
+      "parent_slug": "kg",
+      "name_en": "Faculty of Law",
+      "name_native": null,
+      "city": "Kragujevac",
+      "homepage": "https://www.jura.kg.ac.rs/",
+      "host": "www.jura.kg.ac.rs",
+      "career_urls": [
+        "https://www.jura.kg.ac.rs/sr/informacije/obavestenja/konkursi"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {},
+      "robots_status": "allowed",
+      "source_url": "pm_packet_005#T10 + t10_kg_addenda(1-2).json",
+      "notes": "addenda2: apex jura.kg.ac.rs has NO A record; www (CNAME iustitia.jura.kg.ac.rs) is the only working host. Archive .../izborarh not added (main board has current content; add only if it later runs dry). /sr/nastavno/izbornas and /izborsar are R7 procedure-material sections, never configured as boards."
+    },
+    {
+      "slug": "va",
+      "type": "faculty",
+      "parent_slug": "odbrane",
+      "name_en": "Military Academy",
+      "name_native": null,
+      "city": "Belgrade",
+      "homepage": "https://www.va.mod.gov.rs/",
+      "host": "www.va.mod.gov.rs",
+      "career_urls": [
+        "https://www.va.mod.gov.rs/sitemap.xml"
+      ],
+      "render_mode": "httpx",
+      "crawl_config": {
+        "empty_is_failure": false,
+        "sitemap_include": [
+          "konkurs"
+        ],
+        "sitemap_exclude": [
+          "interni-konkurs",
+          "uvid-javnosti"
+        ]
+      },
+      "foreigner_eligible_default": "no",
+      "robots_status": "allowed_no_robots",
+      "source_url": "pm_packet_001#public_universities + t11_others_addenda.json + t11_va_sitemap_detail.json",
+      "notes": "R2/generalized-rgf rule: robots.txt is an HTML pseudo-404 (Drupal), treated as absent/allow. Discovery is the flat sitemap.xml ONLY (1669 URLs total, ~127 contain 'konkurs') - node ids are NEVER guessed (PM's own earlier guess /lat/11391/konkursi was wrong, a news article). 'interni-konkurs' (R5, internal-only) and 'uvid-javnosti' (R7) slugs are pre-filtered out before the item is even created; the Serbian classifier makes the real employment/enrollment/other split on each survivor's slug-derived title, same as any other family. R5: foreigner_eligible defaults 'no' for every row (military employer)."
+    }
+  ]
+}

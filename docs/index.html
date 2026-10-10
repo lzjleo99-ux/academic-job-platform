@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>academic-job-platform</title>
+<meta name="description" content="A Serbia-first academic job listing aggregator, plus a thesis formatting/similarity module. Source and full documentation on GitHub.">
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #5b5b5b; --accent: #2857c9; --border: #e3e3e3; --card: #f7f8fa;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #15161a; --fg: #e9e9ea; --muted: #a3a3a8; --accent: #7aa2ff; --border: #2a2b30; --card: #1d1e23; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 48px 20px 80px; }
+  h1 { font-size: 1.7rem; margin: 0 0 4px; }
+  .tagline { color: var(--muted); margin: 0 0 32px; font-size: 1.05rem; }
+  h2 { font-size: 1.15rem; margin: 40px 0 12px; border-top: 1px solid var(--border); padding-top: 28px; }
+  h2:first-of-type { border-top: none; padding-top: 0; }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  code { background: var(--card); padding: 2px 6px; border-radius: 4px; font-size: 0.92em; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 18px 20px; margin-bottom: 14px;
+  }
+  .scope-note {
+    background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--accent);
+    border-radius: 6px; padding: 16px 20px; margin: 0 0 14px;
+  }
+  footer { margin-top: 56px; color: var(--muted); font-size: 0.9rem; }
+  .pill {
+    display: inline-block; font-size: 0.78rem; border: 1px solid var(--border); border-radius: 999px;
+    padding: 2px 10px; margin-right: 6px; color: var(--muted);
+  }
+</style>
+</head>
+<body>
+<main>
+  <h1>academic-job-platform</h1>
+  <p class="tagline">A Serbia-first academic job listing aggregator (with international expansion), plus a
+    thesis formatting/similarity-estimate module. Source, docs, and the full real-code history live on
+    GitHub.</p>
+
+  <div><span class="pill">Python / FastAPI</span><span class="pill">Next.js</span>
+    <span class="pill">Postgres</span><span class="pill">localhost-only</span></div>
+
+  <h2>What this is</h2>
+  <p>A set of connectors crawl academic job boards and institutional career pages (starting with Serbian
+    universities/institutes, extended to a handful of international aggregators), reconcile them against
+    OpenAlex's own institution data, de-duplicate across sources, and serve the result through a read-only
+    API and a Next.js UI with filters, a map view, and English/Serbian (Latin + Cyrillic) locales. A
+    separate module lets a student upload a thesis for structural/formatting checks and a transparent,
+    documented similarity <em>estimate</em> against a handful of real external sources.</p>
+
+  <h2>Honest scope - what this deliberately is NOT</h2>
+  <div class="scope-note">
+    <ul>
+      <li><strong>Not a public, hosted service.</strong> This is a localhost-only research/portfolio
+        project. There is no publicly reachable live instance - running it means cloning the repo and
+        starting it on your own machine (see the README).</li>
+      <li><strong>The similarity estimate is not Turnitin</strong> (or any commercial plagiarism-detection
+        service) - it is a documented, transparent heuristic over a small, named set of real sources
+        (internal corpus, OpenAlex, Crossref, Semantic Scholar, Unpaywall, and - only with the student's
+        own opted-in credentials - Copyleaks), never presented as a "plagiarism %" or an authoritative
+        verdict.</li>
+      <li><strong>Blocked or robots-disallowed sources stay deeplink-only.</strong> A source this project
+        cannot legitimately crawl (TLS failures, a disallow rule, a known soft-404 host) is never scraped
+        anyway - it is linked out to directly, honestly, with the reason recorded.</li>
+      <li><strong>No OCR.</strong> A scanned PDF with no extractable text is flagged as such, honestly, not
+        silently skipped or fabricated.</li>
+    </ul>
+  </div>
+
+  <h2>Architecture (one line each)</h2>
+  <div class="card">
+    <p><code>connectors</code> (one per source family, robots-checked, rate-limited, TLS-verified) →
+      <code>rawstore</code> (content-addressed raw HTTP envelopes - every field traces back to a real
+      fetched byte string) → <code>ingest</code> (cross-source dedupe) → Postgres → a read-only
+      <code>FastAPI</code> API → the Next.js UI (HTTP only, no direct DB access). A separate
+      <code>applicants</code> module matches an uploaded CV against open listings with a documented,
+      weighted, fully-explained scoring formula - never a black-box number.</p>
+  </div>
+
+  <h2>Read more</h2>
+  <ul>
+    <li><a href="https://github.com/lzjleo99-ux/academic-job-platform">Source code and full README</a>
+      (setup, architecture, repository layout)</li>
+    <li><a href="https://github.com/lzjleo99-ux/academic-job-platform/blob/main/docs/matching_formula.md">CV/listing matching formula</a> - the real, committed weights and worked examples</li>
+    <li><a href="https://github.com/lzjleo99-ux/academic-job-platform/blob/main/docs/similarity_formula.md">Thesis similarity formula</a> - what it checks, and what it deliberately does not claim</li>
+  </ul>
+
+  <footer>
+    This page is a static summary for GitHub Pages - it makes no live requests and shows no live data,
+    deliberately, since the running platform itself is self-hosted and not publicly deployed. Last updated
+    alongside the repository's own commit history.
+  </footer>
+</main>
+</body>
+</html>

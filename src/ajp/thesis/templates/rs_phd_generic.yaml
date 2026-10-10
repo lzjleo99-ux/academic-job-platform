@@ -1,0 +1,66 @@
+# GENERIC illustrative template - modeled on commonly-seen Serbian PhD dissertation structure. This is NOT
+# any specific faculty's official rulebook and must never be presented to a user as one; each faculty's own
+# rules (when added) will be a separate, faculty-attributed template file. See pm_packet_008's own wording.
+name: rs_phd_generic
+label: "Generic Serbian PhD dissertation structure (illustrative, not an official faculty template)"
+generic: true
+source_note: "Modeled on common structure across Serbian PhD regulations (packet 008); not sourced from any single institution's rulebook."
+
+required_sections:
+  - key: zahvalnica
+    match: ["zahvalnica", "zahvalnost"]
+    optional: true
+  - key: sadrzaj
+    match: ["sadržaj", "sadrzaj", "table of contents"]
+    optional: false
+  - key: uvod
+    match: ["uvod", "introduction"]
+    optional: false
+  - key: pregled_literature
+    match: ["pregled literature", "pregled stanja u oblasti", "teorijski okvir", "pregled dosadašnjih istraživanja"]
+    optional: false
+  - key: ciljevi_hipoteze
+    match: ["ciljevi i hipoteze istraživanja", "ciljevi istraživanja", "hipoteze istraživanja"]
+    optional: false
+  - key: materijal_metode
+    match: ["materijal i metode", "metodologija istraživanja", "metode istraživanja"]
+    optional: false
+  - key: rezultati
+    match: ["rezultati", "rezultati istraživanja"]
+    optional: false
+  - key: diskusija
+    match: ["diskusija"]
+    optional: false
+  - key: zakljucak
+    match: ["zaključak", "zakljucak", "zaključci", "conclusion"]
+    optional: false
+  - key: literatura
+    match: ["literatura", "reference", "bibliografija"]
+    optional: false
+  - key: prilozi
+    match: ["prilozi", "appendix", "dodaci"]
+    optional: true
+  - key: biografija
+    match: ["biografija", "biography", "biografija autora"]
+    optional: true
+  - key: izjave
+    match: ["izjava o autorstvu", "izjava o istovetnosti", "izjava o korišćenju"]
+    optional: true
+
+abstract_languages: ["sr", "en"]
+
+heading_numbering:
+  scheme: decimal                # "1", "1.1", "1.1.1"
+  require_numbering_from_level: 1
+
+page_style_rules:
+  margins_cm: {top: 2.5, bottom: 2.5, left: 3.0, right: 2.0}
+  margins_tolerance_cm: 0.3
+  font_name: "Times New Roman"
+  font_size_pt: 12.0
+  line_spacing: 1.5
+  justification: justify         # parser.py reads WD_ALIGN_PARAGRAPH.JUSTIFY.name.lower() -> 'justify'
+
+page_numbering_required: true
+
+citation_style_hint: "author-year or numbered - checked only for presence/consistency, no single style enforced"

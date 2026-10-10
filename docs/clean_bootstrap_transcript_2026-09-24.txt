@@ -1,0 +1,33 @@
+$ python3 --version
+Python 3.9.6
+
+$ python3 -m venv .venv && . .venv/bin/activate
+(venv activated)
+
+$ python -m pip install --upgrade pip
+    Uninstalling pip-21.2.4:
+      Successfully uninstalled pip-21.2.4
+Successfully installed pip-26.0.1
+
+$ pip install -e ".[dev]"
+  Building editable for ajp (pyproject.toml): started
+  Building editable for ajp (pyproject.toml): finished with status 'done'
+  Created wheel for ajp: filename=ajp-0.1.0-0.editable-py3-none-any.whl size=1752 sha256=2a0d5315b492177a735ff38b9b1cfeee457dbeffeb50e69c9d63500cbd51bbe2
+  Stored in directory: /private/var/folders/04/g7qtpcnj6274b2y7y2d5k0040000gn/T/pip-ephem-wheel-cache-tdszv376/wheels/ef/b8/2b/2f059953ec2f4bc6ae8e7f01e032acd0aa7cf3566f958bfc10
+Successfully built ajp
+Installing collected packages: brotli, websockets, uvloop, typing-extensions, tomli, selectolax, rapidfuzz, pyyaml, python-multipart, python-dotenv, pypdfium2, pygments, pycparser, pycountry, psycopg-binary, psutil, protego, pluggy, platformdirs, Pillow, packaging, lxml, iniconfig, idna, httptools, h11, fasteners, defusedxml, click, charset-normalizer, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, reportlab, python-docx, pypdf, pydantic-core, psycopg, pgserver, httpcore, exceptiongroup, cffi, pytest, pydantic, cryptography, anyio, watchfiles, starlette, pdfminer.six, httpx, pdfplumber, fastapi, ajp
+
+Successfully installed Pillow-11.3.0 ajp-0.1.0 annotated-doc-0.0.5 annotated-types-0.7.0 anyio-4.12.1 brotli-1.2.0 certifi-2026.7.22 cffi-2.0.0 charset-normalizer-3.5.1 click-8.1.8 cryptography-50.0.1 defusedxml-0.7.1 exceptiongroup-1.3.1 fastapi-0.128.8 fasteners-0.20 h11-0.16.0 httpcore-1.0.9 httptools-0.8.0 httpx-0.28.1 idna-3.20 iniconfig-2.1.0 lxml-6.1.3 packaging-26.3 pdfminer.six-20251107 pdfplumber-0.11.8 pgserver-0.1.4 platformdirs-4.4.0 pluggy-1.6.0 protego-0.5.0 psutil-7.2.2 psycopg-3.2.13 psycopg-binary-3.2.13 pycountry-24.6.1 pycparser-2.23 pydantic-2.13.5 pydantic-core-2.46.5 pygments-2.21.0 pypdf-6.19.0 pypdfium2-5.13.0 pytest-8.4.2 python-docx-1.2.0 python-dotenv-1.2.1 python-multipart-0.0.20 pyyaml-6.0.3 rapidfuzz-3.13.0 reportlab-5.0.1 selectolax-0.4.12 starlette-0.49.3 tomli-2.4.1 typing-extensions-4.16.0 typing-inspection-0.4.2 uvicorn-0.39.0 uvloop-0.22.1 watchfiles-1.1.1 websockets-15.0.1
+
+$ ajp-init --data-dir /tmp/ajp-transcript-datadir
+seeded: 100 base + 86 supplement = 186 orgs, 10 demo listings
+DSN=postgresql://postgres:@/postgres?host=/private/tmp/ajp-transcript-datadir/pgdata
+export AJP_DSN='postgresql://postgres:@/postgres?host=/private/tmp/ajp-transcript-datadir/pgdata'
+
+$ python -m pytest -m "not live" -q  (offline suite, same fresh venv)
+........................................................................ [ 74%]
+........................................................................ [ 83%]
+........................................................................ [ 91%]
+........................................................................ [ 99%]
+...                                                                      [100%]
+859 passed, 8 skipped, 1 deselected in 77.33s (0:01:17)

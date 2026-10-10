@@ -1,0 +1,11 @@
+{
+ "entries": [
+  {
+   "slug": "bg-sf",
+   "crawl_config": {
+    "max_pages": 3
+   },
+   "why": "Joomla board, newest first, mixed company/mobility/employment posts; open professor calls can sit beyond page 1 (PM addenda 2)"
+  }
+ ]
+}
