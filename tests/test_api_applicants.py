@@ -263,3 +263,126 @@ def test_tied_scores_break_deterministically_by_posted_at_then_listing_id(client
     expected_no_date_order = sorted((str(tied_ids["tie-no-date-1"]), str(tied_ids["tie-no-date-2"])))
     actual_no_date_order = [ids1[i] for i in sorted(no_date_ranks)]
     assert actual_no_date_order == expected_no_date_order
+
+
+# ---- T43 (packet 025): bulk multi-row INSERT replaces the old row-by-row executemany --------------------
+def test_t43_compute_matches_persists_via_exactly_one_copy_operation_regardless_of_row_count(client, tmp_path, conn, monkeypatch):
+    """T43's own core deliverable: ONE bulk COPY operation (streaming every row in a single `COPY ... FROM
+    STDIN`), never one write per listing - proven directly by counting how many times `Cursor.copy()` is
+    actually invoked, for both a small and a much larger listing count. (A single multi-row `INSERT ...
+    VALUES (...),(...),...` was tried FIRST, per PM's own suggestion, and measured SLOWER than the
+    original row-by-row `executemany` for this real data - COPY is what was actually shipped; see
+    pm/outbox/t43_report.md for the full, real timing comparison of all three approaches.)"""
+    import psycopg
+    from ajp.applicants import pipeline
+
+    real_copy = psycopg.Cursor.copy
+    copy_count = {"n": 0}
+
+    def counting_copy(self, *args, **kwargs):
+        copy_count["n"] += 1
+        return real_copy(self, *args, **kwargs)
+
+    monkeypatch.setattr(psycopg.Cursor, "copy", counting_copy)
+
+    def _seed_listings(source_id, n):
+        conn.execute(f"""INSERT INTO source (id, kind, base_url, robots_ok)
+                         VALUES ('{source_id}','feed','https://x.invalid',true) ON CONFLICT DO NOTHING""")
+        conn.cursor().executemany(
+            f"""INSERT INTO listing (ext_uid, source_id, url, url_canon, title_raw, raw_text, position_kind, status, apply_url)
+               VALUES (%s,'{source_id}',%s,%s,%s,'','other','open',%s)""",
+            [(str(i), f"https://t43.invalid/{source_id}/{i}", f"https://t43.invalid/{source_id}/{i}", f"Role {i}",
+             f"https://t43.invalid/{source_id}/{i}") for i in range(n)],
+        )
+
+    applicant_id = _upload(client, tmp_path).json()["id"]
+
+    _seed_listings("src_t43_small", 3)
+    copy_count["n"] = 0
+    results_small = pipeline.compute_matches(conn, applicant_id)
+    assert copy_count["n"] == 1                               # ONE copy operation, not 3
+    stored_small = conn.execute("SELECT count(*) AS n FROM applicant_match WHERE applicant_id=%s", (applicant_id,)).fetchone()["n"]
+    assert stored_small == len(results_small)
+
+    _seed_listings("src_t43_large", 80)
+    copy_count["n"] = 0
+    results_large = pipeline.compute_matches(conn, applicant_id)
+    assert copy_count["n"] == 1                               # STILL one copy operation, not 83
+    stored_large = conn.execute("SELECT count(*) AS n FROM applicant_match WHERE applicant_id=%s", (applicant_id,)).fetchone()["n"]
+    assert stored_large == len(results_large) == 83
+
+
+def test_t43_bulk_insert_checksum_matches_a_fixed_value_for_a_synthetic_fixture(client, tmp_path, conn):
+    """T43's own identity-neutral requirement, as a committed, offline (no live-DB dependency) regression:
+    a fixed, small synthetic listing set scored against the real uploaded golden-shaped CV must persist to
+    the SAME checksum every time - this exact value was computed by actually running this test against the
+    real code (never hand-derived), and the live, one-off before/after comparison against the real ~/.ajp
+    DB (all 4,065 real open rows, both real golden CVs) is reported separately in pm/outbox/t43_report.md."""
+    import hashlib
+
+    from ajp.applicants import pipeline
+
+    conn.execute("""INSERT INTO source (id, kind, base_url, robots_ok)
+                    VALUES ('src_t43_checksum','feed','https://x.invalid',true)""")
+    conn.cursor().executemany(
+        """INSERT INTO listing (ext_uid, source_id, url, url_canon, title_raw, raw_text, country_iso2,
+                                position_kind, degree_required, status, apply_url)
+           VALUES (%s,'src_t43_checksum',%s,%s,%s,%s,%s,'other',%s,'open',%s)""",
+        [
+            ("1", "https://t43c.invalid/1", "https://t43c.invalid/1", "Postdoc in Quantum Physics",
+             "physics research role", "DE", "phd", "https://t43c.invalid/1"),
+            ("2", "https://t43c.invalid/2", "https://t43c.invalid/2", "Chef position",
+             "restaurant kitchen role", "FR", "none", "https://t43c.invalid/2"),
+            ("3", "https://t43c.invalid/3", "https://t43c.invalid/3", "Some role", "", None, "unknown",
+             "https://t43c.invalid/3"),
+        ],
+    )
+    applicant_id = _upload(client, tmp_path).json()["id"]
+    pipeline.compute_matches(conn, applicant_id)
+    # T43, found live building this exact test: `listing.id` is a server-generated random UUID, not a
+    # stable identity - sorting/hashing by it made the checksum spuriously "non-deterministic" across runs
+    # (same real scores/factors every time, just reshuffled row order) purely because a DIFFERENT random
+    # UUID happened to sort first. Joined against the listing's own real, fixture-controlled `ext_uid`
+    # ('1'/'2'/'3' above) instead - a real stable identity, not an artifact of insertion order.
+    rows = conn.execute(
+        """SELECT l.ext_uid, am.score, am.factors::text AS factors FROM applicant_match am
+           JOIN listing l ON l.id = am.listing_id
+           WHERE am.applicant_id=%s ORDER BY l.ext_uid""",
+        (applicant_id,),
+    ).fetchall()
+    assert len(rows) == 3
+    blob = "\n".join(f"{r['ext_uid']}|{r['score']}|{r['factors']}" for r in rows)
+    checksum = hashlib.md5(blob.encode()).hexdigest()
+    assert checksum == "91c060c3beedc7e065ba472b9663de30"
+
+
+def test_t43_a_failed_copy_rolls_back_the_delete_too_never_leaving_zero_rows(client, tmp_path, conn, monkeypatch):
+    """T43's own explicit atomicity requirement: 'a failure must not leave zero/partial rows' - DELETE +
+    the bulk COPY are one real transaction now (`with conn.transaction():`), so a failure injected into
+    the COPY step must leave the ORIGINAL rows from the previous successful compute still in place, never
+    an empty table. (Found live building this exact task: under this project's own `autocommit=True`
+    connection, this was NOT true before T43 - each statement committed on its own.)"""
+    import psycopg
+    from ajp.applicants import pipeline
+
+    conn.execute("""INSERT INTO source (id, kind, base_url, robots_ok)
+                    VALUES ('src_t43_atomic','feed','https://x.invalid',true)""")
+    conn.execute("""INSERT INTO listing (ext_uid, source_id, url, url_canon, title_raw, raw_text,
+                                         position_kind, status, apply_url)
+                    VALUES ('1','src_t43_atomic','https://t43a.invalid/1','https://t43a.invalid/1',
+                            'Postdoc role','physics','other','open','https://t43a.invalid/1')""")
+    applicant_id = _upload(client, tmp_path).json()["id"]
+    pipeline.compute_matches(conn, applicant_id)
+    before = conn.execute("SELECT count(*) AS n FROM applicant_match WHERE applicant_id=%s", (applicant_id,)).fetchone()["n"]
+    assert before == 1
+
+    def failing_copy(self, *args, **kwargs):
+        raise RuntimeError("simulated COPY failure")
+
+    monkeypatch.setattr(psycopg.Cursor, "copy", failing_copy)
+    with pytest.raises(RuntimeError):
+        pipeline.compute_matches(conn, applicant_id)
+    monkeypatch.undo()
+
+    after = conn.execute("SELECT count(*) AS n FROM applicant_match WHERE applicant_id=%s", (applicant_id,)).fetchone()["n"]
+    assert after == 1                      # the pre-existing row survived - never left at 0 by a half-done recompute

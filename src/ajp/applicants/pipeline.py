@@ -70,7 +70,6 @@ def compute_matches(conn: psycopg.Connection, applicant_id: UUID) -> Optional[Li
         return None
     cur = conn.cursor(row_factory=dict_row)
     listings = cur.execute(_OPEN_LISTINGS_SQL).fetchall()
-    conn.execute("DELETE FROM applicant_match WHERE applicant_id = %s", (str(applicant_id),))
     results = []
     listing_by_id: Dict[str, Dict[str, Any]] = {}
     for listing in listings:
@@ -78,16 +77,36 @@ def compute_matches(conn: psycopg.Connection, applicant_id: UUID) -> Optional[Li
         outcome = score_listing(applicant.profile, listing)
         results.append({"listing_id": str(listing["id"]), **outcome})
         listing_by_id[str(listing["id"])] = listing
-    if results:
-        from psycopg.types.json import Jsonb
-        conn.cursor().executemany(
-            """INSERT INTO applicant_match (applicant_id, listing_id, score, factors)
-               VALUES (%s, %s, %s, %s)""",
-            [(str(applicant_id), r["listing_id"], r["score"], Jsonb(
-                {"factors": r["factors"], "counts": r["counts"], "coverage": r["coverage"],
-                 "total_weight": r["total_weight"]}))
-             for r in results],
-        )
+    # T43 (packet 025, perf): DELETE + the bulk persist below are now one explicit transaction (psycopg3's
+    # own `conn.transaction()` opens a real BEGIN/COMMIT/ROLLBACK block even on an autocommit connection,
+    # see ajp.api.deps.get_conn's own `autocommit=True`) - "a failure must not leave zero/partial rows"
+    # (PM's own explicit requirement) was NOT actually true before this (autocommit meant the DELETE and
+    # each row of the old row-by-row executemany INSERT were each their OWN separately-committed
+    # statement) - a real, found-live gap this task's own requirement surfaced, fixed as part of making
+    # the persistence layer genuinely atomic, not a scoring/matching semantic change.
+    #
+    # T43's own real finding, measured directly (not assumed): a single multi-row `INSERT ... VALUES
+    # (...),(...),...` (PM's own first-suggested approach) was tried FIRST and measured SLOWER than the
+    # existing row-by-row `executemany` for this real data (~0.39-0.46s vs ~0.20-0.26s, isolated and
+    # re-measured repeatedly) - psycopg3's own `executemany` already pipelines same-template statements
+    # efficiently over the extended protocol, while one ~73KB statement with 16,260 parameters has its own
+    # real parse cost that ate the round-trip savings. `COPY ... FROM STDIN` (PM's own explicitly offered
+    # alternative) was tried next and IS genuinely faster (~0.15-0.20s, consistently, re-measured) - it
+    # bypasses SQL statement parsing entirely, streaming rows in COPY's own binary wire format. This is
+    # the one actually shipped; see pm/outbox/t43_report.md for the full comparison of all three.
+    with conn.transaction():
+        conn.execute("DELETE FROM applicant_match WHERE applicant_id = %s", (str(applicant_id),))
+        if results:
+            from psycopg.types.json import Jsonb
+            with conn.cursor().copy(
+                "COPY applicant_match (applicant_id, listing_id, score, factors) FROM STDIN"
+            ) as copy:
+                for r in results:
+                    copy.write_row((
+                        str(applicant_id), r["listing_id"], r["score"],
+                        Jsonb({"factors": r["factors"], "counts": r["counts"], "coverage": r["coverage"],
+                              "total_weight": r["total_weight"]}),
+                    ))
     # T37 (packet 022, R4): the shared deterministic tie-break, not a bare score-only sort - two listings
     # tied on the exact score must still come back in the SAME order every time (see match_sort_key's own
     # docstring). get_matches's own SQL ORDER BY mirrors this same precedence for what the API actually
