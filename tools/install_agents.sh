@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-# T28 (packet 016, user's own explicit demand): install the 3 user-level LaunchAgents (scheduler, API, web)
-# so this platform stays in sync with online jobs and stays reachable locally WITHOUT a human ever running a
-# command by hand again. Idempotent - safe to re-run after a code update (re-bootstraps each agent with
-# today's paths/plist content rather than erroring if one is already loaded).
+# T28 (packet 016, user's own explicit demand): install the user-level LaunchAgents (scheduler, API, web,
+# and - since F5, 2026-10-11 - logrotate, which caps the other three's logs) so this platform stays in sync
+# with online jobs and stays reachable locally WITHOUT a human ever running a command by hand again.
+# Idempotent - safe to re-run after a code update (re-bootstraps each agent with today's paths/plist content
+# rather than erroring if one is already loaded).
 #
 # This script itself calls `launchctl bootstrap` (that is its whole job) - but per this project's own
 # standing rule, an AI agent working on this codebase must never RUN this script itself; only a human
@@ -74,9 +75,12 @@ install_plist() {
 }
 
 echo "== Installing LaunchAgents =="
+[ -x "$REPO_ROOT/tools/logrotate.sh" ] || die "no executable $REPO_ROOT/tools/logrotate.sh"
+
 install_plist scheduler
 install_plist api
 install_plist web
+install_plist logrotate      # F5: caps ~/.ajp/logs/*.log - no-op unless a log is over its size threshold
 
 echo "== Health checks (a few seconds for each service to actually start) =="
 sleep 3
@@ -93,8 +97,9 @@ fi
 
 echo
 echo "Agents are user-level (gui/$(id -u)): they start automatically at login and restart automatically on a"
-echo "crash (never on a clean exit, and never more than once every 10 minutes). Logs: $LOG_DIR/{scheduler,api,web}.log"
+echo "crash (never on a clean exit, and never more than once every 10 minutes). Logs: $LOG_DIR/{scheduler,api,web}.log,"
+echo "errors separated into *.err.log, all capped daily by com.ajp.logrotate (see $LOG_DIR/logrotate.log)."
 echo "Pause temporarily (relaunched automatically after the 10-minute throttle above):"
 echo "  launchctl kill SIGTERM $UID_GUI/com.ajp.<scheduler|api|web>"
 echo "Stop for good (removes it from launchd - it will NOT relaunch, and will not start again at your next login):"
-echo "  launchctl bootout $UID_GUI/com.ajp.<scheduler|api|web>   (or run ./tools/uninstall_agents.sh for all three)"
+echo "  launchctl bootout $UID_GUI/com.ajp.<scheduler|api|web|logrotate>   (or ./tools/uninstall_agents.sh for all four)"

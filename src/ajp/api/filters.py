@@ -212,11 +212,18 @@ def _degree_required(f: ListingFilters) -> Clause:
 
 
 def _deadline(f: ListingFilters) -> Clause:
+    # F14 (2026-10-11): both buckets are bounded BELOW by now() as well as above. They used to have no lower
+    # bound at all, so `closing_soon` returned every deadline that had already passed - including ads that
+    # closed months ago. listing.status is stamped once at ingest time and nothing ever re-evaluates it as a
+    # deadline passes, so those rows are still status='open' (the DEFAULT status filter) and sort=deadline_asc
+    # put the most long-expired ones FIRST, ahead of the genuinely-closing ads a user asked for. A deadline
+    # in the past is not closing soon, and is not an upcoming deadline this month either.
     parts, params = [], {}
     if f.deadline_bucket == "closing_soon":
-        parts.append("l.deadline IS NOT NULL AND l.deadline <= now() + interval '14 days'")
+        parts.append("l.deadline IS NOT NULL AND l.deadline >= now() AND l.deadline <= now() + interval '14 days'")
     elif f.deadline_bucket == "this_month":
-        parts.append("l.deadline IS NOT NULL AND date_trunc('month', l.deadline) = date_trunc('month', now())")
+        parts.append("""l.deadline IS NOT NULL AND l.deadline >= now()
+                        AND date_trunc('month', l.deadline) = date_trunc('month', now())""")
     if f.deadline_from is not None:
         parts.append("l.deadline >= %(deadline_from)s")
         params["deadline_from"] = f.deadline_from

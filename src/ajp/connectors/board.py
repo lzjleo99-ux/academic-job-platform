@@ -36,7 +36,7 @@ from ajp.extract.document import extract_document_text
 from ajp.extract.text import decode_bytes as _decode_html
 from ajp.extract.text import decode_entities, is_oversized_or_listlike_title
 from ajp.extract_contacts import extract_contacts
-from ajp.ingest import upsert_listing
+from ajp.ingest import upsert_listing_deduped
 from ajp.rawstore import put_raw
 from ajp.robots import RobotsDenied
 
@@ -1110,10 +1110,18 @@ def crawl_orgs(conn, client, store, org_list: List[Dict[str, Any]], run_id: str,
         # inserted) - a 2-tuple, ALWAYS truthy regardless of `inserted`'s own value, so `if upsert_listing(...)`
         # previously counted every row as 'ingested' whether it was a fresh insert or an update to an
         # existing row. Unpacked properly: rows_new/rows_updated are now real, distinct counts.
+        #
+        # F14 (2026-10-11): the ingest call is upsert_listing_deduped, not plain upsert_listing. Every other
+        # connector goes through the scheduler's own upsert_listing_deduped; this loop was the one exception,
+        # and `sources` is deliberately NOT an insertable column (ingest.LISTING_COLUMNS excludes it as
+        # "managed by upsert_listing_deduped"), so every row written here kept 0014's DEFAULT '[]' forever:
+        # canonical_source() -> None, verified_direct False, the `source=` filter's
+        # jsonb_array_elements(l.sources) never matched it, and /v1/facets' source dimension dropped it -
+        # real, crawled listings that were invisible to both. (It also fed the crash fixed in ingest.py.)
         rows_new = rows_updated = 0
         for r in rows:
-            _, inserted = upsert_listing(conn, r, store)
-            if inserted:
+            _, action = upsert_listing_deduped(conn, r, store)
+            if action == "inserted":
                 rows_new += 1
             else:
                 rows_updated += 1

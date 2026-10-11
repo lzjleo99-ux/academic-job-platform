@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# T28 (packet 016): removes the 3 user-level LaunchAgents install_agents.sh installed. Bootout only - this
+# T28 (packet 016): removes the user-level LaunchAgents install_agents.sh installed (scheduler, api, web and,
+# since F5, logrotate). Bootout only - this
 # NEVER touches ~/.ajp (the real Postgres data, raw store, uploaded CVs/theses) or the repo checkout itself;
 # uninstalling the agents is completely separate from deleting any data, on purpose.
 #
@@ -29,6 +30,7 @@ remove_agent() {
 remove_agent scheduler
 remove_agent api
 remove_agent web
+remove_agent logrotate
 
 echo
-echo "All 3 agents removed. Your data (~/.ajp) was never touched - it is still there for the next install."
+echo "All 4 agents removed. Your data (~/.ajp) was never touched - it is still there for the next install."

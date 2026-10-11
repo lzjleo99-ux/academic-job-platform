@@ -21,7 +21,7 @@ from datetime import date, datetime, timedelta, timezone
 from typing import Any, Callable, Dict, List, Optional
 
 import psycopg
-from psycopg.rows import dict_row
+from psycopg.rows import dict_row, tuple_row
 
 from ajp.connectors.academicpositions import AcademicPositionsConnector
 from ajp.connectors.academictransfer import AcademicTransferConnector
@@ -47,6 +47,7 @@ log = logging.getLogger(__name__)
 
 JITTER_FRACTION = 0.10        # R4: cadence 24h +/-10%
 FX_STALE_HOURS = 72
+ECB_FEED = "daily"            # ajp.fx.job's own default too; the 90d/hist feeds are gap-repair/backfill tools
 
 # Every bespoke, fixed-source_id connector this project has built - each takes just (client, store),
 # confirmed by grep across every one of these modules (none define a custom __init__ beyond Connector's own).
@@ -151,14 +152,24 @@ def due_sources(conn: psycopg.Connection, *, now: Optional[datetime] = None) -> 
     must not defer the source's next real attempt by a full cadence period - found live while testing this
     (F4, T21 PM acceptance audit): without this exclusion, reconciling a stale row made the source look like
     it had JUST successfully finished, the opposite of the intended "give it a fresh chance now" effect.
+    The cadence window is measured from the last completed run's STARTED_AT, not its finished_at (F2).
+    Both used to be the same instant, so this made no difference; once finished_at began recording the
+    run's REAL completion time, measuring from it would have silently drifted every slow source's schedule
+    by its own runtime each cycle (a source that really takes five hours would come due five hours later
+    every single day, and a full cycle here demonstrably does run for hours). started_at is also the
+    instant the caller itself reasons about (see _run_one_source's T26 note), so comparing it against the
+    caller's own `now` keeps exactly one clock in the dueness decision - the property T26 exists to protect.
+    Only rows that actually completed still count: `finished_at IS NOT NULL` is what keeps an in-flight or
+    reconciled row from deferring the source's next real attempt.
+
     Uses its own dict_row cursor regardless of the connection's default row_factory - same convention as
     registry.py/discovery.py, for the same reason (the shared test `conn` fixture defaults to tuples; the
     API layer's own connections default to dict_row)."""
     now = now or datetime.now(timezone.utc)
     cur = conn.cursor(row_factory=dict_row)
     rows = cur.execute(
-        """SELECT s.*, r.last_finished_at FROM source s
-           LEFT JOIN (SELECT source_id, max(finished_at) AS last_finished_at FROM run_ledger
+        """SELECT s.*, r.last_started_at FROM source s
+           LEFT JOIN (SELECT source_id, max(started_at) AS last_started_at FROM run_ledger
                      WHERE finished_at IS NOT NULL AND note IS DISTINCT FROM %s
                      GROUP BY source_id) r ON r.source_id = s.id
            WHERE s.enabled AND s.kind != 'channel'""",
@@ -167,18 +178,52 @@ def due_sources(conn: psycopg.Connection, *, now: Optional[datetime] = None) -> 
     due = []
     for row in rows:
         row = dict(row)
-        last = row.pop("last_finished_at")
+        last = row.pop("last_started_at")
         if last is None or last + effective_cadence(row, now=now) <= now:
             due.append(row)
     return due
 
 
 # --------------------------------------------------------------------- FX-first (packet's own ordering rule) --
+def _call_fx_provider(fn: Callable[..., Any], dsn: str, store: ObjectStore, polite: PoliteClient) -> Any:
+    """Call one FX provider's run() with store/polite bound BY KEYWORD.
+
+    F1 (found live 2026-10-10, fixed here): this loop used to call every provider as
+    `fn(dsn, store, polite)` - one call shape for both. But ecb.run's real signature is
+    `(dsn, feed='daily', store=None, polite=None)`: its extra `feed` parameter sits SECOND, so the
+    positional form bound the ObjectStore to `feed` and the PoliteClient to `store`. Nothing raised at the
+    call - `feed` accepts any object - so the failure only surfaced deep inside ecb.fetch() as
+    `KeyError: <LocalFsStore ...>` on `FEEDS[feed]`, which the caller's bare `except` turned into a
+    returned dict entry that was never logged or persisted. ECB therefore never ran, not once, in any
+    cycle, while ERAPI (whose signature does bind cleanly) succeeded every time and masked it entirely -
+    the documented two-provider redundancy did not exist, and every currency silently resolved through
+    the LOWEST-precedence, self-described "indicative only" source (fx_source_rank: NBS=1, ECB=2, ERAPI=3).
+
+    Two guarantees now, instead of one call shape:
+      - store/polite are keyword arguments, so an extra positional parameter can never displace them
+        again, whatever a provider's own signature looks like today or later;
+      - inspect's bind() validates the call against the REAL signature, so a provider whose shape drifts
+        (a new required parameter, say) raises a loud TypeError here, never a silent misbinding that
+        surfaces hours later as an unrelated KeyError. `feed` is filled by NAME, not by position.
+    """
+    sig = inspect.signature(fn)
+    kwargs: Dict[str, Any] = {"store": store, "polite": polite}
+    if "feed" in sig.parameters:
+        kwargs["feed"] = ECB_FEED
+    bound = sig.bind(dsn, **kwargs)          # raises TypeError loudly if the signature ever drifts
+    return fn(*bound.args, **bound.kwargs)
+
+
 def run_fx_first(dsn: str, *, raw_root: Optional[str] = None) -> Dict[str, Any]:
     """Every ajp-run --once/--daemon cycle snapshots FX BEFORE running any source, so a source that reads
     fx_rate_latest mid-run (salary EUR/year conversion) never sees a stale rate this same run could have
     refreshed. One provider failing never stops the other (ajp.fx.job's own contract) or the sources that
-    follow. Returns the providers' own results plus a >72h staleness warning, never fabricated."""
+    follow. Returns the providers' own results plus a >72h staleness warning, never fabricated.
+
+    A provider that fails is recorded under its own key AND logged (F1: the failure used to be swallowed
+    into this returned dict with nothing anywhere in the logs, so a provider could be dead for months
+    without a trace); `failed_providers` names them so a caller/run summary can see it without parsing
+    every entry."""
     from ajp.fx import ecb, erapi
     from ajp.rawstore import LocalFsStore
 
@@ -187,18 +232,43 @@ def run_fx_first(dsn: str, *, raw_root: Optional[str] = None) -> Dict[str, Any]:
     out: Dict[str, Any] = {"providers": {}, "stale_warning": None}
     for name, fn in (("ecb", ecb.run), ("erapi", erapi.run)):
         try:
-            out["providers"][name] = fn(dsn, store, polite)
+            out["providers"][name] = _call_fx_provider(fn, dsn, store, polite)
         except Exception as e:  # noqa: BLE001 - one provider failing must never stop the other or the run
             out["providers"][name] = {"error": f"{type(e).__name__}: {e}"}
+            log.warning("FX provider %s failed this cycle: %s: %s", name, type(e).__name__, e)
+    failed = [n for n, result in out["providers"].items() if isinstance(result, dict) and "error" in result]
+    if failed:
+        out["failed_providers"] = failed
     with psycopg.connect(dsn, autocommit=True) as conn:
-        as_of = conn.execute("SELECT max(rate_date) FROM fx_rate_latest").fetchone()[0]
-    if as_of is not None:
-        age_hours = (datetime.now(timezone.utc).date() - as_of).days * 24
-        if age_hours > FX_STALE_HOURS:
-            out["stale_warning"] = f"FX snapshot is {age_hours}h old (> {FX_STALE_HOURS}h threshold), as_of={as_of}"
-    else:
-        out["stale_warning"] = "no FX snapshot exists yet"
+        out["stale_warning"] = fx_stale_warning(conn)
     return out
+
+
+def fx_stale_warning(conn: psycopg.Connection, *, now: Optional[datetime] = None) -> Optional[str]:
+    """ONE definition of 'stale FX', shared by the scheduler's own pre-run check and by GET /health (T21's
+    requirement that the two can never disagree was previously only a comment above TWO copies of the same
+    arithmetic - a real drift risk the moment either one is touched).
+
+    F14 (2026-10-11): the comparison is `>=`, not `>`. `as_of` is a rate's own publication DATE, not a
+    timestamp, so the age can only be measured in whole calendar days - and `days * 24 > 72` required FOUR
+    of them, silently passing a snapshot whose real age was anywhere in 72-96h (ECB publishes ~16:00 CET, so
+    a day-count of three means a real age of roughly 66-78h: the honest reading is that the snapshot has
+    crossed the 72h line and must be reported, not waved through). Everything else in this codebase measures
+    staleness in real hours; only this did not.
+
+    Pins its own tuple_row cursor (the codebase-wide convention: the API layer's connections default to
+    dict_row, the scheduler's and the test fixture's to tuples), so it works under either.
+
+    `now` exists so a test can assert the boundary without sleeping; the real callers leave it None."""
+    now = now or _utcnow()
+    cur = conn.cursor(row_factory=tuple_row)
+    as_of = cur.execute("SELECT max(rate_date) FROM fx_rate_latest").fetchone()[0]
+    if as_of is None:
+        return "no FX snapshot exists yet"
+    age_hours = (now.date() - as_of).days * 24
+    if age_hours >= FX_STALE_HOURS:
+        return f"FX snapshot is {age_hours}h old (> {FX_STALE_HOURS}h threshold), as_of={as_of}"
+    return None
 
 
 # --------------------------------------------------------------------- one source, one ledger row -------------
@@ -272,6 +342,17 @@ def _discover_and_crawl_watchdog(connector) -> Any:
 _R1_KEY = "__scheduler__"    # a single logical key per source, distinct from board.py's own per-URL R1 keys
 
 
+def _utcnow() -> datetime:
+    """The one place the real wall clock is read, used ONLY to stamp a run's actual completion instant
+    (F2). Kept as its own function so a test can substitute a known instant and assert what the ledger
+    really recorded - a bare datetime.now() at each call site would be untestable.
+
+    Deliberately NOT used for anything a scheduling decision depends on: dueness compares against the
+    caller's own `now` (see the T26 note on _run_one_source), so no decision is ever made by comparing
+    this clock against that one."""
+    return datetime.now(timezone.utc)
+
+
 def _run_rs_org_boards(conn: psycopg.Connection, client: PoliteClient, store: ObjectStore, *,
                        run_id: Any, r1: Any, run_id_for_r1: str, finished_at: datetime) -> Dict[str, Any]:
     """F8 (PM live audit 2026-09-24): rs_org_boards is the org-fan-out source (board.crawl_orgs(), one
@@ -321,14 +402,21 @@ def _run_one_source(conn: psycopg.Connection, client: PoliteClient, store: Objec
     consecutive failed run_ledger row for this source is logged status='blocked' instead of plain 'error' -
     the same counter, a different key, so the two never collide or double-count each other.
 
-    `finished_at` is stamped as `started_at` (T26, found live 2026-09-25 running the offline suite the day
-    after writing it): every UPDATE here used to stamp `finished_at = now()`, the database SERVER's own real
-    wall-clock time, while due_sources()'s own cadence check compares against the `now` the CALLER passed to
-    run_once() - identical in real ajp-run usage (both really are 'now'), but a test that simulates a fixed
-    'now' far from the real wall clock (exactly what happens the day after such a test was written, if 'now'
-    is a hardcoded constant) got a silently wrong 'is this source due yet' answer. Both timestamps are now
-    the one, single 'now' the whole call already reasons about - never two independent clocks that can
-    quietly drift apart."""
+    Timestamps, two different jobs that must not be conflated (T26 + F2):
+      - `started_at` is the caller's own `now` (T26, found live 2026-09-25 running the offline suite the day
+        after writing it): it used to be that every UPDATE here stamped `finished_at = now()`, the database
+        SERVER's own real wall-clock time, while due_sources()'s cadence check compares against the `now`
+        the CALLER passed to run_once() - identical in real ajp-run usage (both really are 'now'), but a
+        test that simulates a fixed 'now' far from the real wall clock got a silently wrong 'is this source
+        due yet' answer. So the instant every scheduling decision reasons about is that one caller-supplied
+        `now`, never a second clock that can quietly drift away from it.
+      - `finished_at` is the run's REAL completion instant, read once here via _utcnow() (F2). T26's fix had
+        collapsed both columns onto the same value, which made the ledger demonstrably false: a cycle that
+        really ran for over five hours recorded `finished_at == started_at` for all eighteen of its sources,
+        i.e. zero duration, leaving no way to see a source slowing down or to build any duration-based
+        monitoring. Duration is derived from these two columns and from nothing else, so they are now
+        genuinely different instants - and dueness still reads started_at, never finished_at, so restoring
+        the real value cannot shift a single cadence window (see due_sources)."""
     from ajp.crawl_state import CrawlState
 
     cur = conn.cursor(row_factory=dict_row)
@@ -341,14 +429,14 @@ def _run_one_source(conn: psycopg.Connection, client: PoliteClient, store: Objec
     try:
         if source_row["id"] == "rs_org_boards":
             return _run_rs_org_boards(conn, client, store, run_id=run_id, r1=r1, run_id_for_r1=run_id_for_r1,
-                                      finished_at=started_at)
+                                      finished_at=_utcnow())
         connector = build_connector(source_row, client, store)
         if isinstance(connector, NoOpConnector):
             r1.ok(_R1_KEY)
             conn.execute(
                 """UPDATE run_ledger SET finished_at = %s, status = 'ok', pages_fetched = 0,
                           rows_new = 0, rows_updated = 0, note = %s WHERE run_id = %s""",
-                (started_at, connector.reason, run_id),
+                (_utcnow(), connector.reason, run_id),
             )
             return {"source_id": source_row["id"], "run_id": run_id, "status": "ok", "note": connector.reason}
         rows, report = _discover_and_crawl_watchdog(connector)
@@ -363,7 +451,7 @@ def _run_one_source(conn: psycopg.Connection, client: PoliteClient, store: Objec
         conn.execute(
             """UPDATE run_ledger SET finished_at = %s, status = 'ok', pages_fetched = %s,
                       rows_new = %s, rows_updated = %s, http_counters = %s WHERE run_id = %s""",
-            (started_at, report.get("attempted", len(rows)), rows_new, rows_updated,
+            (_utcnow(), report.get("attempted", len(rows)), rows_new, rows_updated,
              json.dumps(report, default=str), run_id),
         )
         return {"source_id": source_row["id"], "run_id": run_id, "status": "ok",
@@ -375,7 +463,7 @@ def _run_one_source(conn: psycopg.Connection, client: PoliteClient, store: Objec
         status = "blocked" if r1_state["blocked_reason"] else "error"
         conn.execute(
             "UPDATE run_ledger SET finished_at = %s, status = %s, note = %s WHERE run_id = %s",
-            (started_at, status, error_text if status == "error" else r1_state["blocked_reason"], run_id),
+            (_utcnow(), status, error_text if status == "error" else r1_state["blocked_reason"], run_id),
         )
         return {"source_id": source_row["id"], "run_id": run_id, "status": status, "error": error_text}
     finally:

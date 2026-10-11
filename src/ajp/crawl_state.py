@@ -12,6 +12,7 @@ import json
 from typing import Any, Dict, Optional
 
 import psycopg
+from psycopg.rows import tuple_row
 
 BLOCK_AFTER_RUNS = 3
 HISTORY_KEEP = 10
@@ -22,8 +23,14 @@ class CrawlState:
         self.conn, self.source_id, self.run_id = conn, source_id, run_id
 
     def get(self, key: str) -> Optional[Dict[str, Any]]:
-        cur = self.conn.execute("""SELECT consecutive_failures, last_run_id, last_error, blocked_reason, history
-                                     FROM crawl_state WHERE source_id=%s AND key=%s""", (self.source_id, key))
+        # F14 (2026-10-11): pins its own tuple_row cursor. The row is unpacked POSITIONALLY, so a connection
+        # whose default row_factory is dict_row (the API layer's, see ajp.api.deps) would make zip() iterate
+        # the dict's KEYS - silently producing {"consecutive_failures": "consecutive_failures", ...} and a
+        # failure count that never reaches 3, i.e. R1's blocking never fires. Pinned, like registry.py and
+        # discovery.py already do, so this behaves identically under either default.
+        cur = self.conn.cursor(row_factory=tuple_row)
+        cur.execute("""SELECT consecutive_failures, last_run_id, last_error, blocked_reason, history
+                         FROM crawl_state WHERE source_id=%s AND key=%s""", (self.source_id, key))
         r = cur.fetchone()
         return None if r is None else dict(zip(("consecutive_failures", "last_run_id", "last_error", "blocked_reason", "history"), r))
 

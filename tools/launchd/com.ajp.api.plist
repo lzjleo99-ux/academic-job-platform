@@ -30,10 +30,13 @@
   </dict>
   <key>ThrottleInterval</key>
   <integer>600</integer>
+  <!-- F5 (2026-10-11): stderr has its own file, not api.log - uvicorn's access logging makes the stdout
+       file the fastest-growing one, and a traceback interleaved into it is unreadable. Capped by
+       com.ajp.logrotate (tools/logrotate.sh). -->
   <key>StandardOutPath</key>
   <string>__AJP_LOG_DIR__/api.log</string>
   <key>StandardErrorPath</key>
-  <string>__AJP_LOG_DIR__/api.log</string>
+  <string>__AJP_LOG_DIR__/api.err.log</string>
   <key>ProcessType</key>
   <string>Background</string>
 </dict>

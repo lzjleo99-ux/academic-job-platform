@@ -3,6 +3,7 @@ salary EUR conversion with a fixed FX fixture; dedupe group test; pagination + s
 OpenAPI renders; /health reflects a deliberately degraded source.
 """
 from datetime import datetime, timedelta, timezone
+from uuid import uuid4
 
 import pytest
 from fastapi.testclient import TestClient
@@ -343,6 +344,17 @@ def test_channels_endpoint_lists_euraxess_never_proxied(client):
     slugs = {c["slug"] for c in body}
     assert "serbia-jobs" in slugs
     assert all(c["url"].startswith("https://euraxess.ec.europa.eu") for c in body if c["source_id"] == "euraxess")
+
+
+def test_a_malformed_uuid_path_is_404_not_an_unhandled_500(client):
+    """F14 (2026-10-11): listing.id / org_master.id are uuid columns, so a path value that is not a uuid made
+    Postgres raise 22P02 (invalid input syntax for type uuid) and the app returned a 500 - every mistyped
+    bookmark or crawler hit produced one. An id that cannot be a listing/org id is simply not found."""
+    assert client.get("/v1/listings/not-a-uuid").status_code == 404
+    assert client.get("/v1/orgs/not-a-uuid").status_code == 404
+    # and a well-formed but nonexistent id still 404s the same way - one answer for both
+    assert client.get(f"/v1/listings/{uuid4()}").status_code == 404
+    assert client.get(f"/v1/orgs/{uuid4()}").status_code == 404
 
 
 def test_health_reflects_the_degraded_source(client):

@@ -41,10 +41,13 @@
   </dict>
   <key>ThrottleInterval</key>
   <integer>600</integer>
+  <!-- F5 (2026-10-11): stderr goes to its OWN file. Both streams used to share scheduler.log, which makes
+       the ordering of an interleaved write ambiguous exactly when it matters (a traceback next to the
+       request/crawl line that caused it). Both files are capped by com.ajp.logrotate (tools/logrotate.sh). -->
   <key>StandardOutPath</key>
   <string>__AJP_LOG_DIR__/scheduler.log</string>
   <key>StandardErrorPath</key>
-  <string>__AJP_LOG_DIR__/scheduler.log</string>
+  <string>__AJP_LOG_DIR__/scheduler.err.log</string>
   <key>ProcessType</key>
   <string>Background</string>
 </dict>

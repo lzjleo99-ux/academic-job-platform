@@ -1,13 +1,16 @@
 """T21 acceptance: run_once/run_daemon/jitter/due_sources - offline, real MockTransport HTTP layer (not a
 per-connector test double), so the FULL discover -> crawl -> upsert_listing_deduped -> run_ledger pipeline
 is exercised exactly as ajp-run itself would run it."""
+import inspect
+import logging
 from datetime import date, datetime, timedelta, timezone
 
 import httpx
+import psycopg
 import pytest
 
 from ajp import scheduler
-from ajp.connectors.base import PoliteClient
+from ajp.connectors.base import FetchFailed, PoliteClient
 from ajp.connectors.cern import CernConnector
 from ajp.rawstore import LocalFsStore
 
@@ -175,7 +178,12 @@ def test_a_watchdog_timeout_on_one_source_never_blocks_a_different_due_source_in
         return original_build(source_row, client, store)
 
     original_timeout = sched.MAX_SOURCE_RUNTIME_SECONDS
-    sched.MAX_SOURCE_RUNTIME_SECONDS = 0.2
+    # 0.2s was measurably too tight a budget for cern's own REAL crawl, which is what this test must prove
+    # still succeeds: ~0.22s on its first (cold) call and ~0.07s warm on an idle machine - and several times
+    # that on a loaded one, where the deadline fired against a perfectly healthy source and failed this test
+    # for a reason that has nothing to do with the guarantee it exists to cover. 2s is still a hard bound
+    # (the hung source is abandoned at 2s, not "eventually"), while leaving a healthy source ~20x of headroom.
+    sched.MAX_SOURCE_RUNTIME_SECONDS = 2.0
     sched.build_connector = fake_build_connector
     try:
         result = sched.run_once(conn, mock_client(), LocalFsStore(tmp_path), "unused", now=NOW, skip_fx=True)
@@ -223,6 +231,149 @@ def test_daemon_runs_three_sources_respecting_cadence_and_one_failure_never_stop
     assert all(status in ("ok", "error") for _, status in statuses)  # every row got a real terminal status
     cern_statuses = [st for sid, st in statuses if sid == "cern"]
     assert cern_statuses == ["ok", "ok"]                             # cern succeeds every cycle, never stopped by nsz failing
+
+
+# --------------------------------------------------------------------- F1: FX provider dispatch ----------------
+# F1 (found live 2026-10-10): run_fx_first dispatched BOTH providers through one loop with one call shape,
+# `fn(dsn, store, polite)`. ecb.run's real signature is (dsn, feed='daily', store=None, polite=None) - its
+# `feed` sits SECOND - so the store was bound to `feed` and the client to `store`. Nothing raised at the
+# call, so ECB died as a KeyError deep inside fetch(), which the bare `except` swallowed into a returned
+# dict: ECB never ran once, ever, and ERAPI (whose signature does bind cleanly) masked it completely.
+# Every FX provider was unit-tested; the ONE line wiring them up had zero coverage - these tests are that
+# missing coverage, and they fail against the old call shape.
+def test_run_fx_first_binds_every_provider_s_arguments_by_keyword(dsn, tmp_path, monkeypatch):
+    """Spies carrying each provider's REAL signature: assert what each parameter actually received."""
+    calls = {}
+
+    def fake_ecb_run(dsn, feed="daily", store=None, polite=None):          # ecb.run's real signature
+        calls["ecb"] = {"dsn": dsn, "feed": feed, "store": store, "polite": polite}
+        return {"provider": "ecb"}
+
+    def fake_erapi_run(dsn, store=None, polite=None):                      # erapi.run's real signature
+        calls["erapi"] = {"dsn": dsn, "store": store, "polite": polite}
+        return {"provider": "erapi"}
+
+    monkeypatch.setattr("ajp.fx.ecb.run", fake_ecb_run)
+    monkeypatch.setattr("ajp.fx.erapi.run", fake_erapi_run)
+
+    out = scheduler.run_fx_first(dsn, raw_root=str(tmp_path))
+
+    assert set(calls) == {"ecb", "erapi"}                 # both providers really ran - neither skipped
+    for name in ("ecb", "erapi"):
+        # run_fx_first builds a LocalFsStore and a PoliteClient; the old positional call gave ecb
+        # feed=<LocalFsStore>, store=<PoliteClient>, polite=None - caught by both assertions below.
+        assert isinstance(calls[name]["store"], LocalFsStore), f"{name} got store={calls[name]['store']!r}"
+        assert isinstance(calls[name]["polite"], PoliteClient), f"{name} got polite={calls[name]['polite']!r}"
+    assert calls["ecb"]["feed"] == "daily"                # a real feed name - the bug put the ObjectStore here
+    assert out["providers"] == {"ecb": {"provider": "ecb"}, "erapi": {"provider": "erapi"}}
+    assert "failed_providers" not in out
+
+
+def test_the_dispatch_reaches_the_real_ecb_run_with_store_and_polite_bound_correctly(dsn, tmp_path, monkeypatch):
+    """Not a spy: the REAL ecb.run, stopped just short of any network access, so what its own fetch()
+    receives proves the binding. Against the old call shape, `feed` here is a LocalFsStore object."""
+    from ajp.fx import ecb
+
+    seen = {}
+
+    def fake_fetch(feed="daily", polite=None):            # ecb.run calls fetch(feed, polite) positionally
+        seen["feed"], seen["polite"] = feed, polite
+        raise FetchFailed("stop before any network access")
+
+    monkeypatch.setattr(ecb, "fetch", fake_fetch)
+    with pytest.raises(FetchFailed):
+        scheduler._call_fx_provider(ecb.run, dsn, LocalFsStore(tmp_path), PoliteClient())
+    assert seen["feed"] == "daily"                        # never a store object
+    assert isinstance(seen["polite"], PoliteClient)
+
+
+def test_a_failing_fx_provider_is_recorded_and_logged_but_never_stops_the_other(dsn, tmp_path, monkeypatch,
+                                                                                caplog):
+    """F1's second half: the failure used to vanish into a returned dict with nothing in the logs, so a
+    provider could be dead for months without a trace. It is now named and logged."""
+    def fake_ecb_run(dsn, feed="daily", store=None, polite=None):
+        raise RuntimeError("ecb is down")
+
+    def fake_erapi_run(dsn, store=None, polite=None):
+        return {"provider": "erapi", "rows": 165}
+
+    monkeypatch.setattr("ajp.fx.ecb.run", fake_ecb_run)
+    monkeypatch.setattr("ajp.fx.erapi.run", fake_erapi_run)
+
+    with caplog.at_level(logging.WARNING):
+        out = scheduler.run_fx_first(dsn, raw_root=str(tmp_path))
+
+    assert out["providers"]["erapi"] == {"provider": "erapi", "rows": 165}   # the other still ran
+    assert out["failed_providers"] == ["ecb"]                                # named, not silent
+    assert "ecb" in caplog.text and "ecb is down" in caplog.text             # and logged
+
+
+def test_fx_staleness_warns_at_the_72h_line_not_a_whole_day_later(conn):
+    """F14: the old comparison was `days * 24 > 72`, i.e. FOUR whole calendar days, so a snapshot whose real
+    age was anywhere in 72-96h was silently reported as fresh. `now` is injectable so this is assertable."""
+    conn.execute("INSERT INTO fx_rate (rate_date, currency, per_eur, source) VALUES (%s,'USD',1.1,'ECB')",
+                 (date(2026, 1, 1),))
+    assert scheduler.fx_stale_warning(conn, now=datetime(2026, 1, 3, 12, tzinfo=timezone.utc)) is None   # 48h: fresh
+    warned = scheduler.fx_stale_warning(conn, now=datetime(2026, 1, 4, 12, tzinfo=timezone.utc))         # 72h: stale
+    assert warned is not None and "72h old" in warned and "72h threshold" in warned
+    assert scheduler.fx_stale_warning(conn, now=datetime(2026, 1, 5, 12, tzinfo=timezone.utc)) is not None  # 96h
+
+
+def test_run_fx_first_reports_a_missing_snapshot_without_fabricating_one(dsn, tmp_path, monkeypatch):
+    """The staleness half of the contract: no FX rows at all -> an explicit warning, never a made-up rate."""
+    monkeypatch.setattr("ajp.fx.ecb.run", lambda *a, **k: {"provider": "ecb"})
+    monkeypatch.setattr("ajp.fx.erapi.run", lambda *a, **k: {"provider": "erapi"})
+    out = scheduler.run_fx_first(dsn, raw_root=str(tmp_path))
+    assert out["stale_warning"] == "no FX snapshot exists yet"
+
+
+# --------------------------------------------------------------------- F14: CrawlState row factory -------------
+def test_crawl_state_counts_failures_identically_on_a_dict_row_connection(conn, dsn):
+    """F14 (2026-10-11): CrawlState.get() unpacked its row POSITIONALLY with zip(names, row) while pinning no
+    row factory of its own. On a dict_row connection - the API layer's own default (ajp.api.deps) - zip()
+    iterates the dict's KEYS, so it returned {"consecutive_failures": "consecutive_failures", ...}: a failure
+    count that can never reach 3, i.e. R1's blocking silently never fires. It now pins tuple_row, so it
+    behaves identically under either default (the convention registry.py and discovery.py already follow)."""
+    from psycopg.rows import dict_row
+
+    from ajp.crawl_state import CrawlState
+
+    CernConnector.ensure_source(conn)
+    CrawlState(conn, "cern", "run-1").fail("k1", "boom")
+    assert CrawlState(conn, "cern", "run-1").get("k1")["consecutive_failures"] == 1
+    with psycopg.connect(dsn, autocommit=True, row_factory=dict_row) as dict_conn:
+        state = CrawlState(dict_conn, "cern", "run-1").get("k1")
+        assert state["consecutive_failures"] == 1 and state["last_error"] == "boom"
+
+
+# --------------------------------------------------------------------- F2: real run duration -----------------
+def test_run_ledger_records_the_real_completion_instant_not_a_copy_of_started_at(conn, tmp_path, monkeypatch):
+    """F2: T26 collapsed finished_at onto started_at, so a cycle that really ran for over five hours
+    recorded zero duration for all eighteen of its sources. started_at stays the caller's own `now` (that
+    is what every cadence decision reasons about - T26's actual point); finished_at is now the run's real
+    completion instant, so duration is real again."""
+    CernConnector.ensure_source(conn)
+    stamps = [NOW + timedelta(minutes=7)]
+    monkeypatch.setattr(scheduler, "_utcnow", lambda: stamps.pop(0))
+
+    scheduler.run_once(conn, mock_client(), LocalFsStore(tmp_path), "unused", now=NOW, skip_fx=True)
+
+    started_at, finished_at = conn.execute(
+        "SELECT started_at, finished_at FROM run_ledger ORDER BY run_id DESC LIMIT 1").fetchone()
+    assert started_at == NOW                              # the caller's now - unchanged by F2
+    assert finished_at == NOW + timedelta(minutes=7)      # the real completion instant
+    assert finished_at > started_at                       # a real, non-zero duration in the ledger
+
+
+def test_a_slow_run_s_real_finish_time_never_pushes_its_next_cadence_window(conn):
+    """F2's own guard. Now that finished_at is genuinely later than started_at, measuring dueness from it
+    would drift every slow source's schedule by its own runtime, EVERY cycle (a source that takes five
+    hours would come due five hours later each day, forever). Dueness reads started_at, so it cannot."""
+    CernConnector.ensure_source(conn)
+    conn.execute("""INSERT INTO run_ledger (source_id, started_at, finished_at, status)
+                    VALUES ('cern', %s, %s, 'ok')""",
+                 (NOW - timedelta(hours=30), NOW - timedelta(hours=1)))   # started 30h ago, finished 1h ago
+    assert "cern" in {d["id"] for d in scheduler.due_sources(conn, now=NOW)}   # due on START + cadence
 
 
 # --------------------------------------------------------------------- F4: stale-run reconciliation (T21 PM audit) ---

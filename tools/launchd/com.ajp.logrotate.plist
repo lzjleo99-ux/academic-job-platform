@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  F5 (2026-10-11): caps the other three agents' logs, which launchd itself never rotates - a stack meant
+  to run unattended for months would otherwise grow ~/.ajp/logs without bound (api.log, all uvicorn access
+  logging, grows fastest of the three).
+
+  Runs tools/logrotate.sh once a day (and once at load), which trims any *.log over 5 MiB down to its most
+  recent 5000 lines IN PLACE - see that script's own header for why it must truncate the same inode rather
+  than rename the file (launchd holds one fd open for the lifetime of the job).
+
+  Not KeepAlive: this is a periodic job, not a service - launchd starts it on the interval and it exits.
+  Template - see com.ajp.scheduler.plist's own header comment for the __PLACEHOLDER__ convention.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.ajp.logrotate</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/bin/bash</string>
+    <string>__AJP_REPO_ROOT__/tools/logrotate.sh</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>__AJP_REPO_ROOT__</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>__AJP_VENV_BIN__:/usr/bin:/bin:/usr/sbin:/sbin</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <true/>
+  <key>StartInterval</key>
+  <integer>86400</integer>
+  <key>StandardOutPath</key>
+  <string>__AJP_LOG_DIR__/logrotate.log</string>
+  <key>StandardErrorPath</key>
+  <string>__AJP_LOG_DIR__/logrotate.err.log</string>
+  <key>ProcessType</key>
+  <string>Background</string>
+</dict>
+</plist>

@@ -39,7 +39,7 @@ def listing_filters(
     language: Optional[List[str]] = Query(None),
     language_level: Optional[str] = Query(None),
     degree_required: Optional[List[str]] = Query(None, description="bsc|msc|phd|none|unknown"),
-    deadline_bucket: Optional[str] = Query(None, description="closing_soon|this_month"),
+    deadline_bucket: Optional[str] = Query(None, description="closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only"),
     deadline_from: Optional[date] = Query(None),
     deadline_to: Optional[date] = Query(None),
     status: Optional[List[str]] = Query(None, description="open|closed|expired|unknown; default open only"),

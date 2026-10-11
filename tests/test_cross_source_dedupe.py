@@ -3,7 +3,7 @@ own board) - merge by (a) exact canonical URL or (b) normalized title+employer+l
 listing with sources[] appended, the canonical row's own fields never overwritten by a later merge."""
 from datetime import datetime, timedelta, timezone
 
-from ajp.ingest import find_cross_source_duplicate, upsert_listing_deduped
+from ajp.ingest import find_cross_source_duplicate, upsert_listing, upsert_listing_deduped
 from ajp.rawstore import LocalFsStore, put_raw
 
 NOW = datetime(2026, 9, 22, tzinfo=timezone.utc)
@@ -54,6 +54,25 @@ def test_outside_5_day_window_or_different_employer_is_not_merged(conn, tmp_path
     id3, action3 = upsert_listing_deduped(conn, row("b", raw(store, "b", path="/3"), ext_uid="3", org_raw="Leiden University",
                                                     city="Delft", posted_at=NOW), store)
     assert action3 == "inserted" and id3 not in (id1, id2)
+
+
+def test_recrawling_a_row_whose_sources_array_is_empty_seeds_it_instead_of_crashing(conn, tmp_path):
+    """F14 (found 2026-10-11): the re-crawl branch set
+    `sources = (SELECT jsonb_agg(...) FROM jsonb_array_elements(sources) s)` - a bare aggregate, which is
+    NULL over an EMPTY array (jsonb_array_elements('[]') yields no rows at all). That UPDATE then violated
+    listing.sources' own NOT NULL constraint (0014) with a NotNullViolation, aborting the ENTIRE source run
+    mid-crawl (every remaining row in it lost) - and three such runs block the source altogether.
+    Such rows really exist: every listing predating migration 0014 (its DEFAULT '[]', with no backfill),
+    and every row board.crawl_orgs() wrote through plain upsert_listing (fixed in the same sweep).
+    Reproduced against the old code: psycopg.errors.NotNullViolation on the second call below."""
+    add_source(conn, "a")
+    store = LocalFsStore(tmp_path)
+    lid, _ = upsert_listing(conn, row("a", raw(store, "a")), store)      # plain upsert: sources stays '[]'
+    assert conn.execute("SELECT sources FROM listing WHERE id=%s", (lid,)).fetchone()[0] == []
+    lid2, action = upsert_listing_deduped(conn, row("a", raw(store, "a", "/2")), store)   # same (source, ext_uid)
+    assert (lid2, action) == (lid, "refreshed")
+    sources = conn.execute("SELECT sources FROM listing WHERE id=%s", (lid,)).fetchone()[0]
+    assert [s["source"] for s in sources] == ["a"]        # seeded with its own entry - never NULL
 
 
 def test_merge_never_overwrites_the_canonical_rows_own_fields(conn, tmp_path):

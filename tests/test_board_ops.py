@@ -154,6 +154,19 @@ def test_crawl_orgs_ingested_count_distinguishes_new_from_updated_rows(conn, stu
     assert rep2["rows_new"] == 0 and rep2["rows_updated"] == 1 and rep2["ingested"] == 1
 
 
+def test_crawl_orgs_seeds_sources_so_its_rows_are_visible_to_filters_and_facets(conn, stub, tmp_path, org_row):
+    """F14 (2026-10-11): crawl_orgs ingested through plain upsert_listing, and `sources` is NOT an insertable
+    column (ingest.LISTING_COLUMNS excludes it as managed by upsert_listing_deduped), so every row it wrote
+    kept migration 0014's DEFAULT '[]' forever - invisible to the `source=` filter and to /v1/facets' source
+    dimension, both of which read jsonb_array_elements(l.sources), and canonical_source() returned None
+    (verified_direct False) for exactly the employer-direct rows that flag exists for."""
+    stub.route("/board", body=page(1))
+    rep = run(conn, tmp_path, org_row, "run-1")
+    assert rep["rows_new"] == 1
+    sources = conn.execute("SELECT sources FROM listing").fetchone()[0]
+    assert [s["source"] for s in sources] == ["rs_org_boards"]
+
+
 # ---------------------------------------------------------------- F8: wired into the real scheduler ------------
 def test_rs_org_boards_is_actually_crawled_by_run_once_not_a_noop(conn, stub, tmp_path, org_row):
     """F8 (PM live audit 2026-09-24): rs_org_boards had no single connector instance the generic factory

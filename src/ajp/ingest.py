@@ -114,6 +114,25 @@ def upsert_listing(conn: psycopg.Connection, row: Mapping[str, Any], store: Obje
 
 
 # ---------------------------------------------------------------- T13: cross-source dedupe -----------------
+# One expression, used by BOTH the merge and the re-crawl branch: refresh this source's own last_seen when
+# sources[] already records it, otherwise append a new entry for it.
+#
+# F14 (found 2026-10-11): the re-crawl branch used to be a bare
+#   sources = (SELECT jsonb_agg(...) FROM jsonb_array_elements(sources) s)
+# which is NULL whenever sources[] is EMPTY - jsonb_array_elements('[]'::jsonb) yields no rows at all, and
+# jsonb_agg over zero rows is NULL, not '[]'. That UPDATE then violated listing.sources' own NOT NULL
+# constraint (0014) with a hard NotNullViolation, which killed the WHOLE source's run (one bad row aborts
+# every other row in that crawl, and three such runs block the source entirely). Rows with sources='[]' are
+# not hypothetical: every listing that predates migration 0014 (its DEFAULT, with no backfill UPDATE) has
+# one, and so does every row board.crawl_orgs() wrote through plain upsert_listing (see below).
+# The CASE/EXISTS shape handles the empty array for free: no entry for this source -> append one.
+_SOURCES_APPEND_OR_REFRESH = """(
+     CASE WHEN EXISTS (SELECT 1 FROM jsonb_array_elements(sources) s WHERE s->>'source' = %(sid)s)
+          THEN (SELECT jsonb_agg(CASE WHEN s->>'source' = %(sid)s
+                                      THEN s || jsonb_build_object('last_seen', %(now)s::text)
+                                      ELSE s END)
+                FROM jsonb_array_elements(sources) s)
+          ELSE sources || %(new_entry)s::jsonb END)"""
 def find_cross_source_duplicate(conn: psycopg.Connection, row: Mapping[str, Any]) -> Optional[Any]:
     """The id of an EXISTING listing from a DIFFERENT source this row duplicates, by (a) an exact canonical-URL
     match, or (b) the same normalized title + employer, at the same city, with a posted/deadline date within
@@ -152,28 +171,19 @@ def upsert_listing_deduped(conn: psycopg.Connection, row: Mapping[str, Any], sto
     row = dict(row)
     now = datetime.now(timezone.utc).isoformat()
     dup_id = find_cross_source_duplicate(conn, row)
+    entry = [{"source": row["source_id"], "url": row["url"], "first_seen": now, "last_seen": now}]
     if dup_id is not None:
         conn.execute(
-            """UPDATE listing SET last_seen = now(), sources = (
-                 CASE WHEN EXISTS (SELECT 1 FROM jsonb_array_elements(sources) s WHERE s->>'source' = %(sid)s)
-                 THEN (SELECT jsonb_agg(CASE WHEN s->>'source' = %(sid)s THEN s || jsonb_build_object('last_seen', %(now)s::text)
-                                              ELSE s END)
-                        FROM jsonb_array_elements(sources) s)
-                 ELSE sources || %(new_entry)s::jsonb END)
-                WHERE id = %(id)s""",
-            {"sid": row["source_id"], "now": now, "id": dup_id,
-             "new_entry": Jsonb([{"source": row["source_id"], "url": row["url"], "first_seen": now, "last_seen": now}])})
+            f"UPDATE listing SET last_seen = now(), sources = {_SOURCES_APPEND_OR_REFRESH} WHERE id = %(id)s",
+            {"sid": row["source_id"], "now": now, "id": dup_id, "new_entry": Jsonb(entry)})
         return dup_id, "merged"
     listing_id, inserted = upsert_listing(conn, row, store)
     if inserted:
         conn.execute(
-            "UPDATE listing SET sources = %s::jsonb WHERE id = %s",
-            (Jsonb([{"source": row["source_id"], "url": row["url"], "first_seen": now, "last_seen": now}]), listing_id))
+            "UPDATE listing SET sources = %s::jsonb WHERE id = %s", (Jsonb(entry), listing_id))
     else:
+        # F14: the same shape as the merge branch above, never a bare jsonb_agg (see the constant's comment).
         conn.execute(
-            """UPDATE listing SET sources = (
-                 SELECT jsonb_agg(CASE WHEN s->>'source' = %(sid)s THEN s || jsonb_build_object('last_seen', %(now)s::text)
-                                        ELSE s END)
-                 FROM jsonb_array_elements(sources) s) WHERE id = %(id)s""",
-            {"sid": row["source_id"], "now": now, "id": listing_id})
+            f"UPDATE listing SET sources = {_SOURCES_APPEND_OR_REFRESH} WHERE id = %(id)s",
+            {"sid": row["source_id"], "now": now, "id": listing_id, "new_entry": Jsonb(entry)})
     return listing_id, "inserted" if inserted else "refreshed"

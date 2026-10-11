@@ -151,8 +151,15 @@ def get_matches(conn: psycopg.Connection, applicant_id: UUID, *, limit: int = 10
     out = []
     for r in rows:
         r = dict(r)
-        stored = r.pop("factors")            # {"factors": {...}, "counts": {...}, "coverage": ..., "total_weight": ...}
-        r.update(factors=stored["factors"], counts=stored["counts"], coverage=stored["coverage"],
-                total_weight=stored["total_weight"], listing_id=str(r["listing_id"]))
+        # F14 (2026-10-11): read defensively. `stored["factors"]`/["counts"]/["coverage"]/["total_weight"]
+        # raised KeyError (or TypeError on a NULL column) for ANY row not written by this pipeline's own
+        # compute_matches - one such row turns the whole matches response into a 500, with no recovery but a
+        # full re-run. ajp.applicants.matching.match_sort_key already reads these same fields with
+        # .get(...) or {}; this now matches that convention, and the defaults are the schema's own
+        # zero-evidence values (ApplicantMatchOut requires coverage/total_weight, so None is not an option).
+        stored = r.pop("factors") or {}      # {"factors": {...}, "counts": {...}, "coverage": ..., "total_weight": ...}
+        r.update(factors=stored.get("factors") or {}, counts=stored.get("counts") or {},
+                coverage=stored.get("coverage") or 0.0, total_weight=stored.get("total_weight") or 0,
+                listing_id=str(r["listing_id"]))
         out.append(r)
     return {"total": total, "results": out}

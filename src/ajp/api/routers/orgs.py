@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+import psycopg.errors
 from psycopg import Connection
 
 from ajp.api.deps import get_conn
@@ -28,11 +29,16 @@ def list_orgs(country: Optional[List[str]] = Query(None), conn: Connection = Dep
 
 @router.get("/orgs/{org_id}", response_model=OrgDetail)
 def get_org(org_id: str, conn: Connection = Depends(get_conn)) -> OrgDetail:
-    row = conn.execute(
-        f"""SELECT {_SUMMARY_SELECT}, o.career_urls, o.render_mode, o.robots_status, o.robots_checked_at,
-                   o.openalex_id, o.openalex_works_count, o.qs_rank, o.the_rank
-            FROM org_master o WHERE o.id = %(id)s""", {"id": org_id},
-    ).fetchone()
+    # F14 (2026-10-11): same as GET /v1/listings/{id} - o.id is a uuid, so a malformed path value raised
+    # 22P02 and escaped as a 500 instead of this endpoint's own 404.
+    try:
+        row = conn.execute(
+            f"""SELECT {_SUMMARY_SELECT}, o.career_urls, o.render_mode, o.robots_status, o.robots_checked_at,
+                       o.openalex_id, o.openalex_works_count, o.qs_rank, o.the_rank
+                FROM org_master o WHERE o.id = %(id)s""", {"id": org_id},
+        ).fetchone()
+    except psycopg.errors.DataError:
+        raise HTTPException(status_code=404, detail="org not found") from None
     if row is None:
         raise HTTPException(status_code=404, detail="org not found")
     return OrgDetail(**{**dict(row), "id": str(row["id"])})

@@ -7,6 +7,7 @@ from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import StreamingResponse
+import psycopg.errors
 from psycopg import Connection
 
 from ajp.api.deps import get_conn
@@ -88,7 +89,14 @@ def export_listings(
 
 @router.get("/listings/{listing_id}", response_model=ListingDetail)
 def get_listing(listing_id: str, conn: Connection = Depends(get_conn)) -> ListingDetail:
-    row = conn.execute(f"SELECT {BASE_SELECT} {BASE_FROM} WHERE l.id = %(id)s", {"id": listing_id}).fetchone()
+    # F14 (2026-10-11): the id column is a uuid, so a malformed path value ('not-a-uuid') made Postgres
+    # raise 22P02 and escaped as an unhandled 500 - every mistyped bookmark or crawler hit produced one.
+    # An id that cannot be a listing id is simply not found: 404, the same answer as a well-formed id with
+    # no row (clients already handle 404 here, and no new status code is introduced).
+    try:
+        row = conn.execute(f"SELECT {BASE_SELECT} {BASE_FROM} WHERE l.id = %(id)s", {"id": listing_id}).fetchone()
+    except psycopg.errors.DataError:
+        raise HTTPException(status_code=404, detail="listing not found") from None
     if row is None:
         raise HTTPException(status_code=404, detail="listing not found")
     return row_to_detail(row)

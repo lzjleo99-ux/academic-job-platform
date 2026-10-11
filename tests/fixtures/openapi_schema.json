@@ -2978,7 +2978,7 @@
             }
           },
           {
-            "description": "closing_soon|this_month",
+            "description": "closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only",
             "in": "query",
             "name": "deadline_bucket",
             "required": false,
@@ -2991,7 +2991,7 @@
                   "type": "null"
                 }
               ],
-              "description": "closing_soon|this_month",
+              "description": "closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only",
               "title": "Deadline Bucket"
             }
           },
@@ -3578,7 +3578,7 @@
             }
           },
           {
-            "description": "closing_soon|this_month",
+            "description": "closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only",
             "in": "query",
             "name": "deadline_bucket",
             "required": false,
@@ -3591,7 +3591,7 @@
                   "type": "null"
                 }
               ],
-              "description": "closing_soon|this_month",
+              "description": "closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only",
               "title": "Deadline Bucket"
             }
           },
@@ -4139,7 +4139,7 @@
             }
           },
           {
-            "description": "closing_soon|this_month",
+            "description": "closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only",
             "in": "query",
             "name": "deadline_bucket",
             "required": false,
@@ -4152,7 +4152,7 @@
                   "type": "null"
                 }
               ],
-              "description": "closing_soon|this_month",
+              "description": "closing_soon (next 14 days)|this_month (rest of this month); upcoming deadlines only",
               "title": "Deadline Bucket"
             }
           },

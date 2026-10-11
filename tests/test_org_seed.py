@@ -146,6 +146,17 @@ def test_university_never_matches_its_own_faculty_and_duplicates_are_refused():
     assert len(r["matches"]) == 1 and len(r["ambiguous"]) == 1    # one OpenAlex id can be claimed once
 
 
+def test_no_openalex_candidates_at_all_is_reported_unmatched_not_an_indexerror():
+    """F14 (2026-10-11): with an empty candidate list, `ranked` is [] for every org and the sort key's
+    x[1][0][0] indexed an empty list - IndexError before a single result was produced. An upstream fetch
+    returning nothing is a plausible outcome (and not one any caller handled), so every org is reported
+    unmatched instead: the function's own contract for 'no acceptable match'."""
+    r = orgs.match_openalex([mk("bg", "University of Belgrade"), mk("uns", "University of Novi Sad")], [])
+    assert r["matches"] == [] and r["ambiguous"] == []
+    assert {u["slug"] for u in r["unmatched"]} == {"bg", "uns"}
+    assert all(u["best"] is None for u in r["unmatched"])
+
+
 def test_apply_matches_never_overwrites_existing_ids(conn):
     orgs.seed_orgs(conn)
     conn.execute("UPDATE org_master SET openalex_id='I-manual' WHERE slug='bg'")

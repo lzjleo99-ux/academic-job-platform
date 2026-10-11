@@ -150,7 +150,14 @@ def match_openalex(orgs: List[Dict[str, Any]], oa_rows: List[Dict[str, Any]], th
         ranked = sorted(((max(fuzz.token_sort_ratio(q, n) for n in names), oid, disp) for oid, disp, names in cands), reverse=True)
         scored.append((o["slug"], ranked[:3]))
     matches, ambiguous, unmatched, claimed = [], [], [], {}
-    for slug, top in sorted(scored, key=lambda x: -x[1][0][0]):
+    # F14 (2026-10-11): an EMPTY candidate list used to crash here - `ranked` is then [] for every org, and
+    # the sort key's x[1][0][0] indexed an empty list (IndexError), as did `top[0]` below. An upstream fetch
+    # that returns nothing is a plausible operational outcome, not an error: report every org as unmatched
+    # (the function's own contract for "no acceptable match") instead of raising.
+    for slug, top in sorted(scored, key=lambda x: -(x[1][0][0] if x[1] else 0)):
+        if not top:
+            unmatched.append({"slug": slug, "best": None})
+            continue
         best, second = top[0], (top[1] if len(top) > 1 else (0, None, None))
         if best[0] >= threshold and best[0] - second[0] >= margin and best[1] not in claimed:
             claimed[best[1]] = slug

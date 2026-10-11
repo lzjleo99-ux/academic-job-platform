@@ -37,10 +37,11 @@
   </dict>
   <key>ThrottleInterval</key>
   <integer>600</integer>
+  <!-- F5 (2026-10-11): stderr has its own file (see com.ajp.api.plist). Capped by com.ajp.logrotate. -->
   <key>StandardOutPath</key>
   <string>__AJP_LOG_DIR__/web.log</string>
   <key>StandardErrorPath</key>
-  <string>__AJP_LOG_DIR__/web.log</string>
+  <string>__AJP_LOG_DIR__/web.err.log</string>
   <key>ProcessType</key>
   <string>Background</string>
 </dict>
