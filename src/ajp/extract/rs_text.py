@@ -10,6 +10,35 @@ import re
 from typing import Any, Dict, Optional, Tuple
 
 from ajp.dedupe_keys import normalize_title
+from ajp.extract.evidence import (
+    CONFIDENCE_MODEL,
+    Classification,
+    classify_other,
+    clip_raw,
+    score,
+)
+
+# T48 (packet 028): rule-strength tiers for the two listing columns that had no {conf, raw} of their own.
+# See ajp.extract.evidence's module docstring for what these numbers are (a rule-strength PRIOR, not a
+# calibrated probability) and why they are per-rule-GROUP: each kind is ONE regex, so a match says only
+# that *something* in the group hit, and the tier is therefore set by the group's WEAKEST member. The
+# precision a single tier cannot carry is in ``raw`` - the actual span that matched.
+#   grant_call 0.60 - the broadest group here: a bare 'projekat'/'stipendija'/'mobilnost' is the whole
+#                     match, and rs_text's own comment says a bare 'konkurs za' is not even trusted as an
+#                     employment marker for the same "too common/ambiguous standalone" reason.
+#   employment 0.85 - dominated by unambiguous phrases ('radno mesto', 'izbor u zvanje', 'zasnivanje
+#                     radnog odnosa'), but the group also carries the weaker 'konkurs ... poslovi'
+#                     co-occurrence rule, so it is not the top tier.
+#   internship 0.80 / enrollment 0.85 - both narrow and specific; enrollment's 'konkurs za upis' /
+#                     'prijemni ispit' phrase-shapes have no known false positive in this codebase.
+_KIND_TIERS = {"employment": 0.85, "enrollment": 0.85, "internship": 0.80, "grant_call": 0.60}
+#   researcher_title 0.95 - exact, multi-word Serbian research titles ('naucni savetnik', 'visi naucni
+#                     saradnik'): a full official title, essentially never incidental.
+#   research_assistant 0.60 - the weakest: a BARE 'istrazivac\w*' stem, the same shape already treated as
+#                     a false-positive risk elsewhere in this file ('Noc istrazivaca' - Researchers' Night,
+#                     an outreach event that is not a position at all, despite containing the word).
+_POSITION_TIERS = {"researcher_title": 0.95, "postdoc": 0.90, "professor": 0.85, "lecturer": 0.80,
+                   "research_assistant": 0.60, "technician": 0.85, "admin": 0.85, "intern": 0.80}
 
 ACADEMIC_RX = re.compile(r"\b(fakultet\w*|institut\w*|univerzitet\w*|nauc\w+|istrazivac\w*|istrazivan\w+|asistent\w*|docent\w*|"
                          r"profesor\w*|saradnik\w* u nastavi|laboratorij\w*)\b")
@@ -188,25 +217,66 @@ _PERFORMANCE_AUDITION = re.compile(r"\bsolistick\w* nastup\w*\b|\baudicij\w*\b|\
                                    r"\bnastup\w* sa hor\w*\b|\bza hor\b|\bza orkestar\b")
 
 
+def classify_kind_with_evidence(text: str, *, title: str = "", section_is_job_board: bool = False) -> Classification:
+    """As ``classify_kind``, but returning the raw span, the rule and a confidence alongside the kind.
+    Same first-hit-wins order, same guards - only the return type differs.
+
+    ``title`` is optional and used ONLY to zone the match (title vs body), never to change which rule
+    fires: callers that hold the title separately (every connector does - they build ``f"{title} {body}"``
+    to call this) pass it and get the zone discount, callers that only hold one combined string get
+    ``zone=None`` and no discount. Either way the classification itself is identical.
+
+    NOTE (F16, reported not silently fixed): ``section_is_job_board`` is accepted and documented as
+    letting a job-board section rescue an unclassified text, but the body has NEVER used it - it appears
+    exactly once in the whole repo, in this signature. Implementing what the docstring promises would
+    change the classification of live rows, which is a product decision, not a bug fix, so it is left
+    alone and raised to PM instead."""
+    n = normalize_title(text)
+    n_title = normalize_title(title) if title else None
+    guards: list = []
+    for kind, rx in _KIND_RULES:
+        m = re.search(rx, n)
+        if not m:
+            continue
+        # 'projekat'/'stipendija' etc. also show up in ordinary news narrating something that already
+        # happened (an award ceremony, a finished project's results) - not a call to action. Only
+        # employment/grant_call are gated on tense: enrollment/internship markers are specific enough on
+        # their own. The standing-document guard applies more broadly - 'spisak zakljucenih ugovora' trips
+        # the bare 'praks*' internship marker the same way 'cenovnik ... izbora u zvanja' trips employment's.
+        if kind in ("employment", "grant_call") and _NARRATIVE_PAST.search(n) and not _CALL_FOR_PARTICIPATION.search(n):
+            guards.append("narrative_past")
+            continue
+        if kind in ("employment", "grant_call", "internship") and is_standing_procedure_document(text):
+            guards.append("standing_document")
+            continue
+        if kind == "grant_call" and _JAVNI_POZIV.search(n) and _PERFORMANCE_AUDITION.search(n):
+            guards.append("performance_audition")
+            continue
+        zone = None
+        if n_title is not None:
+            zone = "title" if re.search(rx, n_title) else "body"
+        return Classification(kind=kind, conf=score(_KIND_TIERS[kind], zone=zone, guards_fired=len(guards)),
+                              raw=clip_raw(m.group(0)), rule=f"kind.{kind}", zone=zone, guards=tuple(guards))
+    return classify_other(guards=tuple(guards))
+
+
 def classify_kind(text: str, *, section_is_job_board: bool = False) -> str:
     """employment / enrollment / grant_call / internship / other. Unclassified stays 'other' (hidden by default)
     unless the source section itself is a job board AND the text has an employment marker."""
-    n = normalize_title(text)
-    for kind, rx in _KIND_RULES:
-        if re.search(rx, n):
-            # 'projekat'/'stipendija' etc. also show up in ordinary news narrating something that already
-            # happened (an award ceremony, a finished project's results) - not a call to action. Only
-            # employment/grant_call are gated on tense: enrollment/internship markers are specific enough on
-            # their own. The standing-document guard applies more broadly - 'spisak zakljucenih ugovora' trips
-            # the bare 'praks*' internship marker the same way 'cenovnik ... izbora u zvanja' trips employment's.
-            if kind in ("employment", "grant_call") and _NARRATIVE_PAST.search(n) and not _CALL_FOR_PARTICIPATION.search(n):
-                continue
-            if kind in ("employment", "grant_call", "internship") and is_standing_procedure_document(text):
-                continue
-            if kind == "grant_call" and _JAVNI_POZIV.search(n) and _PERFORMANCE_AUDITION.search(n):
-                continue
-            return kind
-    return "other"
+    return classify_kind_with_evidence(text, section_is_job_board=section_is_job_board).kind
+
+
+def position_kind_with_evidence(title: str) -> Tuple[Classification, Optional[str]]:
+    """As ``position_kind``, but the kind carries its raw span, rule and confidence. Always zoned 'title':
+    both rule sets are already evaluated against the title alone, never against a body."""
+    n = normalize_title(title)
+    rs = next((v for v, rx in _RS_TITLES if re.search(rx, n)), None)
+    m_kind = next(((k, re.search(rx, n)) for k, rx in _POSITION_RULES if re.search(rx, n)), None)
+    if m_kind is None:
+        return classify_other(), rs
+    kind, m = m_kind
+    return (Classification(kind=kind, conf=score(_POSITION_TIERS[kind], zone="title"),
+                           raw=clip_raw(m.group(0)), rule=f"position.{kind}", zone="title"), rs)
 
 
 def position_kind(title: str) -> Tuple[str, Optional[str]]:
@@ -214,6 +284,19 @@ def position_kind(title: str) -> Tuple[str, Optional[str]]:
     rs = next((v for v, rx in _RS_TITLES if re.search(rx, n)), None)
     kind = next((k for k, rx in _POSITION_RULES if re.search(rx, n)), "other")
     return kind, rs
+
+
+def kind_row_fields(text: str, title: str = "") -> Dict[str, Any]:
+    """The listing row fields one RS ad's classification produces: ``kind`` + its {conf,raw} and
+    ``position_kind`` + its {conf,raw}, in the shape ``upsert_listing`` accepts. One call so a connector
+    cannot set the kind and forget its evidence - the whole point of T48 is that the two never diverge."""
+    # zone: 'title' when the caller handed us the title separately, else None - both multiply by 1.0
+    # (ZONE_TITLE == 1.0), so an un-split string is never silently marked as a title-only match.
+    k = classify_kind_with_evidence(text, title=title)
+    pk, rs = position_kind_with_evidence(title or text)
+    return {"kind": k.kind, "kind_conf": k.conf, "kind_raw": k.raw,
+            "position_kind": pk.kind, "position_kind_conf": pk.conf, "position_kind_raw": pk.raw,
+            "rs_research_title": rs}
 
 
 def degree_required(text: str) -> Optional[str]:

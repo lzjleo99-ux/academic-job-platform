@@ -300,6 +300,264 @@
         "title": "ChannelLinkOut",
         "type": "object"
       },
+      "ClassificationReview": {
+        "description": "One classification a human is asked to check (T48, packet 028). The machine's answer is carried\nWITH the excerpt it was derived from - a reviewer must never be asked to agree or disagree without\nseeing the text the decision was made on (D6). ``conf`` is a rule-strength prior, not a probability\n(see ajp.extract.evidence), and ``model`` names the version that produced it.",
+        "properties": {
+          "classified_as": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classified As"
+          },
+          "conf": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Conf"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "guards": {
+            "default": [],
+            "items": {},
+            "title": "Guards",
+            "type": "array"
+          },
+          "human_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Human Kind"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "listing_id": {
+            "title": "Listing Id",
+            "type": "string"
+          },
+          "listing_org": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Org"
+          },
+          "listing_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Title"
+          },
+          "listing_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Listing Url"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "raw": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Raw"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "reviewed_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewed At"
+          },
+          "reviewer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewer"
+          },
+          "rule": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rule"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Status"
+          },
+          "zone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Zone"
+          }
+        },
+        "required": [
+          "id",
+          "listing_id",
+          "field"
+        ],
+        "title": "ClassificationReview",
+        "type": "object"
+      },
+      "ClassificationReviewResponse": {
+        "description": "The worklist plus the counts to judge it by. ``threshold`` and ``model`` are returned with the data\nitself so a reader never has to guess what a 0.6 means or which model produced it.",
+        "properties": {
+          "by_status": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "default": {},
+            "title": "By Status",
+            "type": "object"
+          },
+          "items": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/ClassificationReview"
+            },
+            "title": "Items",
+            "type": "array"
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model"
+          },
+          "pending_by_reason": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "default": {},
+            "title": "Pending By Reason",
+            "type": "object"
+          },
+          "threshold": {
+            "default": 0.0,
+            "title": "Threshold",
+            "type": "number"
+          },
+          "total": {
+            "default": 0,
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "title": "ClassificationReviewResponse",
+        "type": "object"
+      },
       "Confident": {
         "properties": {
           "conf": {
@@ -2756,6 +3014,89 @@
         "summary": "List Channels",
         "tags": [
           "channels"
+        ]
+      }
+    },
+    "/v1/classification-review": {
+      "get": {
+        "description": "Open review items, worst-first: 'unclassified_academic' (a real ad the vocabulary does not cover\nyet - the failure mode PM's own T33/T35/T36 audits found by hand) before 'excluded_by_rule' (the\nclassifier positively identified an exclusion) before 'low_confidence' (a rule fired, but a broad one).",
+        "operationId": "classification_review_v1_classification_review_get",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "pending",
+              "title": "Status",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "reason",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Reason"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 500,
+              "minimum": 1,
+              "title": "Limit",
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offset",
+            "required": false,
+            "schema": {
+              "default": 0,
+              "minimum": 0,
+              "title": "Offset",
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassificationReviewResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Classification Review",
+        "tags": [
+          "classification-review"
         ]
       }
     },

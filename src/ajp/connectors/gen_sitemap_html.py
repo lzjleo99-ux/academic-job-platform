@@ -33,7 +33,7 @@ from ajp.connectors.jobposting import _strip_html, classify_location, extract_jo
 from ajp.extract_contacts import extract_contacts
 from ajp.robots import RobotsDenied
 from ajp.extract import rs_text
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes, decode_entities
 from selectolax.parser import HTMLParser
 
@@ -188,19 +188,21 @@ class SitemapHtmlConnector(Connector):
         if not title:
             return None
         body_text = decode_entities(self._extract_body(html))
+        # T48 (packet 028): one call returns the kind AND its {conf, raw} evidence, so the row can never
+        # carry a classification without the excerpt that produced it (D6). rs_research_title rides along
+        # with the Serbian branch and is popped back out below - it is a separate column, not evidence.
         if self.config.classifier == "rs":
-            kind = rs_text.classify_kind(f"{title} {body_text}")
-            position_kind, rs_research_title = rs_text.position_kind(title)
+            kind_f = rs_text.kind_row_fields(f"{title} {body_text}", title)
         else:
-            kind = classify_kind_intl(title, body_text)
-            position_kind = position_kind_intl(title, body_text)
-            rs_research_title = None
+            kind_f = kind_row_fields(title, body_text)
+        kind, position_kind = kind_f["kind"], kind_f["position_kind"]
+        rs_research_title = kind_f.pop("rs_research_title", None)
         location = classify_location(f"{title} {body_text}", has_country=country is not None)
         contacts = extract_contacts(html=html, text=body_text)
         row: Dict[str, Any] = {
             "ext_uid": hashlib.sha1(url.encode()).hexdigest()[:16], "source_id": self.source_id,
             "url": url, "title_raw": title, "org_raw": self.config.org_raw, "country_iso2": country,
-            "position_kind": position_kind, "kind": kind, "ft_pt": "unknown",
+            **kind_f, "ft_pt": "unknown",
             "raw_text": body_text[:4000], "requirements_raw": body_text[:4000],
             "foreigner_eligible": "unknown", "extraction_family": "gen_sitemap_html", "raw_html_ref": raw_ref,
             "location_class": location["location_class"], "location_class_conf": location["location_class_conf"],

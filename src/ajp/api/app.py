@@ -9,7 +9,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from ajp import __version__
-from ajp.api.routers import applicants, channels, facets, governance, health, listings, meta, orgs, sources, thesis
+from ajp.api.routers import (applicants, channels, classification_review, facets, governance, health,
+                             listings, meta, orgs, sources, thesis)
 
 # T15's Next.js dev server only; never a wildcard (no client secrets ever cross this API anyway, but an open
 # CORS policy would still let any page read a visitor's data through their browser).
@@ -29,7 +30,8 @@ def create_app() -> FastAPI:
     app.add_middleware(CORSMiddleware, allow_origins=_DEV_UI_ORIGINS,
                        allow_methods=["GET", "POST", "PATCH", "DELETE"], allow_headers=["*"])
     for router in (health.router, listings.router, facets.router, orgs.router, sources.router, meta.router,
-                  channels.router, thesis.router, applicants.router, governance.router):
+                  channels.router, thesis.router, applicants.router, governance.router,
+                  classification_review.router):
         app.include_router(router)
     return app
 

@@ -19,7 +19,7 @@ from ajp.connectors.base import Connector, ObjectStore, PoliteClient, UrlManifes
 from ajp.connectors.jobposting import _parse_dt, _strip_html, classify_location, country_from_freetext_location
 from ajp.extract.text import decode_entities
 from ajp.extract_contacts import extract_contacts
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 
 HOST = "boards-api.greenhouse.io"
 TENANT_LINK_RE = re.compile(r"https?://(?:boards|job-boards)\.greenhouse\.io/([A-Za-z0-9_-]+)", re.IGNORECASE)
@@ -98,7 +98,7 @@ class GreenhouseConnector(Connector):
         row: Dict[str, Any] = {
             "ext_uid": str(j.get("id")), "source_id": self.source_id, "url": url, "title_raw": title,
             "country_iso2": country, "city": location_name, "org_id": self.org_id, "org_raw": self.org_raw,
-            "position_kind": position_kind_intl(title, body or ""), "kind": classify_kind_intl(title, body or ""),
+            **kind_row_fields(title, body or ""),
             "ft_pt": "unknown", "ad_lang": "en", "raw_text": body, "requirements_raw": body,
             "apply_url": url, "foreigner_eligible": "unknown",
             "extraction_family": "ats_greenhouse", "raw_html_ref": raw_ref,

@@ -28,7 +28,7 @@ from ajp.connectors.jobposting import _strip_html, classify_location
 from ajp.extract.text import decode_bytes, decode_entities
 from ajp.extract_contacts import extract_contacts
 from ajp.extract import rs_text
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.rawstore import put_raw
 from ajp.robots import RobotsDenied
 from selectolax.parser import HTMLParser
@@ -260,15 +260,23 @@ class WordPressConnector(Connector):
 
     def _map_row(self, item: Dict[str, str], body_text: str, raw_ref: str, html: str = "") -> Optional[Dict[str, Any]]:
         title = item["title"]
-        rs_research_title = None
+        # T48 (packet 028): one call returns the kind AND its {conf, raw} evidence (D6 - a classification
+        # may never be persisted without the excerpt that produced it). rs_research_title comes out of the
+        # same dict and is popped below; it is a separate column, not evidence.
         if self.config.classifier == "rs":
-            kind = rs_text.classify_kind(f"{title} {body_text}")
-            position_kind, rs_research_title = rs_text.position_kind(title)
+            kind_f = rs_text.kind_row_fields(f"{title} {body_text}", title)
         else:
-            kind = classify_kind_intl(title, body_text)
-            position_kind = position_kind_intl(title, body_text)
+            kind_f = kind_row_fields(title, body_text)
+        rs_research_title = kind_f.pop("rs_research_title", None)
         if self.config.default_kind is not None:
-            kind = self.config.default_kind
+            # The site's configured default_kind OVERRIDES the classifier's own answer, so from here on the
+            # classifier's evidence no longer describes the kind being persisted. Keep the override (it is
+            # the source's own configured truth) but DROP the evidence rather than attach an excerpt to a
+            # value it did not produce - a 'praksa' span next to kind='employment' would be a fabricated
+            # provenance, which is exactly what D6 forbids.
+            if self.config.default_kind != kind_f["kind"]:
+                kind_f = {**kind_f, "kind": self.config.default_kind, "kind_conf": None, "kind_raw": None}
+        kind, position_kind = kind_f["kind"], kind_f["position_kind"]
         # T23 (PM ruling R2): a missing fixed_country is still never guessed from free text (D6 unchanged) -
         # but the row is persisted with country_iso2=None + a real location_class now (migration 0020),
         # rather than discarded outright.
@@ -278,7 +286,7 @@ class WordPressConnector(Connector):
         row: Dict[str, Any] = {
             "ext_uid": hashlib.sha1(item["link"].encode()).hexdigest()[:16], "source_id": self.source_id,
             "url": item["link"], "title_raw": title, "org_id": self.org_id, "org_raw": self.config.org_raw,
-            "country_iso2": country, "position_kind": position_kind, "kind": kind,
+            "country_iso2": country, **kind_f,
             "ft_pt": "unknown", "raw_text": body_text[:4000], "requirements_raw": body_text[:4000],
             "foreigner_eligible": "unknown", "extraction_family": "gen_wordpress", "raw_html_ref": raw_ref,
             "location_class": location["location_class"], "location_class_conf": location["location_class_conf"],

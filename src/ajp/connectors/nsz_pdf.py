@@ -21,6 +21,7 @@ from selectolax.parser import HTMLParser
 
 from ajp.connectors.jobposting import classify_location
 from ajp.extract import rs_text
+from ajp.extract.evidence import with_kind_override
 from ajp.extract.text import is_oversized_or_listlike_title
 from ajp.extract_contacts import extract_contacts
 
@@ -199,8 +200,14 @@ def rows_from_ads(ads: List[PdfAd], issue: Issue, raw_ref: str, source_id: str =
 def _row(block: PdfAd, title: str, issue: Issue, raw_ref: str, source_id: str, now: datetime) -> Dict[str, Any]:
     full = f"{block.employer} {block.address} {title} {block.body}"
     uid = f"{issue.date.year}-{issue.label}-" + hashlib.sha1(f"{block.employer}|{title}|{block.body[:200]}".encode()).hexdigest()[:10]
-    kind = rs_text.classify_kind(f"{title} {block.employer}")
-    pk, rs_title = rs_text.position_kind(title)
+    # T48 (packet 028): kind + its {conf, raw} evidence from ONE call. The "an entry of the job publication
+    # is a job ad" fallback below FORCES kind='employment' when the classifier found nothing - that is a
+    # product decision, not a classification, so the (absent) evidence is dropped with it rather than being
+    # invented to match (D6).
+    kind_f = rs_text.kind_row_fields(f"{title} {block.employer}", title)
+    kind = kind_f["kind"]
+    kind_f = with_kind_override(kind_f, "employment" if kind == "other" else kind)
+    pk, rs_title = kind_f["position_kind"], kind_f.pop("rs_research_title", None)
     location = classify_location(full, has_country=True)   # T23 (PM ruling R2) completeness fix
     contacts = extract_contacts(text=full)                 # a PDF's own extracted text, no mailto:/tel: markup
     page_url = f"{issue.url}#page={block.page_first}"
@@ -216,8 +223,8 @@ def _row(block: PdfAd, title: str, issue: Issue, raw_ref: str, source_id: str, n
                        else f"Position(s) announced by {block.employer}" if block.employer else "Untitled position notice")
     row: Dict[str, Any] = {
         "ext_uid": uid, "source_id": source_id, "url": page_url, "title_raw": stored_title,
-        "org_raw": block.employer, "country_iso2": "RS", "city": city_from(block.address), "position_kind": pk,
-        "kind": "employment" if kind == "other" else kind,          # an entry of the job publication is a job ad
+        "org_raw": block.employer, "country_iso2": "RS", "city": city_from(block.address),
+        **kind_f,                          # kind (+ its evidence) and position_kind (+ its evidence)
         "ad_lang": rs_text.script_of(full), "raw_text": full, "requirements_raw": block.body or None, "raw_html_ref": raw_ref,
         "posted_at": datetime(issue.date.year, issue.date.month, issue.date.day, tzinfo=_BELGRADE),
         "foreigner_eligible": "unknown", "extraction_family": "nsz_pdf",

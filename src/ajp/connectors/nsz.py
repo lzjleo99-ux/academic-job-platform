@@ -17,6 +17,7 @@ from selectolax.parser import HTMLParser
 from ajp.connectors.base import Connector, FetchFailed, ManifestViolation, UrlManifest
 from ajp.connectors.jobposting import classify_location
 from ajp.extract import rs_text
+from ajp.extract.evidence import with_kind_override
 from ajp.extract.text import decode_bytes, is_oversized_or_listlike_title
 from ajp.extract_contacts import extract_contacts
 from ajp.robots import RobotsDenied
@@ -161,12 +162,18 @@ def rows_from_detail(card: Card, det: Detail, raw_ref: str, source_id: str = "ns
     rows = []
     for n, ad in enumerate(det.ads, 1):
         full = f"{ad.body} {ad.conditions}"
-        kind = rs_text.classify_kind(f"{ad.position} {det.employer}")   # judged on the title, not the conditions text
+        # T48 (packet 028): kind + its {conf, raw} evidence come from ONE call, so the row can never carry
+        # a classification without the excerpt that produced it. Both overrides below change what is
+        # persisted WITHOUT the classifier having produced it, so the evidence is dropped with the kind -
+        # see ajp.extract.evidence.with_kind_override.
+        kind_f = rs_text.kind_row_fields(f"{ad.position} {det.employer}", ad.position)
+        kind = kind_f["kind"]                                       # judged on the title, not the conditions text
         if kind == "other" and card.category:
             kind = "employment"                                     # an entry in the job board is a job ad...
         if kind == "employment" and not rs_text.academic_ad(ad.position, det.employer):
             kind = "other"                                          # ...but only academic ones are in the default view
-        pk, rs_title = rs_text.position_kind(ad.position)
+        kind_f = with_kind_override(kind_f, kind)
+        pk, rs_title = kind_f["position_kind"], kind_f.pop("rs_research_title", None)
         location = classify_location(full, has_country=True)   # T23 (PM ruling R2) completeness fix
         contacts = extract_contacts(html=html, text=full)
         # T35b: classification above is judged on the FULL ad.position text (unchanged) - only what gets
@@ -175,8 +182,7 @@ def rows_from_detail(card: Card, det: Detail, raw_ref: str, source_id: str = "ns
         row: Dict[str, Any] = {
             "ext_uid": card.ext_id if len(det.ads) == 1 else f"{card.ext_id}-{n}", "source_id": source_id, "url": card.url,
             "title_raw": title_raw, "org_raw": det.employer, "country_iso2": "RS", "city": city_from_address(det.address),
-            "position_kind": pk, "ad_lang": rs_text.script_of(full), "raw_text": full, "raw_html_ref": raw_ref,
-            "kind": kind,
+            **kind_f, "ad_lang": rs_text.script_of(full), "raw_text": full, "raw_html_ref": raw_ref,
             "requirements_raw": ad.conditions, "foreigner_eligible": "unknown", "extraction_family": "nsz_html",
             "location_class": location["location_class"], "location_class_conf": location["location_class_conf"],
             "location_class_raw": location["location_class_raw"],

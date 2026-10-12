@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from ajp.connectors.base import Connector, UrlManifest
 from ajp.connectors.jobposting import classify_location
 from ajp.extract import rs_text
+from ajp.extract.evidence import with_kind_override
 from ajp.extract.text import decode_bytes
 from ajp.extract_contacts import extract_contacts
 
@@ -65,10 +66,17 @@ def classify(title: str, body: str = "") -> str:
     live, so the kind SHAPE is judged on title+body together. academic_ad's position-noun check stays on the
     title alone (employer is unknown from the RSS alone, so its own employer-string gate simply never fires,
     which is fine: 'DOMAR'/'Kuvar'/etc fail the position-noun check regardless of who's hiring)."""
-    kind = rs_text.classify_kind(f"{title} {body}")
-    if kind == "employment" and not rs_text.academic_ad(title):
-        kind = "other"
-    return kind
+    return classify_fields(title, body)["kind"]
+
+
+def classify_fields(title: str, body: str = "") -> Dict[str, Any]:
+    """``classify`` carrying the classifier's own {conf, raw} evidence (T48, packet 028). The academic_ad
+    gate below changes the kind the classifier produced, so its evidence is dropped along with it - an
+    excerpt for a decision that was overruled is not provenance (D6)."""
+    f = rs_text.kind_row_fields(f"{title} {body}", title)
+    if f["kind"] == "employment" and not rs_text.academic_ad(title):
+        return with_kind_override(f, "other")
+    return f
 
 
 class SljakaConnector(Connector):
@@ -91,18 +99,19 @@ class SljakaConnector(Connector):
         rows: List[Dict[str, Any]] = []
         report = {"items": len(items), "kept": 0, "discarded": 0}
         for it in items:
-            kind = classify(it["title"], it["body"])
+            kind_f = classify_fields(it["title"], it["body"])
+            kind = kind_f["kind"]
             if kind == "other":
                 report["discarded"] += 1
                 continue
             report["kept"] += 1
-            pk, rs_title = rs_text.position_kind(it["title"])
+            pk, rs_title = kind_f["position_kind"], kind_f.pop("rs_research_title", None)
             location = classify_location(f"{it['title']} {it['body']}", has_country=True)
             contacts = extract_contacts(html=it["body_html"], text=it["body"])
             row: Dict[str, Any] = {
                 "ext_uid": hashlib.sha1(it["link"].encode()).hexdigest()[:16], "source_id": self.source_id,
                 "url": it["link"], "title_raw": it["title"], "org_raw": None, "country_iso2": "RS",
-                "position_kind": pk, "kind": kind, "ad_lang": rs_text.script_of(it["title"]),
+                **kind_f, "ad_lang": rs_text.script_of(it["title"]),
                 "raw_text": it["body"][:2000], "raw_html_ref": ref.key, "foreigner_eligible": "unknown",
                 "extraction_family": "sljaka_rss",
                 "location_class": location["location_class"], "location_class_conf": location["location_class_conf"],

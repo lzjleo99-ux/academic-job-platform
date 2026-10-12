@@ -28,7 +28,7 @@ from psycopg.types.json import Jsonb
 from ajp.connectors.base import Connector, FetchFailed, ManifestViolation, ObjectStore, PoliteClient, UrlManifest
 from ajp.connectors.jobposting import _country_iso2, _parse_dt, _strip_html, classify_location
 from ajp.extract_contacts import extract_contacts
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_entities
 from ajp.rawstore import put_raw
 from ajp.robots import RobotsDenied
@@ -188,8 +188,7 @@ class WorkdayCxsConnector(Connector):
             "url": url,
             "title_raw": title, "country_iso2": country, "city": info.get("location"),
             "org_id": self.org_id, "org_raw": self.org_raw,
-            "position_kind": position_kind_intl(title, body_text or ""),
-            "kind": classify_kind_intl(title, body_text or ""),
+            **kind_row_fields(title, body_text or ""),
             "ft_pt": ft_pt, "ad_lang": "en", "raw_text": body_text, "requirements_raw": body_text,
             "foreigner_eligible": "unknown", "extraction_family": "ats_workday_cxs", "raw_html_ref": raw_ref,
             "location_class": location["location_class"], "location_class_conf": location["location_class_conf"],

@@ -19,7 +19,7 @@ from selectolax.parser import HTMLParser
 
 from ajp.connectors.base import Connector, FetchFailed, ManifestViolation, UrlManifest
 from ajp.connectors.jobposting import classify_location, fetch_sitemap_text, sitemap_locs
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes
 from ajp.extract_contacts import extract_contacts
 from ajp.robots import RobotsDenied
@@ -110,14 +110,15 @@ class CnrsConnector(Connector):
             if not detail["title"]:
                 continue
             report["parsed"] += 1
-            kind = classify_kind_intl(detail["title"], detail["body_text"])
+            kind_f = kind_row_fields(detail["title"], detail["body_text"])
+            kind = kind_f["kind"]
             location = classify_location(f"{detail['title']} {detail['body_text']}", has_country=True)
             contacts = extract_contacts(html=html, text=detail["body_text"])
             row: Dict[str, Any] = {
                 "ext_uid": hashlib.sha1(res.final_url.encode()).hexdigest()[:16], "source_id": self.source_id,
                 "url": res.final_url, "title_raw": detail["title"], "org_raw": "CNRS",
                 "country_iso2": "FR", "city": detail["city"],
-                "position_kind": position_kind_intl(detail["title"], detail["body_text"]), "kind": kind,
+                **kind_f,
                 "ad_lang": "fr", "raw_text": detail["body_text"][:2000], "ft_pt": "unknown",
                 "foreigner_eligible": "unknown", "extraction_family": "cnrs_html", "raw_html_ref": ref.key,
                 "status": "unknown", "apply_url": res.final_url, **contacts,

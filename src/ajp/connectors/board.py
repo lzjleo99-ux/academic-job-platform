@@ -32,6 +32,7 @@ from ajp import orgs as orgs_mod
 from ajp.connectors.base import Connector, FetchFailed, FetchResult, ManifestViolation, UrlManifest, is_transport_error
 from ajp.crawl_state import CrawlState
 from ajp.extract import rs_text
+from ajp.extract.evidence import with_kind_override
 from ajp.extract.document import extract_document_text
 from ajp.extract.text import decode_bytes as _decode_html
 from ajp.extract.text import decode_entities, is_oversized_or_listlike_title
@@ -762,11 +763,17 @@ def rows_from_items(items: List[Item], org: Dict[str, Any], raw_ref: str, source
                 # classification path that might not require this specific signal.
         if teaser and _has_garbled_text(teaser):
             teaser = None    # never store garbled text as the teaser/raw_text either
-        pk, rs_title = rs_text.position_kind(title)
+        # T48 (packet 028): attach the classifier's {conf, raw} evidence ONLY when the classifier agrees with
+        # the kind ``keep()`` actually decided. keep() can also produce a kind from academic_ad() or from a
+        # document-path URL hint - neither is the classifier's own decision, so with_kind_override drops the
+        # evidence in those cases instead of attaching an excerpt to a verdict that was reached another way
+        # (D6: the raw excerpt must be the text the value was actually derived from).
+        kind_f = with_kind_override(rs_text.kind_row_fields(title, title), kind)
+        pk, rs_title = kind_f["position_kind"], kind_f.pop("rs_research_title", None)
         row: Dict[str, Any] = {
             "ext_uid": hashlib.sha1(it.url.encode()).hexdigest()[:16], "source_id": source_id, "url": it.url, "title_raw": title,
             "org_id": org.get("id"), "org_raw": org.get("name_native") or org.get("name_en"), "country_iso2": "RS", "city": org.get("city"),
-            "position_kind": pk, "kind": kind, "ad_lang": rs_text.script_of(title), "raw_text": teaser or title,
+            **kind_f, "ad_lang": rs_text.script_of(title), "raw_text": teaser or title,
             # R5: a military/police employer defaults foreigner_eligible='no' unless the ad text explicitly states
             # otherwise - listing-level text alone (title/teaser; documents are never opened) essentially never
             # does, so this is the org-level default from its own seed entry, 'unknown' for every other org.

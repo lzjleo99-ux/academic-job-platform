@@ -23,7 +23,7 @@ from selectolax.parser import HTMLParser
 
 from ajp.connectors.base import Connector, FetchFailed, ManifestViolation, UrlManifest
 from ajp.connectors.jobposting import classify_location
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes
 from ajp.extract_contacts import extract_contacts
 from ajp.robots import RobotsDenied
@@ -125,7 +125,8 @@ class CernConnector(Connector):
             # T23 (PM ruling R2): an unresolvable country is still never guessed (D6 unchanged) - the row is
             # persisted with country_iso2=None + a real location_class now (migration 0020), not discarded.
             report["parsed"] += 1
-            kind = classify_kind_intl(item["title"], detail["body_text"])
+            kind_f = kind_row_fields(item["title"], detail["body_text"])
+            kind = kind_f["kind"]
             location = classify_location(f"{item['title']} {detail['body_text']}",
                                          has_country=detail["country_iso2"] is not None)
             contacts = extract_contacts(html=html, text=detail["body_text"])
@@ -133,7 +134,7 @@ class CernConnector(Connector):
                 "ext_uid": hashlib.sha1(item["link"].encode()).hexdigest()[:16],
                 "source_id": self.source_id, "url": item["link"], "title_raw": item["title"],
                 "org_raw": "CERN", "country_iso2": detail["country_iso2"], "city": detail["city"],
-                "position_kind": position_kind_intl(item["title"], detail["body_text"]), "kind": kind,
+                **kind_f,
                 "ad_lang": "en", "raw_text": detail["body_text"][:2000], "ft_pt": "unknown",
                 "foreigner_eligible": "unknown", "extraction_family": "cern_rss_html",
                 "raw_html_ref": ref.key, "status": "unknown", "apply_url": item["link"], **contacts,

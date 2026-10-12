@@ -212,6 +212,44 @@ class OrgBoardHealthResponse(BaseModel):
     orgs: List[OrgBoardHealth] = []
 
 
+class ClassificationReview(BaseModel):
+    """One classification a human is asked to check (T48, packet 028). The machine's answer is carried
+    WITH the excerpt it was derived from - a reviewer must never be asked to agree or disagree without
+    seeing the text the decision was made on (D6). ``conf`` is a rule-strength prior, not a probability
+    (see ajp.extract.evidence), and ``model`` names the version that produced it."""
+    id: str
+    listing_id: str
+    field: str
+    listing_title: Optional[str] = None
+    listing_url: Optional[str] = None
+    listing_org: Optional[str] = None
+    classified_as: Optional[str] = None
+    conf: Optional[float] = None
+    raw: Optional[str] = None
+    rule: Optional[str] = None
+    zone: Optional[str] = None
+    guards: List[Any] = []
+    model: Optional[str] = None
+    reason: Optional[str] = None
+    status: Optional[str] = None
+    human_kind: Optional[str] = None
+    reviewer: Optional[str] = None
+    reviewed_at: Optional[str] = None
+    notes: Optional[str] = None
+    created_at: Optional[str] = None
+
+
+class ClassificationReviewResponse(BaseModel):
+    """The worklist plus the counts to judge it by. ``threshold`` and ``model`` are returned with the data
+    itself so a reader never has to guess what a 0.6 means or which model produced it."""
+    items: List[ClassificationReview] = []
+    total: int = 0
+    by_status: Dict[str, int] = {}
+    pending_by_reason: Dict[str, int] = {}
+    threshold: float = 0.0
+    model: Optional[str] = None
+
+
 class ChannelLinkOut(BaseModel):
     source_id: str
     slug: str

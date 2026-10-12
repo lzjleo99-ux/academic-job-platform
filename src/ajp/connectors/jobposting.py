@@ -16,7 +16,7 @@ import pycountry
 from selectolax.parser import HTMLParser
 
 from ajp.connectors.base import FetchFailed
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes, decode_entities
 from ajp.extract_contacts import extract_contacts
 
@@ -290,8 +290,7 @@ def jobposting_to_row(jp: Dict[str, Any], url: str, source_id: str, raw_ref: str
         "org_raw": org_name,
         "country_iso2": country,
         "city": city,
-        "position_kind": position_kind_intl(title, description or ""),
-        "kind": classify_kind_intl(title, description or ""),
+        **kind_row_fields(title, description or ""),
         "ad_lang": None,               # set by the caller when the source's own URL/locale names it (e.g. AT /en/ vs /nl/)
         "raw_text": description,
         "ft_pt": ft_pt,

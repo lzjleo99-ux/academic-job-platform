@@ -29,7 +29,7 @@ from selectolax.parser import HTMLParser
 
 from ajp.connectors.base import Connector, FetchFailed, ManifestViolation, UrlManifest
 from ajp.connectors.jobposting import classify_location
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes
 from ajp.extract_contacts import extract_contacts
 from ajp.robots import RobotsDenied
@@ -163,7 +163,8 @@ class KthConnector(Connector):
             # persisted with country_iso2=None + a real location_class now (migration 0020), not discarded.
             report["parsed"] += 1
             title, body = detail["title"], detail["body_text"]
-            kind = classify_kind_intl(title, body)
+            kind_f = kind_row_fields(title, body)
+            kind = kind_f["kind"]
             if kind == "other":
                 report["discarded"] += 1
                 continue
@@ -173,7 +174,7 @@ class KthConnector(Connector):
                 "ext_uid": link.rstrip("/").rsplit("/", 1)[-1], "source_id": self.source_id,
                 "url": link, "title_raw": title, "org_raw": ORG_RAW,
                 "country_iso2": detail["country_iso2"], "city": detail["city"],
-                "position_kind": position_kind_intl(title, body), "kind": kind, "ad_lang": "en",
+                **kind_f, "ad_lang": "en",
                 "raw_text": body[:2000], "ft_pt": detail["ft_pt"], "contract": detail["contract"],
                 "foreigner_eligible": "unknown", "extraction_family": "kth_rss_html",
                 "raw_html_ref": ref.key, "status": "open",

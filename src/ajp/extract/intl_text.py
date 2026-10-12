@@ -8,6 +8,28 @@ own design note.
 from __future__ import annotations
 
 import re
+from typing import Any, Dict
+
+from ajp.extract.evidence import (
+    Classification,
+    classify_other,
+    clip_raw,
+    score,
+)
+
+# T48 (packet 028): rule-strength tiers, the same model as rs_text._KIND_TIERS - see
+# ajp.extract.evidence for what these are (a rule-strength PRIOR, not a calibrated probability).
+# Unlike rs_text, these are per-BRANCH rather than per-kind: classify_kind_intl is a sequence of
+# independent ifs, not one ordered group regex, so each branch's own specificity is knowable exactly.
+#   grant_call 0.95 - _GRANT_CALL_STRONG names the scheme outright ('Marie Sklodowska-Curie',
+#                     'fellowship', 'scholarship'); the file's own comment calls these "unambiguous".
+#   grant_call 0.55 - the ERC branch, genuinely ambiguous BY ITS OWN COMMENT: a real postdoc ad naming
+#                     "an ERC-funded research program" describes its own funding, so this branch only
+#                     fires once that shape has been ruled out, and is trusted barely more than a coin.
+#   employment 0.75 - _ACADEMIC_POSITION, a broad multilingual vocabulary list.
+#   enrollment 0.85 / internship 0.80 - narrow phrase shapes.
+_POSITION_TIERS_INTL = {"postdoc": 0.90, "professor": 0.85, "lecturer": 0.85, "research_assistant": 0.80,
+                        "researcher_title": 0.70, "intern": 0.80, "phd": 0.85}
 
 # Exclusion markers checked FIRST: a non-academic role on an academic-flavoured board (administrative/facilities/
 # hospitality/sales/finance-ops staff, or a non-research internship) is not shown, whatever academic-sounding
@@ -105,25 +127,81 @@ _RESEARCH_SUPPORT_STAFF_TITLE = re.compile(
 _PM_RULED_STAFF_TITLE = re.compile(r"\bworkday solution expert\b|\bkindergarten team lead\b", re.I)
 
 
+def _zone_of(rx: str, title: str) -> str:
+    """Where the match occurred - recorded as EVIDENCE on every decision, but see below: it is only folded
+    into ``kind``'s confidence in one place, and deliberately not here."""
+    return "title" if re.search(rx, title, re.I) else "body"
+
+
+# classify_kind_intl's branches all scan title + description AS ONE TEXT, by design and on purpose: a real
+# ad as vague as "Faculty Position in Finance and Accounting" names its actual rank only in the body (jobs.ac.uk,
+# live, recorded in position_kind_intl's own docstring). Discounting a body-only hit here would therefore
+# penalise the exact behaviour these rules exist for - measured on the live DB, it put 977 of 1,296 queued
+# rows in one bucket purely for matching in the body, which is noise, not doubt. So the zone is RECORDED
+# (a reviewer should know whether the title or the body produced the verdict) but NOT scored here.
+#
+# position_kind_intl is the opposite, and its discount stays: there the project has a live counter-example
+# for body text actively misleading it (KU DK's PhD ad whose body named the supervisor's own rank, which
+# outranked the advertised PhD role) - that is why 'phd' gets title-level precedence there at all.
+def _kind_conf(tier: float) -> float:
+    return score(tier)
+
+
+def classify_kind_intl_with_evidence(title: str, description: str = "") -> Classification:
+    """As ``classify_kind_intl``, but returning the raw span, the branch and a confidence alongside the
+    kind. Same order, same guards - only the return type differs.
+
+    The non-academic-role branch returns 'other' WITH a rule and a raw span: it is a positive
+    identification of an exclusion, which is a real, auditable decision - but its ``conf`` stays None,
+    because 'other' is the absence of positive evidence for a kind, never a confident negative."""
+    text = f"{title} {description}"
+    m = _NON_ACADEMIC_ROLE.search(text)
+    if m:
+        return classify_other(rule="kind.non_academic_role", raw=m.group(0))
+    m = _GRANT_CALL_STRONG.search(text)
+    if m:
+        return Classification(kind="grant_call", conf=_kind_conf(0.95),
+                              raw=clip_raw(m.group(0)), rule="kind.grant_call.strong",
+                              zone=_zone_of(_GRANT_CALL_STRONG.pattern, title))
+    if _ERC_CALL.search(text) and not _ERC_JOB_FUNDING_SOURCE.search(text):
+        m = _ERC_CALL.search(text)
+        return Classification(kind="grant_call", conf=score(0.55, guards_fired=1),
+                              raw=clip_raw(m.group(0)), rule="kind.grant_call.erc",
+                              zone=_zone_of(_ERC_CALL.pattern, title), guards=("erc_job_funding_source",))
+    m = _INTERNSHIP.search(text)
+    if m:
+        return Classification(kind="internship", conf=_kind_conf(0.80),
+                              raw=clip_raw(m.group(0)), rule="kind.internship",
+                              zone=_zone_of(_INTERNSHIP.pattern, title))
+    m = _ENROLLMENT.search(text)
+    if m:
+        return Classification(kind="enrollment", conf=_kind_conf(0.85),
+                              raw=clip_raw(m.group(0)), rule="kind.enrollment",
+                              zone=_zone_of(_ENROLLMENT.pattern, title))
+    m = _ACADEMIC_POSITION.search(text)
+    if m:
+        return Classification(kind="employment", conf=_kind_conf(0.75),
+                              raw=clip_raw(m.group(0)), rule="kind.academic_position",
+                              zone=_zone_of(_ACADEMIC_POSITION.pattern, title))
+    # both of the two remaining branches are TITLE-ONLY by design (see _RESEARCH_SUPPORT_STAFF_TITLE's own
+    # comment: a description-text mention must never be enough on its own).
+    m = _RESEARCH_SUPPORT_STAFF_TITLE.search(title)
+    if m:
+        return Classification(kind="employment", conf=score(0.80, zone="title"), raw=clip_raw(m.group(0)),
+                              rule="kind.research_support_staff", zone="title")
+    m = _PM_RULED_STAFF_TITLE.search(title)
+    if m:
+        return Classification(kind="employment", conf=score(0.90, zone="title"), raw=clip_raw(m.group(0)),
+                              rule="kind.pm_ruled_staff", zone="title")
+    return classify_other()
+
+
 def classify_kind_intl(title: str, description: str = "") -> str:
     """employment / grant_call / internship / enrollment / other. Checked in this order (first hit wins, same
     'never guess' convention as rs_text.classify_kind): a non-academic role is excluded outright; a genuine
     funding/fellowship CALL is grant_call; a short work placement is internship; an admissions notice is
     enrollment; any other recognised academic position title is employment; anything else is 'other' (hidden)."""
-    text = f"{title} {description}"
-    if _NON_ACADEMIC_ROLE.search(text):
-        return "other"
-    if _GRANT_CALL_STRONG.search(text) or (_ERC_CALL.search(text) and not _ERC_JOB_FUNDING_SOURCE.search(text)):
-        return "grant_call"
-    if _INTERNSHIP.search(text):
-        return "internship"
-    if _ENROLLMENT.search(text):
-        return "enrollment"
-    if _ACADEMIC_POSITION.search(text):
-        return "employment"
-    if _RESEARCH_SUPPORT_STAFF_TITLE.search(title) or _PM_RULED_STAFF_TITLE.search(title):
-        return "employment"
-    return "other"
+    return classify_kind_intl_with_evidence(title, description).kind
 
 
 # listing.position_kind's own CHECK enum (0003_listing.sql) - 'phd' is a real bucket here (unlike rs_text.py's
@@ -167,6 +245,22 @@ _POSITION_RULES_INTL = [
 _PHD_RULE = next(rx for v, rx in _POSITION_RULES_INTL if v == "phd")
 
 
+def position_kind_intl_with_evidence(title: str, description: str = "") -> Classification:
+    """As ``position_kind_intl``, but with the raw span, rule and confidence. The 'phd' branch keeps its
+    own title-level precedence (see the docstring below) and is therefore zoned 'title' outright."""
+    m = re.search(_PHD_RULE, title, re.I)
+    if m:
+        return Classification(kind="phd", conf=score(_POSITION_TIERS_INTL["phd"], zone="title"),
+                              raw=clip_raw(m.group(0)), rule="position.phd", zone="title")
+    text = f"{title} {description}"
+    for v, rx in _POSITION_RULES_INTL:
+        m = re.search(rx, text, re.I)
+        if m:
+            return Classification(kind=v, conf=score(_POSITION_TIERS_INTL[v], zone=_zone_of(rx, title)),
+                                  raw=clip_raw(m.group(0)), rule=f"position.{v}", zone=_zone_of(rx, title))
+    return classify_other()
+
+
 def position_kind_intl(title: str, description: str = "") -> str:
     """listing.position_kind's own enum value (phd/postdoc/professor/lecturer/research_assistant/
     researcher_title/technician/admin/intern/other) - 'other' when nothing specific is named, same convention
@@ -182,7 +276,14 @@ def position_kind_intl(title: str, description: str = "") -> str:
     a bare 'professor'/'research fellow' mention can be (the latter two stay pure combined-text rules
     specifically so a body's more specific 'postdoctoral research fellow' can still out-rank a vaguer title
     like 'Research Fellow in Particle Physics', per the CERN fixture - only 'phd' gets this precedence)."""
-    if re.search(_PHD_RULE, title, re.I):
-        return "phd"
-    text = f"{title} {description}"
-    return next((v for v, rx in _POSITION_RULES_INTL if re.search(rx, text, re.I)), "other")
+    return position_kind_intl_with_evidence(title, description).kind
+
+
+def kind_row_fields(title: str, description: str = "") -> Dict[str, Any]:
+    """The listing row fields one international ad's classification produces: ``kind`` + its {conf,raw}
+    and ``position_kind`` + its {conf,raw}, in the shape ``upsert_listing`` accepts. One call, so a
+    connector cannot set a kind and forget to carry the evidence for it."""
+    k = classify_kind_intl_with_evidence(title, description)
+    pk = position_kind_intl_with_evidence(title, description)
+    return {"kind": k.kind, "kind_conf": k.conf, "kind_raw": k.raw,
+            "position_kind": pk.kind, "position_kind_conf": pk.conf, "position_kind_raw": pk.raw}

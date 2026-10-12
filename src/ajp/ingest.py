@@ -34,6 +34,13 @@ LISTING_COLUMNS = (
     "posted_at", "posted_at_basis", "posted_at_conf", "posted_at_raw", "ad_lang", "raw_text", "raw_html_ref", "status", "kind", "extraction_family",
     "location_class", "location_class_conf", "location_class_raw",             # T23 (PM ruling R2)
     "content_scanned",                                                        # T31 (packet 019)
+    # T48 (packet 028): the classification's own {conf, raw}, closing the last D6 gap on this table -
+    # kind and position_kind were the only two extracted values with neither (0026). Accepted from the
+    # connector because only the connector knows which classifier it used (rs_text vs intl_text, chosen
+    # per source) - unlike 0024's inferred_*, these CANNOT be recomputed here from the row's own text.
+    # Optional: a connector not yet wired to the evidence-returning classifiers simply leaves them NULL,
+    # and no row is ever refused for lacking evidence it was never asked for.
+    "kind_conf", "kind_raw", "position_kind_conf", "position_kind_raw",
 )
 # T23 (PM ruling R2): country_iso2 is no longer required - a row whose country cannot be resolved is
 # persisted with country_iso2=None + a real location_class (remote/hybrid/unknown) instead of being

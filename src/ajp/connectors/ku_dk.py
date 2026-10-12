@@ -35,7 +35,7 @@ from typing import Any, Dict, List, Tuple
 
 from ajp.connectors.base import Connector, UrlManifest
 from ajp.connectors.jobposting import _strip_html
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes
 from ajp.extract_contacts import extract_contacts
 from ajp.rawstore import put_raw
@@ -119,7 +119,8 @@ class KuDkConnector(Connector):
         for item in items:
             body_text = _strip_html(item["body_html"])
             title, body = item["title"], body_text
-            kind = classify_kind_intl(title, body)
+            kind_f = kind_row_fields(title, body)
+            kind = kind_f["kind"]
             if kind == "other":
                 report["discarded"] += 1
                 continue
@@ -134,7 +135,7 @@ class KuDkConnector(Connector):
             row: Dict[str, Any] = {
                 "ext_uid": item["ext_uid"], "source_id": self.source_id, "url": item["url"],
                 "title_raw": title, "org_raw": ORG_RAW, "country_iso2": COUNTRY, "city": None,
-                "position_kind": position_kind_intl(title, body), "kind": kind, "ad_lang": "en",
+                **kind_f, "ad_lang": "en",
                 "raw_text": body[:2000], "ft_pt": "unknown", "foreigner_eligible": "unknown",
                 "extraction_family": "ku_dk_rss", "raw_html_ref": ref.key, "status": "open",
                 "apply_url": item["url"], **contacts,

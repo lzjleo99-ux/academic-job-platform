@@ -50,7 +50,7 @@ from psycopg.types.json import Jsonb
 
 from ajp.connectors.base import Connector, UrlManifest
 from ajp.connectors.jobposting import _country_iso2, classify_location, country_from_freetext_location
-from ajp.extract.intl_text import classify_kind_intl, position_kind_intl
+from ajp.extract.intl_text import kind_row_fields
 from ajp.extract.text import decode_bytes, decode_entities
 from ajp.extract_contacts import extract_contacts
 from ajp.rawstore import put_raw
@@ -156,7 +156,8 @@ class HigherEdJobsRssConnector(Connector):
             title, body = it["title"], it["body"]
             if not title:
                 continue
-            kind = classify_kind_intl(title, body)
+            kind_f = kind_row_fields(title, body)
+            kind = kind_f["kind"]
             if kind == "other":
                 report["discarded"] += 1
                 continue
@@ -175,7 +176,7 @@ class HigherEdJobsRssConnector(Connector):
                 "ext_uid": hashlib.sha1(it["link"].encode()).hexdigest()[:16], "source_id": self.source_id,
                 "url": it["link"], "title_raw": title, "org_raw": it["employer"],
                 "country_iso2": country, "city": it["location_line"] or None,
-                "position_kind": position_kind_intl(title, body), "kind": kind,
+                **kind_f,
                 "ad_lang": "en", "raw_text": body[:4000], "requirements_raw": body[:4000], "ft_pt": "unknown",
                 "foreigner_eligible": "unknown", "extraction_family": "higher_ed_jobsrss",
                 "raw_html_ref": ref.key, "apply_url": it["link"],
