@@ -1426,6 +1426,174 @@
         "title": "MetaResponse",
         "type": "object"
       },
+      "OrgBoardBlocked": {
+        "description": "One blocked board URL of one organisation, with the reason it was refused - so \"degraded\" is\nalways attributable to a specific URL rather than a bare status string.",
+        "properties": {
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Url"
+          }
+        },
+        "title": "OrgBoardBlocked",
+        "type": "object"
+      },
+      "OrgBoardHealth": {
+        "properties": {
+          "blocked": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/OrgBoardBlocked"
+            },
+            "title": "Blocked",
+            "type": "array"
+          },
+          "degraded_to_deeplink": {
+            "default": false,
+            "title": "Degraded To Deeplink",
+            "type": "boolean"
+          },
+          "ingested": {
+            "default": 0,
+            "title": "Ingested",
+            "type": "integer"
+          },
+          "items": {
+            "default": 0,
+            "title": "Items",
+            "type": "integer"
+          },
+          "pages_fetched": {
+            "default": 0,
+            "title": "Pages Fetched",
+            "type": "integer"
+          },
+          "rows_new": {
+            "default": 0,
+            "title": "Rows New",
+            "type": "integer"
+          },
+          "rows_updated": {
+            "default": 0,
+            "title": "Rows Updated",
+            "type": "integer"
+          },
+          "slug": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Slug"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "OrgBoardHealth",
+        "type": "object"
+      },
+      "OrgBoardHealthResponse": {
+        "description": "Per-organisation health of the rs_org_boards fan-out, read from the per-org reports\nrun_ledger.http_counters already persists (see registry.fetch_org_board_health). The rollups let a\ncaller see the shape at a glance; `orgs` carries the attribution, degraded first.",
+        "properties": {
+          "orgs": {
+            "default": [],
+            "items": {
+              "$ref": "#/components/schemas/OrgBoardHealth"
+            },
+            "title": "Orgs",
+            "type": "array"
+          },
+          "orgs_degraded": {
+            "default": 0,
+            "title": "Orgs Degraded",
+            "type": "integer"
+          },
+          "orgs_ok": {
+            "default": 0,
+            "title": "Orgs Ok",
+            "type": "integer"
+          },
+          "orgs_total": {
+            "default": 0,
+            "title": "Orgs Total",
+            "type": "integer"
+          },
+          "orgs_zero_rows": {
+            "default": 0,
+            "title": "Orgs Zero Rows",
+            "type": "integer"
+          },
+          "run_finished_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Finished At"
+          },
+          "run_started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Started At"
+          },
+          "run_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Run Status"
+          },
+          "source_id": {
+            "title": "Source Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "source_id"
+        ],
+        "title": "OrgBoardHealthResponse",
+        "type": "object"
+      },
       "OrgDetail": {
         "properties": {
           "career_urls": {
@@ -4412,6 +4580,28 @@
           }
         },
         "summary": "List Orgs",
+        "tags": [
+          "orgs"
+        ]
+      }
+    },
+    "/v1/orgs/board-health": {
+      "get": {
+        "description": "Per-organisation health of the rs_org_boards fan-out source, attributed by org slug.\n\nAnswers PM's own F4 finding (debug_sweep_2026-10-10.md): \"rs_org_boards partially degraded - 3\nsub-URLs tripped R1\" was reported honestly but unactionably, because /v1/sources aggregates\ncrawl_state by source_id and returns reason strings with no attribution. This endpoint reads the\nper-org reports run_ledger.http_counters already persists, so a degraded org is always paired with\nthe exact board URL and the reason it was refused.\n\nRead-only, and it invents nothing: with no fan-out run recorded yet it returns zeroed rollups\nrather than an error, so a fresh install is a valid empty answer rather than a 500.",
+        "operationId": "org_board_health_v1_orgs_board_health_get",
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrgBoardHealthResponse"
+                }
+              }
+            },
+            "description": "Successful Response"
+          }
+        },
+        "summary": "Org Board Health",
         "tags": [
           "orgs"
         ]

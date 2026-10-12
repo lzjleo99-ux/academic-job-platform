@@ -178,6 +178,40 @@ class OrgDetail(OrgSummary):
     the_rank: Optional[int] = None
 
 
+class OrgBoardBlocked(BaseModel):
+    """One blocked board URL of one organisation, with the reason it was refused - so "degraded" is
+    always attributable to a specific URL rather than a bare status string."""
+    url: Optional[str] = None
+    reason: Optional[str] = None
+
+
+class OrgBoardHealth(BaseModel):
+    slug: Optional[str] = None
+    status: str
+    rows_new: int = 0
+    rows_updated: int = 0
+    ingested: int = 0
+    items: int = 0
+    pages_fetched: int = 0
+    blocked: List[OrgBoardBlocked] = []
+    degraded_to_deeplink: bool = False
+
+
+class OrgBoardHealthResponse(BaseModel):
+    """Per-organisation health of the rs_org_boards fan-out, read from the per-org reports
+    run_ledger.http_counters already persists (see registry.fetch_org_board_health). The rollups let a
+    caller see the shape at a glance; `orgs` carries the attribution, degraded first."""
+    source_id: str
+    run_started_at: Optional[datetime] = None
+    run_finished_at: Optional[datetime] = None
+    run_status: Optional[str] = None
+    orgs_total: int = 0
+    orgs_ok: int = 0
+    orgs_degraded: int = 0
+    orgs_zero_rows: int = 0
+    orgs: List[OrgBoardHealth] = []
+
+
 class ChannelLinkOut(BaseModel):
     source_id: str
     slug: str

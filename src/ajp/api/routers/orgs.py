@@ -8,7 +8,8 @@ import psycopg.errors
 from psycopg import Connection
 
 from ajp.api.deps import get_conn
-from ajp.api.schemas import OrgDetail, OrgSummary
+from ajp.api.schemas import OrgBoardHealthResponse, OrgDetail, OrgSummary
+from ajp.registry import fetch_org_board_health
 
 router = APIRouter(prefix="/v1", tags=["orgs"])
 
@@ -25,6 +26,24 @@ def list_orgs(country: Optional[List[str]] = Query(None), conn: Connection = Dep
         where, params = "o.country = ANY(%(country)s)", {"country": country}
     rows = conn.execute(f"SELECT {_SUMMARY_SELECT} FROM org_master o WHERE {where} ORDER BY o.name_en NULLS LAST", params).fetchall()
     return [OrgSummary(**{**dict(r), "id": str(r["id"])}) for r in rows]
+
+
+# Declared BEFORE /orgs/{org_id} on purpose: FastAPI matches in registration order, so a literal
+# "board-health" segment placed after the path parameter would be swallowed as an org_id and 404.
+@router.get("/orgs/board-health", response_model=OrgBoardHealthResponse)
+def org_board_health(conn: Connection = Depends(get_conn)) -> OrgBoardHealthResponse:
+    """Per-organisation health of the rs_org_boards fan-out source, attributed by org slug.
+
+    Answers PM's own F4 finding (debug_sweep_2026-10-10.md): "rs_org_boards partially degraded - 3
+    sub-URLs tripped R1" was reported honestly but unactionably, because /v1/sources aggregates
+    crawl_state by source_id and returns reason strings with no attribution. This endpoint reads the
+    per-org reports run_ledger.http_counters already persists, so a degraded org is always paired with
+    the exact board URL and the reason it was refused.
+
+    Read-only, and it invents nothing: with no fan-out run recorded yet it returns zeroed rollups
+    rather than an error, so a fresh install is a valid empty answer rather than a 500.
+    """
+    return OrgBoardHealthResponse(**fetch_org_board_health(conn))
 
 
 @router.get("/orgs/{org_id}", response_model=OrgDetail)
