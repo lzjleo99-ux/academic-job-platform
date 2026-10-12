@@ -33,6 +33,9 @@ log = logging.getLogger("ajp.connectors")
 MAX_REDIRECTS = 5
 RETRY_STATUSES = {429, 500, 502, 503, 504}
 MAX_CRAWL_DELAY_SECONDS = 30.0   # a site's own robots.txt Crawl-delay is honoured up to this cap, never beyond it
+# F15 (found live 2026-10-13): consecutive URLs on ONE host that each exhausted their own retries with a
+# connection-level transport error before the host is treated as unreachable. See HostUnreachable.
+MAX_CONSECUTIVE_HOST_FAILURES = 3
 # T23: response size cap. Found live auditing every fetch_raw()/get()/post() call site (2026-09-24) - only
 # 2 of them (nsz.py's own 25MB PDF cap, board.py's deadline-page cap) ever passed max_bytes explicitly;
 # every other HTML/JSON/XML detail-page, feed and sitemap fetch across the whole project had NO cap at all
@@ -74,6 +77,37 @@ def is_transport_error(exc: BaseException) -> bool:
 
 class ResponseTooLarge(FetchFailed):
     """Body larger than the caller's max_bytes; never retried (retrying cannot make it smaller)."""
+
+
+class HostUnreachable(FetchFailed):
+    """Raised once MAX_CONSECUTIVE_HOST_FAILURES URLs on one host have each exhausted their own retries
+    with a connection-level transport error (refused / reset / timeout / TLS), and from then on for every
+    further URL on that host, BEFORE any network attempt or backoff sleep.
+
+    Why it exists, measured on the live stack 2026-10-13: connectors catch FetchFailed PER URL and count
+    it, raising only at the end ("all N detail fetches failed"). So a host whose network is unreachable
+    gets ground through its ENTIRE url list at full retry cost. jobs_ac_uk's most recent run burned
+    10,834s - exactly the F9 3-hour per-source watchdog ceiling - having fetched ZERO pages, because its
+    ~2,000 detail URLs each cost ~7s of retries+backoff before being counted and discarded. With the
+    breaker the same run fails in seconds and says why.
+
+    A subclass of FetchFailed so every existing `except FetchFailed` handler keeps working unchanged; the
+    distinction is for the log and for a caller that wants to tell "this host is down" (nothing to gain
+    from its remaining URLs) from "this one URL failed".
+
+    Two scoping decisions, both deliberate:
+      * TRANSPORT-ONLY. A 403/429/5xx means the host ANSWERED, so it resets the counter rather than
+        feeding it - a rate-limited or forbidden host is emphatically reachable, and treating it as
+        unreachable would silently skip a source that is merely being polite back at us.
+      * PER-HOST. One dead site must never trip the breaker for any other host, so a single unreachable
+        source cannot abort a whole multi-source cycle the way a process-global counter would.
+    """
+
+    def __init__(self, message: object, *, url: Optional[str] = None):
+        # Same shape as ManifestViolation above (FetchFailed itself is a bare RuntimeError subclass and
+        # takes no keyword), so .url is readable structurally rather than parsed back out of the message.
+        super().__init__(message)
+        self.url = url
 
 
 class UrlManifest:
@@ -145,6 +179,10 @@ class PoliteClient:
         # fetching robots.txt is circular by definition, exactly the case the original guard already existed
         # to prevent, just too narrowly.
         self._resolving_robots = False
+        # F15: consecutive URLs per host that exhausted their retries at the connection level. Keyed by
+        # netloc, the same host identity _throttle already uses, so a breaker and a rate limit always
+        # agree about what "one host" means.
+        self._host_url_failures: Dict[str, int] = {}
         self._timeout = timeout
         # TLS certificate verification is always on (certifi bundle); there is no opt-out.
         self._client = client or httpx.Client(timeout=timeout, verify=ssl.create_default_context(cafile=certifi.where()))
@@ -252,13 +290,45 @@ class PoliteClient:
             delay = max(delay, float(resp.headers["retry-after"]))
         return min(delay, self._cap)
 
+    def _host_of(self, url: str) -> str:
+        return urlsplit(url).netloc
+
+    def _note_host_answered(self, host: str) -> None:
+        """Any HTTP response at all - 200, 403, 429, 5xx - proves the host is reachable, so a run of
+        transport failures on it is over and the counter starts again from zero."""
+        if host in self._host_url_failures:
+            del self._host_url_failures[host]
+
+    def _note_host_url_exhausted(self, host: str, url: str, last_err: BaseException) -> None:
+        """One more URL on this host exhausted its retries at the connection level. Only transport-level
+        exhaustion reaches here; an HTTP-status give-up (a persistent 503, say) is a host that answered
+        and is handled by the caller's own per-URL failure counting, never by this breaker."""
+        n = self._host_url_failures.get(host, 0) + 1
+        self._host_url_failures[host] = n
+        if n >= MAX_CONSECUTIVE_HOST_FAILURES:
+            log.error("%d consecutive URLs on %s failed at the connection level (last: %s); "
+                      "treating the host as unreachable and not attempting its remaining URLs",
+                      n, host, last_err)
+            raise HostUnreachable(
+                f"{n} consecutive URLs on {host} failed at the connection level (last: {last_err}); "
+                f"the host is treated as unreachable, so its remaining URLs are not attempted",
+                url=url) from last_err
+
     def _request_with_retries(self, url: str, max_bytes: Optional[int] = None,
                               extra_headers: Optional[Dict[str, str]] = None) -> httpx.Response:
+        host = self._host_of(url)
+        # F15: fail fast, BEFORE any network attempt or backoff sleep. This is what turns "grind 2,000
+        # URLs for three hours" into "stop in seconds" - the cost of the remaining URLs is not paid.
+        if self._host_url_failures.get(host, 0) >= MAX_CONSECUTIVE_HOST_FAILURES:
+            raise HostUnreachable(
+                f"{self._host_url_failures[host]} consecutive URLs on {host} already failed at the "
+                f"connection level; not attempting {url}", url=url)
         last_err: Optional[BaseException] = None
         for attempt in range(self._max_retries + 1):
             resp: Optional[httpx.Response] = None
             try:
                 resp = self._send(url, max_bytes, extra_headers)
+                self._note_host_answered(host)
                 if resp.status_code not in RETRY_STATUSES:
                     return resp
                 last_err = FetchFailed(f"HTTP {resp.status_code} for {url}")
@@ -270,6 +340,9 @@ class PoliteClient:
                 d = self._backoff(attempt, resp)
                 log.warning("retry %d/%d for %s in %.1fs (%s)", attempt + 1, self._max_retries, url, d, last_err)
                 self._sleep(d)
+        if isinstance(last_err, httpx.TransportError):
+            # retries exhausted at the connection level - the only shape that feeds the breaker
+            self._note_host_url_exhausted(host, url, last_err)
         raise FetchFailed(f"giving up on {url} after {self._max_retries + 1} attempts: {last_err}") from last_err
 
     # -- public -----------------------------------------------------------------------------
