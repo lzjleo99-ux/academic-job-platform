@@ -4,17 +4,23 @@ Privacy default (D4/packet 008): this router never sends the uploaded document a
 local (ajp.thesis.pipeline calls only the local parser/checks/store). T17's similarity endpoints (added
 separately) are the only ones that ever make an outbound request, and only for bounded search probes, never
 the document text itself, and never at all unless the caller explicitly asks.
+
+T49 (2026-10-13): every write here is PUBLIC self-service by design, so it is bounded by the inbound rate
+limiter (ajp.api.ratelimit) rather than a token a browser cannot hold. The similarity run is the one to
+watch - it can trigger real third-party API calls - so its bucket is separate and its default is tighter
+than the cheap ones.
 """
 from __future__ import annotations
 
 from typing import List, Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from fastapi.responses import Response
 from psycopg import Connection
 
 from ajp.api.deps import get_conn
+from ajp.api.ratelimit import rate_limit
 from ajp.thesis import pipeline, store
 from ajp.thesis.docx_export import ExportError
 from ajp.thesis.similarity.pipeline import default_adapters
@@ -38,9 +44,11 @@ def _task_out(task: store.ThesisTask) -> ThesisTaskOut:
 
 @router.post("/analyze", response_model=ThesisTaskOut)
 async def analyze(
+    request: Request,
     file: UploadFile = File(...),
     template: str = Query("rs_phd_generic"),
     conn: Connection = Depends(get_conn),
+    _rl: None = Depends(rate_limit("upload")),
 ) -> ThesisTaskOut:
     content = await file.read()
     try:
@@ -67,7 +75,8 @@ def get_task(task_id: UUID, conn: Connection = Depends(get_conn)) -> ThesisTaskO
 
 
 @router.delete("/{task_id}", status_code=204)
-def delete_task(task_id: UUID, conn: Connection = Depends(get_conn)) -> None:
+def delete_task(task_id: UUID, request: Request, conn: Connection = Depends(get_conn),
+                _rl: None = Depends(rate_limit("write"))) -> None:
     """T25 (packet 016): closes RC1's own documented gap - a real self-service delete, not just the bulk
     purge_older_than mechanism that already existed but had no per-document trigger."""
     if not store.delete_task(conn, store.DEFAULT_ROOT, task_id):
@@ -99,10 +108,12 @@ def similarity_sources() -> list:
 
 @router.post("/{task_id}/similarity")
 def run_similarity(
+    request: Request,
     task_id: UUID,
     sources: Optional[List[str]] = Query(None, description="omit for all sources; pass to enable only these"),
     copyleaks_consent: bool = Query(False, description="explicit per-run consent - Copyleaks is never called without it"),
     conn: Connection = Depends(get_conn),
+    _rl: None = Depends(rate_limit("compute")),
 ):
     try:
         report = pipeline.run_similarity_for_task(conn, store.DEFAULT_ROOT, task_id, enabled_sources=sources,

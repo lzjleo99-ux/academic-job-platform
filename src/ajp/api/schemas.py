@@ -250,6 +250,19 @@ class ClassificationReviewResponse(BaseModel):
     model: Optional[str] = None
 
 
+class ReviewDecisionOut(BaseModel):
+    """What recording a human decision returns. ``applied`` is always False by contract: the correction is
+    RECORDED, never auto-written back to `listing` (the standing 'a human decision is recorded, never
+    auto-applied' ruling) - the field exists so the response says so explicitly instead of leaving a
+    reader to wonder whether their correction took effect silently."""
+    id: str
+    listing_id: str
+    field: str
+    status: str
+    human_kind: Optional[str] = None
+    applied: bool = False
+
+
 class ChannelLinkOut(BaseModel):
     source_id: str
     slug: str

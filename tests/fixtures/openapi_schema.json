@@ -2194,6 +2194,98 @@
         "title": "Page",
         "type": "object"
       },
+      "ReviewDecisionIn": {
+        "description": "A human's answer to one queued classification. 'corrected' REQUIRES human_kind - the DB enforces\nthe same rule, but failing at the schema layer returns a 422 that says so before the DB is touched.",
+        "properties": {
+          "human_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Human Kind"
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Notes"
+          },
+          "reviewer": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reviewer"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "ReviewDecisionIn",
+        "type": "object"
+      },
+      "ReviewDecisionOut": {
+        "description": "What recording a human decision returns. ``applied`` is always False by contract: the correction is\nRECORDED, never auto-written back to `listing` (the standing 'a human decision is recorded, never\nauto-applied' ruling) - the field exists so the response says so explicitly instead of leaving a\nreader to wonder whether their correction took effect silently.",
+        "properties": {
+          "applied": {
+            "default": false,
+            "title": "Applied",
+            "type": "boolean"
+          },
+          "field": {
+            "title": "Field",
+            "type": "string"
+          },
+          "human_kind": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Human Kind"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "listing_id": {
+            "title": "Listing Id",
+            "type": "string"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "listing_id",
+          "field",
+          "status"
+        ],
+        "title": "ReviewDecisionOut",
+        "type": "object"
+      },
       "SalaryBasis": {
         "properties": {
           "fx_rate_date": {
@@ -3095,6 +3187,59 @@
           }
         },
         "summary": "Classification Review",
+        "tags": [
+          "classification-review"
+        ]
+      }
+    },
+    "/v1/classification-review/{review_id}/decision": {
+      "post": {
+        "description": "Record a human decision on one review. Never auto-applies: `listing` keeps the machine's answer;\n`human_kind` is the correction, recorded for a deliberate separate step (the standing 'a human\ndecision is recorded, never auto-applied' ruling).",
+        "operationId": "decide_classification_review_v1_classification_review__review_id__decision_post",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "review_id",
+            "required": true,
+            "schema": {
+              "title": "Review Id",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReviewDecisionIn"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReviewDecisionOut"
+                }
+              }
+            },
+            "description": "Successful Response"
+          },
+          "422": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            },
+            "description": "Validation Error"
+          }
+        },
+        "summary": "Decide Classification Review",
         "tags": [
           "classification-review"
         ]

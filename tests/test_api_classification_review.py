@@ -81,9 +81,18 @@ def test_empty_queue_is_a_200_with_counts_not_an_error(client, conn):
                                       "unclassified_academic": 0}
 
 
-def test_no_write_route_exists_yet(client):
-    """Deliberate, not an oversight: recording a decision is a mutation and this API has no auth, so the
-    HTTP verb waits for item ④ on the roadmap rather than enlarging the unauthenticated write surface
-    (/v1/applicants and /v1/thesis are already open writes - an unfixed exposure, not a precedent)."""
-    for method in ("post", "patch", "delete"):
-        assert getattr(client, method)("/v1/classification-review").status_code == 405
+def test_the_decision_route_needs_a_secret_not_a_405(client):
+    """T49 (2026-10-13): the write route now EXISTS - it was deliberately withheld until this API had any
+    auth at all, because recording a decision is a mutation and /v1/applicants + /v1/thesis were already
+    open writes (an unfixed exposure, not a precedent to extend). It is an OPERATOR action, so it takes a
+    real secret (AJP_ADMIN_TOKEN) rather than the volume bound the public self-service endpoints get.
+    With no token configured the endpoint is OFF (503, the same refuse-when-unconfigured rule as get_dsn);
+    a wrong token is 401. Reading stays public."""
+    assert client.get("/v1/classification-review").status_code == 200
+    r = client.post("/v1/classification-review/00000000-0000-0000-0000-000000000000/decision",
+                    json={"status": "confirmed"})
+    assert r.status_code == 503, "no AJP_ADMIN_TOKEN configured: the admin surface must be off, not open"
+    assert "AJP_ADMIN_TOKEN" in r.json()["detail"]
+    # the collection path itself is still read-only
+    assert client.post("/v1/classification-review", json={}).status_code == 405
+    assert client.patch("/v1/classification-review").status_code == 405

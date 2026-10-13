@@ -5,16 +5,21 @@ Privacy default (same standing rule as thesis, packet 008/D4): a CV is analysed 
 never sends the uploaded document, its extracted text, or the structured profile anywhere else. DELETE is a
 real delete (ajp.applicants.store.delete_applicant erases the file and the extracted text, keeping only a
 tombstone row), not a soft hide - see the Privacy page for the retention statement this endpoint backs.
+
+T49 (2026-10-13): every write here is PUBLIC self-service by design, so it is bounded by the inbound rate
+limiter (ajp.api.ratelimit) rather than a token a browser cannot hold. Volume is the control that fits;
+identity is not.
 """
 from __future__ import annotations
 
 from typing import Any, Dict
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
+from fastapi import APIRouter, Depends, File, HTTPException, Query, Request, UploadFile
 from psycopg import Connection
 
 from ajp.api.deps import get_conn
+from ajp.api.ratelimit import rate_limit
 from ajp.api.schemas import ApplicantMatchesResponse, ApplicantMatchOut, ApplicantOut
 from ajp.applicants import pipeline, store
 from ajp.applicants.matching import MATCH_WEIGHTS
@@ -36,7 +41,8 @@ def _applicant_out(a: store.Applicant) -> ApplicantOut:
 
 
 @router.post("", response_model=ApplicantOut)
-async def upload(file: UploadFile = File(...), conn: Connection = Depends(get_conn)) -> ApplicantOut:
+async def upload(request: Request, file: UploadFile = File(...), conn: Connection = Depends(get_conn),
+                 _rl: None = Depends(rate_limit("upload"))) -> ApplicantOut:
     content = await file.read()
     try:
         applicant = pipeline.upload_cv(conn, store.DEFAULT_ROOT, filename=file.filename or "cv", content=content)
@@ -58,7 +64,8 @@ def get_applicant(applicant_id: UUID, conn: Connection = Depends(get_conn)) -> A
 
 
 @router.patch("/{applicant_id}", response_model=ApplicantOut)
-def patch_profile(applicant_id: UUID, patch: Dict[str, Any], conn: Connection = Depends(get_conn)) -> ApplicantOut:
+def patch_profile(applicant_id: UUID, patch: Dict[str, Any], request: Request,
+                  conn: Connection = Depends(get_conn), _rl: None = Depends(rate_limit("write"))) -> ApplicantOut:
     """A manual correction to the extracted profile - merges ``patch`` into the existing profile (never a
     full replace), so reviewing/fixing one field never requires resending every other one."""
     applicant = store.update_profile(conn, applicant_id, patch)
@@ -68,7 +75,8 @@ def patch_profile(applicant_id: UUID, patch: Dict[str, Any], conn: Connection = 
 
 
 @router.delete("/{applicant_id}", status_code=204)
-def delete_applicant(applicant_id: UUID, conn: Connection = Depends(get_conn)) -> None:
+def delete_applicant(applicant_id: UUID, request: Request, conn: Connection = Depends(get_conn),
+                     _rl: None = Depends(rate_limit("write"))) -> None:
     deleted = store.delete_applicant(conn, store.DEFAULT_ROOT, applicant_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="no such applicant")
@@ -81,8 +89,10 @@ _MAX_MATCHES_LIMIT = 500
 
 
 @router.post("/{applicant_id}/matches", response_model=ApplicantMatchesResponse)
-def compute_matches(applicant_id: UUID, limit: int = Query(_DEFAULT_MATCHES_LIMIT, ge=1, le=_MAX_MATCHES_LIMIT),
-                    offset: int = Query(0, ge=0), conn: Connection = Depends(get_conn)) -> ApplicantMatchesResponse:
+def compute_matches(request: Request, applicant_id: UUID,
+                    limit: int = Query(_DEFAULT_MATCHES_LIMIT, ge=1, le=_MAX_MATCHES_LIMIT),
+                    offset: int = Query(0, ge=0), conn: Connection = Depends(get_conn),
+                    _rl: None = Depends(rate_limit("compute"))) -> ApplicantMatchesResponse:
     results = pipeline.compute_matches(conn, applicant_id)
     if results is None:
         raise HTTPException(status_code=404, detail="no such applicant")
