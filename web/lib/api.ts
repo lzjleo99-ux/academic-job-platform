@@ -3,8 +3,9 @@
 // read-only listing API does not require one; see web/tests/no-secrets.test.ts for the guard that checks this
 // stays true as the app grows.
 import type {
-  Applicant, ApplicantMatchesResponse, ChannelLinkOut, FacetsResponse, GovernanceSnapshot, HealthResponse,
-  ListingDetail, ListingsResponse, MetaResponse, OrgDetail, OrgSummary, SimilarityReport, SourceStatus, ThesisTask,
+  Applicant, ApplicantMatchesResponse, ChannelLinkOut, ClassificationReviewReason,
+  ClassificationReviewResponse, FacetsResponse, GovernanceSnapshot, HealthResponse, ListingDetail,
+  ListingsResponse, MetaResponse, OrgDetail, OrgSummary, SimilarityReport, SourceStatus, ThesisTask,
 } from "./types";
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://127.0.0.1:8000";
@@ -34,6 +35,12 @@ export const api = {
   meta: () => getJson<MetaResponse>("/v1/meta"),
   channels: () => getJson<ChannelLinkOut[]>("/v1/channels"),
   sources: () => getJson<SourceStatus[]>("/v1/sources"),
+  // T48: the classifier's own review queue. READ-only by design - recording a decision needs
+  // AJP_ADMIN_TOKEN, which a browser cannot hold (see ajp.api.deps.require_admin), so this UI shows
+  // the worklist and the operator acts on it with a token.
+  classificationReview: (reason?: ClassificationReviewReason) =>
+    getJson<ClassificationReviewResponse>("/v1/classification-review",
+      reason ? new URLSearchParams({ reason }) : undefined),
   governance: () => getJson<GovernanceSnapshot>("/v1/governance"),
   exportUrl: (params: URLSearchParams, format: "csv" | "json") => {
     const p = new URLSearchParams(params);

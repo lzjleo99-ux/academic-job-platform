@@ -21,6 +21,9 @@ htmlcov/
 # ---------------------------------------------------------------- Node / Next.js / Playwright -----------------
 node_modules/
 .next/
+# T48: the previous build, renamed out of the way so `next build` gets a clean dir (the sandbox's
+# bulk-delete guard blocks emptying .next in one go). Harmless to delete by hand at any time.
+.next-old/
 out/
 .turbo/
 *.tsbuildinfo

@@ -33,6 +33,11 @@ export function NavBar() {
           <Link href="/compliance" className="hover:underline">
             {t("nav_compliance")}
           </Link>
+          {/* T48: the classifier's own review queue. Public on purpose - "here is what our automated
+              classification is unsure about" is a transparency statement, not an internal tool. */}
+          <Link href="/review" className="hover:underline">
+            {t("nav_review")}
+          </Link>
         </nav>
         <LocaleSwitcher />
       </div>

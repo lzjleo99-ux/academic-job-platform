@@ -51,6 +51,12 @@ const _enKeys = {
   applicants_f_languages: 0, applicants_f_desired_countries: 0, applicants_f_desired_cities: 0,
   applicants_f_remote_ok: 0, applicants_f_ft_pt: 0, applicants_f_years_experience: 0,
   applicants_f_min_salary: 0, applicants_f_visa_note: 0,
+  // T48 review queue
+  nav_review: 0, review_title: 0, review_intro: 0, review_total_pending: 0, review_model: 0,
+  review_filter_all: 0, review_open_ad: 0, review_machine_verdict: 0, review_rule: 0,
+  review_zone: 0, review_guards: 0, review_no_excerpt: 0, review_of_threshold: 0,
+  review_decisions_note: 0, review_reason_unclassified_academic: 0, review_reason_excluded_by_rule: 0,
+  review_reason_low_confidence: 0,
 };
 type Dict = Record<keyof typeof _enKeys, string>;
 
@@ -136,6 +142,17 @@ const en: Dict = {
   applicants_f_remote_ok: "Open to remote work", applicants_f_ft_pt: "Full/part time preference",
   applicants_f_years_experience: "Years of experience", applicants_f_min_salary: "Minimum salary (EUR/year)",
   applicants_f_visa_note: "Visa / foreigner-eligibility note",
+  nav_review: "Classification review", review_title: "Classification review queue",
+  review_intro: "Listings the rule-based classifier itself is not sure about. Each row carries the exact text span the decision was made on, so it can be judged on the evidence rather than on the verdict. Nothing here is a proven error - it is a worklist of what deserves a second look.",
+  review_total_pending: "Awaiting review", review_model: "Confidence model",
+  review_filter_all: "All", review_open_ad: "Open ad",
+  review_machine_verdict: "Classifier said", review_rule: "Rule", review_zone: "Matched in",
+  review_guards: "Guards fired", review_no_excerpt: "no excerpt (no rule matched)",
+  review_of_threshold: "vs threshold",
+  review_decisions_note: "Decisions are recorded by an operator with a token; this page never writes.",
+  review_reason_unclassified_academic: "Possibly a missed ad",
+  review_reason_excluded_by_rule: "Excluded by rule",
+  review_reason_low_confidence: "Weak rule matched",
 } as const;
 
 const srLatn: Dict = {
@@ -220,6 +237,17 @@ const srLatn: Dict = {
   applicants_f_remote_ok: "Otvoren/a za rad na daljinu", applicants_f_ft_pt: "Preferencija puno/skraćeno radno vreme",
   applicants_f_years_experience: "Godine iskustva", applicants_f_min_salary: "Minimalna plata (EUR/godišnje)",
   applicants_f_visa_note: "Napomena o vizi / statusu stranca",
+  nav_review: "Pregled klasifikacije", review_title: "Red za pregled klasifikacije",
+  review_intro: "Oglasi za koje klasifikator zasnovan na pravilima sam nije siguran. Svaki red nosi tačan izvod teksta na osnovu koga je odluka doneta, da se može proceniti na dokazima, a ne na samoj odluci. Ovo nije dokaz o grešci - to je spisak onoga što zaslužuje drugi pogled.",
+  review_total_pending: "Čeka pregled", review_model: "Model pouzdanosti",
+  review_filter_all: "Sve", review_open_ad: "Otvori oglas",
+  review_machine_verdict: "Klasifikator je rekao", review_rule: "Pravilo", review_zone: "Poklopljeno u",
+  review_guards: "Aktivirane zaštite", review_no_excerpt: "nema izvoda (nijedno pravilo nije odgovaralo)",
+  review_of_threshold: "prema pragu",
+  review_decisions_note: "Odluke beleži operater pomoću tokena; ova stranica nikada ne piše.",
+  review_reason_unclassified_academic: "Moguće promašen oglas",
+  review_reason_excluded_by_rule: "Isključeno pravilom",
+  review_reason_low_confidence: "Odgovaralo slabo pravilo",
 };
 
 const srCyrl: Dict = {
@@ -304,6 +332,17 @@ const srCyrl: Dict = {
   applicants_f_remote_ok: "Отворен/а за рад на даљину", applicants_f_ft_pt: "Преференција пуно/скраћено радно време",
   applicants_f_years_experience: "Године искуства", applicants_f_min_salary: "Минимална плата (EUR/годишње)",
   applicants_f_visa_note: "Напомена о визи / статусу странца",
+  nav_review: "Преглед класификације", review_title: "Ред за преглед класификације",
+  review_intro: "Огласи за које класификатор заснован на правилима сам није сигуран. Сваки ред носи тачан извод текста на основу кога је одлука донесена, да се може проценити на доказима, а не на самој одлуци. Ово није доказ о грешки - то је списак онога што заслужује други поглед.",
+  review_total_pending: "Чека преглед", review_model: "Модел поузданости",
+  review_filter_all: "Све", review_open_ad: "Отвори оглас",
+  review_machine_verdict: "Класификатор је рекао", review_rule: "Правило", review_zone: "Поклопљено у",
+  review_guards: "Активиране заштите", review_no_excerpt: "нема извода (ниједно правило није одговарало)",
+  review_of_threshold: "према прагу",
+  review_decisions_note: "Одлуке бележи оператер помоћу токена; ова страница никада не пише.",
+  review_reason_unclassified_academic: "Могуће промашен оглас",
+  review_reason_excluded_by_rule: "Искључено правилом",
+  review_reason_low_confidence: "Одговарало слабо правило",
 };
 
 export const DICTIONARIES: Record<Locale, Dict> = { en, "sr-Latn": srLatn, "sr-Cyrl": srCyrl };

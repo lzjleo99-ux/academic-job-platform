@@ -334,3 +334,43 @@ export interface MetaResponse {
   duration_buckets: string[];
   degraded_features: { feature: string; reason: string }[];
 }
+
+// T48/T49: the classifier's own review queue - the listings it is least sure about, with the evidence the
+// decision was made on. `conf` is a rule-strength PRIOR, not a probability (see the API's own model field),
+// and `raw` is the exact span the classifier saw, so a reviewer judges the decision and not just its output.
+export type ClassificationReviewReason =
+  | "unclassified_academic"
+  | "excluded_by_rule"
+  | "low_confidence";
+
+export interface ClassificationReview {
+  id: string;
+  listing_id: string;
+  field: string;
+  listing_title: string | null;
+  listing_url: string | null;
+  listing_org: string | null;
+  classified_as: string | null;
+  conf: number | null;
+  raw: string | null;
+  rule: string | null;
+  zone: string | null;
+  guards: string[];
+  model: string | null;
+  reason: ClassificationReviewReason;
+  status: string | null;
+  human_kind: string | null;
+  reviewer: string | null;
+  reviewed_at: string | null;
+  notes: string | null;
+  created_at: string | null;
+}
+
+export interface ClassificationReviewResponse {
+  items: ClassificationReview[];
+  total: number;
+  by_status: Record<string, number>;
+  pending_by_reason: Record<string, number>;
+  threshold: number;
+  model: string | null;
+}
